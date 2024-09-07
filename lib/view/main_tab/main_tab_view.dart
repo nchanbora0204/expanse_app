@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/view/main_pages/pendding/addTransaction.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
 import '../main_pages/budget.dart';
@@ -19,6 +20,7 @@ class _MainTabViewState extends State<MainTabView> {
   final List<Widget> pages = [
     HomeView(),
     TransactionList(),
+
     Budget(),
     AccountSettingPage(),
   ];
@@ -126,6 +128,7 @@ class _MainTabViewState extends State<MainTabView> {
       bottom: 20,
       child: InkWell(
         onTap: () {
+          Navigator.push(context, MaterialPageRoute(builder:(context)=> AddTransactionForm() ));
           // Hành động khi nhấn nút thêm chi tiêu
         },
         child: Container(
