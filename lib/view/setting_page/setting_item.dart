@@ -12,6 +12,7 @@ class SettingItem extends StatelessWidget {
   final Function() onTap;
   final String? value;
 
+
   const SettingItem({
     super.key,
     required this.title,
