@@ -16,15 +16,21 @@ class SegmentButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final Color activeTextColor = theme.textTheme.bodyLarge?.color ?? Colors.white;
+    final Color inactiveTextColor = theme.textTheme.bodyMedium?.color ?? Colors.grey;
+    final Color borderColor = theme.dividerColor;
+    final Color backgroundColor = theme.scaffoldBackgroundColor.withOpacity(0.2);
+    
     return InkWell(
       onTap: onPressed,
       child: Container(
         decoration: isAcitive
             ? BoxDecoration(
                 border: Border.all(
-                  color: TColor.border.withOpacity(0.15),
+                  color: borderColor.withOpacity(0.15),
                 ),
-                color: TColor.gray60.withOpacity(0.2),
+                color: backgroundColor,
                 borderRadius: BorderRadius.circular(15),
               )
             : null,
@@ -32,7 +38,7 @@ class SegmentButton extends StatelessWidget {
         child: Text(
           title,
           style: TextStyle(
-            color: isAcitive ? TColor.white : TColor.gray30,
+            color: isAcitive ? activeTextColor : inactiveTextColor,
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),

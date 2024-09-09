@@ -15,6 +15,8 @@ class SubScriptionHomeRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
@@ -26,7 +28,7 @@ class SubScriptionHomeRow extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 8),
           decoration: BoxDecoration(
             border: Border.all(
-              color: TColor.border.withOpacity(0.15),
+              color: colorScheme.onSurface.withOpacity(0.15),
             ),
             borderRadius: BorderRadius.circular(15),
           ),
@@ -47,7 +49,7 @@ class SubScriptionHomeRow extends StatelessWidget {
                 child: Text(
                   sub["Tên"],
                   style: TextStyle(
-                    color: TColor.white,
+                    color: colorScheme.onSurface,
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
                   ),
@@ -59,7 +61,7 @@ class SubScriptionHomeRow extends StatelessWidget {
               Text(
                 "\$${sub["Giá"]}",  // Changed from "Tổng" to "Giá"
                 style: TextStyle(
-                  color: TColor.white,
+                  color: colorScheme.onSurface,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),

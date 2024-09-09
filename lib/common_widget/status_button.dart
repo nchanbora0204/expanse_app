@@ -18,6 +18,8 @@ class StatusButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
     return InkWell(
       onTap: onPressed,
       child: SizedBox(
@@ -28,9 +30,13 @@ class StatusButton extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: TColor.border.withOpacity(0.15),
+                  color: isDarkMode
+                  ? Colors.white.withOpacity(0.15)
+                  : Colors.black.withOpacity(0.15),
                 ),
-                color: TColor.gray60.withOpacity(0.2),
+                color: isDarkMode
+                    ? Colors.white.withOpacity(0.2)
+                    : Colors.black.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(15),
               ),
               alignment: Alignment.center,
@@ -40,7 +46,7 @@ class StatusButton extends StatelessWidget {
                   Text(
                     title,
                     style: TextStyle(
-                      color: TColor.gray40,
+                      color: isDarkMode ? Colors.grey[500] : Colors.grey[700],
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
                     ),
@@ -48,7 +54,7 @@ class StatusButton extends StatelessWidget {
                   Text(
                     value,
                     style: TextStyle(
-                      color: TColor.white,
+                      color: isDarkMode ? Colors.black : Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
