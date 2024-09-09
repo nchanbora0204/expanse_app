@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "258938640438",
+    "project_id": "moneylover-v1",
+    "storage_bucket": "moneylover-v1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:258938640438:android:fd4a2fcc09f074f5df2097",
+        "android_client_info": {
+          "package_name": "com.example.money_lover"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/home/home_view.dart';
 import 'package:money_lover/view/login/sign_up.dart';
 import 'package:money_lover/view/login/signup_social.dart';
@@ -43,7 +42,10 @@ class MyApp extends StatelessWidget {
         'signUp_social': (context) => SocialSignUp(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
+        
       },
+      //HElLO EM
+   
       // home: AccountSettingPage(),
     );
   }
