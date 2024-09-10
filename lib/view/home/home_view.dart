@@ -246,8 +246,8 @@ class _HomeViewState extends State<HomeView> {
               isAcitive: isSubscription,
               onPressed: () {
                 setState(() {
-                  isSubscription = true;
-                  isInvoice = false;
+                  isSubscription = !isSubscription;
+                  isInvoice = !isInvoice;
                 });
               },
             ),

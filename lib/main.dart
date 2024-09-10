@@ -5,9 +5,10 @@ import 'package:money_lover/view/login/signup_social.dart';
 import 'package:money_lover/view/login/welcome_view.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
-import 'package:money_lover/view/theme_provider/theme.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
+
+import 'common/color_extension.dart';
 
 void main() {
   runApp(
@@ -25,15 +26,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final themeMode = themeProvider.curThemeMode;
+
     return MaterialApp(
       title: 'Mooney',
       debugShowCheckedModeBanner: false,
-      theme: lightTheme,
-      // Định nghĩa dartThem nếu cần
-      darkTheme: ThemeData.dark(),
-      // Áp dụng themeMode từ ThemeProvider
+      theme: ThemeData(
+        fontFamily: "Inter",
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: TColor.primary,
+          background: TColor.gray80,
+          primary: TColor.gray70,
+          primaryContainer: TColor.gray60,
+          secondary: TColor.secondary,
+        ),
+        useMaterial3: false,
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(color: Colors.black, fontSize: 36),
+          headlineMedium: TextStyle(color: Colors.black, fontSize: 27),
+          headlineSmall: TextStyle(color: Colors.black, fontSize: 24),
+          bodyLarge: TextStyle(color: Colors.black, fontSize: 18),
+          bodyMedium: TextStyle(color: Colors.black, fontSize: 14),
+        ),
+      ),
+      darkTheme: ThemeData.dark().copyWith(
+        textTheme: TextTheme(
+          headlineLarge: TextStyle(color: Colors.white, fontSize: 36),
+          headlineMedium: TextStyle(color: Colors.white, fontSize: 27),
+          headlineSmall: TextStyle(color: Colors.white, fontSize: 24),
+          bodyLarge: TextStyle(color: Colors.white, fontSize: 18),
+          bodyMedium: TextStyle(color: Colors.white, fontSize: 14),
+        ),
+      ),
       themeMode: themeMode,
-
       initialRoute: 'main_tab',
       routes: {
         'account_setting': (context) => AccountSettingPage(),
@@ -42,11 +66,7 @@ class MyApp extends StatelessWidget {
         'signUp_social': (context) => SocialSignUp(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
-        
       },
-      //HElLO EM
-   
-      // home: AccountSettingPage(),
     );
   }
 }
