@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/view/main_pages/pendding/transaction_model.dart';
+import 'package:money_lover/models/transaction_model.dart';
 
 class TransactionList extends StatefulWidget {
   const TransactionList({super.key});
@@ -10,14 +10,7 @@ class TransactionList extends StatefulWidget {
 }
 
 class _TransactionListState extends State<TransactionList> {
-  final List<Transaction> _transactions = [
-    Transaction(title: 'Giao dịch 1', amount: 50.0, date: DateTime.now()),
-    Transaction(
-        title: 'Giao dịch 2',
-        amount: 75.0,
-        date: DateTime.now().subtract(Duration(days: 1))),
-    // Thêm các giao dịch khác nếu cần
-  ];
+
 
   double? _devHeight, _devWidth;
 
@@ -69,9 +62,9 @@ class _TransactionListState extends State<TransactionList> {
     final theme = Theme.of(context);
     return Expanded(
       child: ListView.builder(
-        itemCount: _transactions.length,
+        itemCount: null,
         itemBuilder: (context, index) {
-          final transaction = _transactions[index];
+          final transaction = null;
           return ListTile(
             title: Text(
               transaction.title,

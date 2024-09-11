@@ -8,9 +8,23 @@ import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:get_it/get_it.dart';
 import 'common/color_extension.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+      options: FirebaseOptions(
+        apiKey: 'AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM',
+        appId: '1:258938640438:android:fd4a2fcc09f074f5df2097',
+        messagingSenderId: '258938640438',
+        projectId: 'moneylover-v1',
+        storageBucket: 'moneylover-v1.appspot.com',
+      )
+
+  );
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -34,7 +48,7 @@ class MyApp extends StatelessWidget {
         fontFamily: "Inter",
         colorScheme: ColorScheme.fromSeed(
           seedColor: TColor.primary,
-          background: TColor.gray80,
+
           primary: TColor.gray70,
           primaryContainer: TColor.gray60,
           secondary: TColor.secondary,
@@ -67,6 +81,7 @@ class MyApp extends StatelessWidget {
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
       },
+
     );
   }
 }

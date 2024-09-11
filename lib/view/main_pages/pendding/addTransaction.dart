@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:money_lover/models/transaction_model.dart';
+import 'package:money_lover/firebaseService/transactionServices.dart';// Thay đổi theo đường dẫn thực tế
 
 class AddTransactionForm extends StatefulWidget {
   @override
@@ -10,7 +12,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   String _title = '';
   double _amount = 0;
   DateTime _selectedDate = DateTime.now();
-
+  final TransactionService _transactionService = TransactionService();
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -19,7 +21,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       appBar: AppBar(
         title: Text('Thêm Giao Dịch Mới'),
         backgroundColor: theme.appBarTheme.backgroundColor,
-        iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor), // Màu icon
+        iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -28,97 +30,101 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Tên giao dịch',
-                  labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color), // Màu chữ label
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: theme.dividerColor), // Màu viền
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: theme.colorScheme.primary), // Màu viền khi focus
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập tên giao dịch';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _title = value!;
-                },
-              ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Số tiền',
-                  labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color), // Màu chữ label
-                  enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: theme.dividerColor), // Màu viền
-                  ),
-                  focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: theme.colorScheme.primary), // Màu viền khi focus
-                  ),
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Vui lòng nhập số tiền';
-                  }
-                  if (double.tryParse(value) == null) {
-                    return 'Vui lòng nhập một số hợp lệ';
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _amount = double.parse(value!);
-                },
-              ),
+              _buildAmountField(theme),
               SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Ngày: ${_selectedDate.toLocal()}'.split(' ')[0],
-                      style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color), // Màu chữ
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _selectDate,
-                    child: Text(
-                      'Chọn ngày',
-                      style: TextStyle(color: theme.textTheme.bodyMedium?.color), // Màu chữ
-                    ),
-                  ),
-                ],
-              ),
+              _buildDateSelector(theme),
               SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      _formKey.currentState!.save();
-                      // Thêm logic để lưu giao dịch mới vào danh sách giao dịch
-                      print('Giao dịch: $_title, Số tiền: $_amount, Ngày: $_selectedDate');
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: Text('Lưu Giao Dịch'),
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: theme.colorScheme.onPrimary, backgroundColor: theme.colorScheme.primary, padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ), // Màu chữ
-                  ),
-                ),
-              )
+              _buildSaveButton(theme),
             ],
           ),
         ),
       ),
     );
   }
-  
+
+  Widget _buildAmountField(ThemeData theme) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Số tiền',
+        labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: theme.dividerColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.primary),
+        ),
+      ),
+      keyboardType: TextInputType.number,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Vui lòng nhập số tiền';
+        }
+        if (double.tryParse(value) == null) {
+          return 'Vui lòng nhập một số hợp lệ';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _amount = double.parse(value!);
+      },
+    );
+  }
+
+  Widget _buildDateSelector(ThemeData theme) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            'Ngày: ${_selectedDate.toLocal()}'.split(' ')[0],
+            style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+          ),
+        ),
+        TextButton(
+          onPressed: _selectDate,
+          child: Text(
+            'Chọn ngày',
+            style: TextStyle(color: theme.textTheme.bodyMedium?.color),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSaveButton(ThemeData theme) {
+    return Center(
+      child: ElevatedButton(
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+
+            final transaction = TransactionModel(
+              id: DateTime.now().toString(),
+              title: _title,
+              amount: _amount,
+              date: _selectedDate,
+            );
+
+            try {
+              await _transactionService.addTransaction(transaction);
+              print('Giao dịch đã được lưu');
+              Navigator.pop(context);
+            } catch (e) {
+              print('Lỗi khi lưu giao dịch: $e');
+            }
+          }
+        },
+        child: Text('Lưu Giao Dịch'),
+        style: ElevatedButton.styleFrom(
+          foregroundColor: theme.colorScheme.onPrimary,
+          backgroundColor: theme.colorScheme.primary,
+          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
 
   Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
@@ -132,5 +138,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
         _selectedDate = picked;
       });
     }
+
   }
+
 }
