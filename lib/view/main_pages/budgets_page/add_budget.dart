@@ -1,25 +1,27 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:money_lover/models/transaction_model.dart';
-import 'package:money_lover/firebaseService/transactionServices.dart';// Thay đổi theo đường dẫn thực tế
+import 'package:money_lover/firebaseService/budget_Services.dart';
+import 'package:money_lover/models/budget_model.dart';
 
-class AddTransactionForm extends StatefulWidget {
+class AddBudgetForm extends StatefulWidget {
   @override
-  _AddTransactionFormState createState() => _AddTransactionFormState();
+  _AddBudgetFormState createState() => _AddBudgetFormState();
 }
 
-class _AddTransactionFormState extends State<AddTransactionForm> {
+class _AddBudgetFormState extends State<AddBudgetForm> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   double _amount = 0;
   DateTime _selectedDate = DateTime.now();
-  final TransactionService _transactionService = TransactionService();
+  final BudgetService _budgetService = BudgetService();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thêm Giao Dịch Mới'),
+        title: Text('Thêm Ngân Sách Mới'),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -30,6 +32,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildTitleField(theme),
               _buildAmountField(theme),
               SizedBox(height: 20),
               _buildDateSelector(theme),
@@ -42,11 +45,48 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
+  Widget _buildTitleField(ThemeData theme) {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: 'Tiêu đề',
+        labelStyle: TextStyle(
+          color: theme.textTheme.bodyMedium?.color,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Roboto',
+        ),
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: theme.dividerColor),
+        ),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: theme.colorScheme.primary),
+        ),
+      ),
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Vui lòng nhập tiêu đề';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _title = value!;
+      },
+      style: TextStyle(
+        fontFamily: 'Roboto',
+        fontSize: 18,
+      ),
+    );
+  }
+
   Widget _buildAmountField(ThemeData theme) {
     return TextFormField(
       decoration: InputDecoration(
         labelText: 'Số tiền',
-        labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color),
+        labelStyle: TextStyle(
+          color: theme.textTheme.bodyMedium?.color,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
         ),
@@ -75,12 +115,12 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       children: [
         Expanded(
           child: Text(
-            'Ngày: ${_selectedDate.toLocal()}'.split(' ')[0],
+            'Ngày kết thúc: ${_selectedDate.toLocal().toString().split(' ')[0]}',
             style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
           ),
         ),
         TextButton(
-          onPressed: _selectDate,
+          onPressed: () => _selectDate(),
           child: Text(
             'Chọn ngày',
             style: TextStyle(color: theme.textTheme.bodyMedium?.color),
@@ -97,23 +137,26 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           if (_formKey.currentState!.validate()) {
             _formKey.currentState!.save();
 
-            final transaction = TransactionModel(
-              id: DateTime.now().toString(),
-              title: _title,
+            // Sinh id ngẫu nhiên cho budget
+            final id = _generateRandomId();
+
+            final budget = BudgetModel(
+              id: id,
+              tittle: _title,
               amount: _amount,
               date: _selectedDate,
             );
 
             try {
-              await _transactionService.addTransaction(transaction);
-              print('Giao dịch đã được lưu');
+              await _budgetService.addBudget(budget);
+              print('Ngân sách đã được lưu');
               Navigator.pop(context);
             } catch (e) {
-              print('Lỗi khi lưu giao dịch: $e');
+              print('Lỗi khi lưu ngân sách: $e');
             }
           }
         },
-        child: Text('Lưu Giao Dịch'),
+        child: Text('Lưu Ngân Sách'),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,
@@ -126,6 +169,13 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
+  // Phương thức để sinh id ngẫu nhiên với định dạng 'bgXXXXXX'
+  String _generateRandomId() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    final random = Random();
+    return 'bg' + List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+  }
+
   Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -133,12 +183,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
         _selectedDate = picked;
       });
     }
-
   }
-
 }

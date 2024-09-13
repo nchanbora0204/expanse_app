@@ -3,6 +3,8 @@ import 'package:money_lover/view/home/home_view.dart';
 import 'package:money_lover/view/login/sign_up.dart';
 import 'package:money_lover/view/login/signup_social.dart';
 import 'package:money_lover/view/login/welcome_view.dart';
+import 'package:money_lover/view/main_pages/budgets_page/add_budget.dart';
+import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
@@ -26,6 +28,8 @@ void main() async {
 
   );
   runApp(
+
+
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
       child: const MyApp(),
@@ -80,6 +84,8 @@ class MyApp extends StatelessWidget {
         'signUp_social': (context) => SocialSignUp(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
+        'add_trans': (context) => AddTransactionForm(),
+        'add_bud':(context) => AddBudgetForm(),
       },
 
     );
