@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../common/color_extension.dart';
 import '../theme_provider/theme_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EditScreen extends StatefulWidget {
   const EditScreen({super.key});
@@ -19,6 +20,7 @@ class _EditScreenState extends State<EditScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
 
@@ -64,7 +66,7 @@ class _EditScreenState extends State<EditScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Tài Khoản",
+                AppLocalizations.of(context)!.account,
                 style: textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -73,7 +75,7 @@ class _EditScreenState extends State<EditScreen> {
                 height: 40,
               ),
               EditItem(
-                title: "Photo",
+                title: AppLocalizations.of(context)!.photo,
                 widget: Column(
                   children: [
                     Image.asset(
@@ -86,22 +88,22 @@ class _EditScreenState extends State<EditScreen> {
                       style: TextButton.styleFrom(
                         foregroundColor: Colors.lightBlueAccent,
                       ),
-                      child: const Text(
-                        "Upload Image",
+                      child:  Text(
+                        AppLocalizations.of(context)!.uploadImage,
                       ),
                     ),
                   ],
                 ),
               ),
-              const EditItem(
-                title: "Name",
+               EditItem(
+                title: AppLocalizations.of(context)!.name,
                 widget: TextField(),
               ),
               const SizedBox(
                 height: 40,
               ),
               EditItem(
-                title: "Gender",
+                title: AppLocalizations.of(context)!.gender,
                 widget: Row(
                   children: [
                     IconButton(
@@ -151,14 +153,14 @@ class _EditScreenState extends State<EditScreen> {
               ),
               EditItem(
                 widget: TextField(),
-                title: "Age",
+                title: AppLocalizations.of(context)!.age,
               ),
               const SizedBox(
                 height: 40,
               ),
               EditItem(
                 widget: TextField(),
-                title: "Email",
+                title: AppLocalizations.of(context)!.email,
               ),
             ],
           ),

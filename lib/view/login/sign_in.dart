@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
 
-class SignUp extends StatefulWidget {
+class SignIn extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _SignUp();
+    return _SignIn();
   }
 }
 
-class _SignUp extends State<SignUp> {
+class _SignIn extends State<SignIn> {
   double? _devHeight, _devWidth;
-  int _currentIndex = 0;
-  bool _obscureText = true; // Biến để theo dõi trạng thái ẩn/hiện mật khẩu
+  bool _obscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +31,10 @@ class _SignUp extends State<SignUp> {
               Image.asset("assets/img/app_logo.png"),
               SizedBox(height: _devHeight! * 0.3),
 
-              AnimatedSwitcher(
-                duration: Duration(milliseconds: 500), // Thời gian chuyển đổi
-                child: _buildStep(),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-              ),
-              _signupWithFacebook(),
+              _buildSignInForm(),
+              _signInWithFacebook(),
               SizedBox(height: _devHeight! * 0.1),
-              _signIn(),
+              _navigateToSignUp(),
             ],
           ),
         ),
@@ -49,14 +42,49 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  Widget _signupWithFacebook() {
+  Widget _buildSignInForm() {
+    return Container(
+      child: Column(
+        children: [
+          _buildTextField("Email"),
+          _buildTextField("Mật khẩu", isPassword: true),
+          SizedBox(height: 20),
+          MaterialButton(
+            onPressed: () {
+              // Xử lý đăng nhập ở đây
+            },
+            minWidth: _devWidth! * 0.7,
+            height: _devHeight! * 0.06,
+            child: Container(
+              height: 55,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/img/primary_btn.png"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Center(
+                child: Text(
+                  "Đăng nhập",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _signInWithFacebook() {
     return MaterialButton(
       onPressed: () {
-        setState(() {
-          if (_currentIndex < 4) {
-            _currentIndex++; // Chuyển sang bước tiếp theo
-          }
-        });
+        // Xử lý đăng nhập với Facebook ở đây
       },
       minWidth: _devWidth! * 0.7,
       height: _devHeight! * 0.06,
@@ -71,11 +99,7 @@ class _SignUp extends State<SignUp> {
         ),
         child: Center(
           child: Text(
-            _currentIndex == 0
-                ? "Bắt đầu thôi nào" // Hiển thị ban đầu
-                : (_currentIndex > 4 ? "Tiếp tục" : "Hoàn tất đăng ký"),
-
-            // Thay đổi sau khi nhấn
+            "Đăng nhập bằng Facebook",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -87,10 +111,10 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  Widget _signIn() {
+  Widget _navigateToSignUp() {
     return MaterialButton(
       onPressed: () {
-        Navigator.pushNamed(context, 'sign_in');
+        Navigator.pushNamed(context, 'sign_up');
       },
       color: TColor.gray70,
       minWidth: _devWidth! * 0.7,
@@ -103,7 +127,7 @@ class _SignUp extends State<SignUp> {
         height: 55,
         child: Center(
           child: Text(
-            "Đăng Nhập",
+            "Chưa có tài khoản? Đăng ký",
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -115,28 +139,11 @@ class _SignUp extends State<SignUp> {
     );
   }
 
-  Widget _buildStep() {
-    List<Widget> steps = [
-      SizedBox(),
-      _buildTextField("Email"),
-      _buildTextField("Mật khẩu", isPassword: true),
-      _buildTextField("Họ tên"),
-      _buildTextField("Tên"),
-    ];
-
-    return Column(
-      key: ValueKey<int>(_currentIndex),
-      children: [
-        if (_currentIndex > 0) steps[_currentIndex],
-      ],
-    );
-  }
-
   Widget _buildTextField(String hint, {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
-        obscureText: isPassword ? _obscureText : false, // Áp dụng thuộc tính obscureText
+        obscureText: isPassword ? _obscureText : false,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
