@@ -4,7 +4,7 @@ import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
-import '../main_pages/budgets_page/budgets_list.dart';
+import '../main_pages/budgets_page/category_list.dart';
 import '../main_pages/pendding/transaction_list.dart';
 
 class MainTabView extends StatefulWidget {
@@ -21,7 +21,7 @@ class _MainTabViewState extends State<MainTabView> {
     HomeView(),
     TransactionList(),
 
-    Budget(),
+    Category(),
     AccountSettingPage(),
   ];
 

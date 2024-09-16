@@ -1,25 +1,27 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:money_lover/firebaseService/budget_services.dart'; // Đảm bảo đường dẫn chính xác
-import 'package:money_lover/models/budget_model.dart'; // Đảm bảo đường dẫn chính xác
+import 'package:money_lover/firebaseService/other_services.dart'; // Sửa đường dẫn thành service cho Category
+import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫn thành model cho Category
 import 'package:money_lover/common/color_extension.dart';
-class Budget extends StatefulWidget {
+import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
+
+class Category extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _Budget();
+    return _CategoryScreenState();
   }
 }
 
-class _Budget extends State<Budget> {
+class _CategoryScreenState extends State<Category> {
   bool _isExpanded = false;
   double? _devHeight, _devWidth;
-  late Future<List<BudgetModel>> _budgetFuture;
-  final BudgetService _budgetService = BudgetService();
+  late Future<List<CategoryModel>> _categoryFuture;
+  final CategoryService _categoryService = CategoryService();
 
   @override
   void initState() {
     super.initState();
-    _budgetFuture = _budgetService.getBudgets(); // Lấy dữ liệu khi khởi tạo
+    _categoryFuture = _categoryService.getCategory(); // Lấy danh sách category
   }
 
   @override
@@ -48,7 +50,7 @@ class _Budget extends State<Budget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.max,
           children: [
-            _budgetList(),
+            _categoryList(),
             calendarView(),
           ],
         ),
@@ -56,41 +58,45 @@ class _Budget extends State<Budget> {
     );
   }
 
-  Widget _budgetList() {
-    return FutureBuilder<List<BudgetModel>>(
-      future: _budgetFuture,
+  Widget _categoryList() {
+    return FutureBuilder<List<CategoryModel>>(
+      future: _categoryFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError) {
           return Text('Lỗi khi tải dữ liệu');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text('Chưa có dữ liệu ngân sách');
+          return Text('Chưa có dữ liệu danh mục');
         } else {
-          final budgets = snapshot.data!;
-          final displayedBudgets = _isExpanded ? budgets : budgets.take(4).toList();
+          final category = snapshot.data!;
+          final displayedCategories = _isExpanded ? category : category.take(4).toList();
 
           return AnimatedContainer(
             padding: EdgeInsets.all(15),
             duration: Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            height: _isExpanded ? _devHeight! * 0.75 : _devHeight! * 0.59,
+            height:  _devHeight! * 0.75,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                  child: _budgetCard(displayedBudgets),
+                  child: _categoryCard(category),
                 ),
                 Container(
                   width: _devWidth! * 0.44,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left :15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+
                     children: [
-                      addNewBudget(),
-                      if (budgets.length > 4) takeMoreBudget(),
+                      SizedBox(
+                        height: 100,
+                      ),
+                      addNewCategory(),
+
                     ],
                   ),
                 ),
@@ -102,50 +108,16 @@ class _Budget extends State<Budget> {
     );
   }
 
-  Widget takeMoreBudget() {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: TextButton(
-        onPressed: () {
-          setState(() {
-            _isExpanded = !_isExpanded;
-          });
-        },
-        child: Container(
-          height: 50,
-          width: _devWidth! * 0.38,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.secondary,
-            borderRadius: BorderRadius.circular(20),
-          ),
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                _isExpanded ? 'Thu gọn' : 'Hiển thị thêm',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  fontSize: 18.0,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget _budgetCard(List<BudgetModel> budgets) {
+
+  Widget _categoryCard(List<CategoryModel> categories) {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
       ),
-      itemCount: budgets.length,
+      itemCount: categories.length,
       itemBuilder: (context, index) {
         return Card(
           color: getRandomColor(),
@@ -158,17 +130,10 @@ class _Budget extends State<Budget> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  budgets[index].tittle,
+                  categories[index].name,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontSize: 16.0,
                     fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 10.0),
-                Text(
-                  budgets[index].amount.toString(),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontSize: 14.0,
                   ),
                 ),
               ],
@@ -179,7 +144,7 @@ class _Budget extends State<Budget> {
     );
   }
 
-  Widget addNewBudget() {
+  Widget addNewCategory() {
     return Container(
       height: 50,
       width: _devWidth! * 0.4,
@@ -190,7 +155,7 @@ class _Budget extends State<Budget> {
       child: IconButton(
         icon: Icon(Icons.add),
         onPressed: () {
-          // Chức năng để thêm ngân sách mới
+          Navigator.push(context, MaterialPageRoute(builder:(context)=>AddCategoryForm() )); // Chức năng để thêm danh mục mới
         },
       ),
     );

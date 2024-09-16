@@ -1,88 +1,61 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
+import 'package:intl/intl.dart';
+ // Đảm bảo đường dẫn chính xác đến file này
+
 
 class TransactionList extends StatefulWidget {
-  const TransactionList({super.key});
-
   @override
   _TransactionListState createState() => _TransactionListState();
 }
 
 class _TransactionListState extends State<TransactionList> {
+  late Future<List<TransactionModel>> _transactionsList;
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchTransactions();
+  }
 
-  double? _devHeight, _devWidth;
+  void _fetchTransactions() {
+    // Gọi phương thức từ TransactionService để lấy danh sách giao dịch
+    _transactionsList = TransactionService().getTransaction();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    _devHeight = MediaQuery.of(context).size.height;
-    _devWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        title: Image.asset(
-          "assets/img/app_logo.png",
-          width: _devWidth! * 0.4,
-          fit: BoxFit.contain,
-        ),
+        title: Text('Transactions'),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _transactionList(),
-          // ElevatedButton(
-          //   onPressed: () async {
-          //     final result = await Navigator.push(
-          //       context,
-          //       MaterialPageRoute(builder: (context) => AddTransactionForm()),
-          //     );
-          //     if (result != null) {
-          //       _addTransaction(result as Transaction);
-          //     }
-          //   },
-          //   child: Text('Thêm Giao Dịch'),
-          //   style: ElevatedButton.styleFrom(
-          //     padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          //     shape: RoundedRectangleBorder(
-          //       borderRadius: BorderRadius.circular(10),
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
-
-  Widget _transactionList() {
-    final theme = Theme.of(context);
-    return Expanded(
-      child: ListView.builder(
-        itemCount: null,
-        itemBuilder: (context, index) {
-          final transaction = null;
-          return ListTile(
-            title: Text(
-              transaction.title,
-              style: theme.textTheme.bodyLarge?.copyWith(
-                color: theme.textTheme.bodyLarge?.color,
-              ),
-            ),
-            subtitle: Text(
-              'Số tiền: ${transaction.amount.toStringAsFixed(2)}',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.textTheme.bodyMedium?.color,
-              ),
-            ),
-            onTap: () {
-              // Xử lý sự kiện nhấn vào đây
-              print('Nhấn vào giao dịch: ${transaction.title}');
-            },
-          );
+      body: FutureBuilder<List<TransactionModel>>(
+        future: _transactionsList,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No transactions available.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final transaction = snapshot.data![index];
+                return ListTile(
+                  title: Text(transaction.title),
+                  subtitle: Text(transaction.amount.toString()),
+                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+                  onTap: () {
+                    // Navigate to transaction details or allow editing
+                  },
+                );
+              },
+            );
+          }
         },
       ),
     );

@@ -3,7 +3,7 @@ import 'package:money_lover/view/home/home_view.dart';
 import 'package:money_lover/view/login/sign_up.dart';
 import 'package:money_lover/view/login/signup_social.dart';
 import 'package:money_lover/view/login/welcome_view.dart';
-import 'package:money_lover/view/main_pages/budgets_page/add_budget.dart';
+import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
@@ -58,6 +58,7 @@ class MyApp extends StatelessWidget {
           secondary: TColor.secondary,
         ),
         useMaterial3: false,
+
         textTheme: TextTheme(
           headlineLarge: TextStyle(color: Colors.black, fontSize: 36),
           headlineMedium: TextStyle(color: Colors.black, fontSize: 27),
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
           bodyMedium: TextStyle(color: Colors.black, fontSize: 14),
         ),
       ),
+
       darkTheme: ThemeData.dark().copyWith(
         textTheme: TextTheme(
           headlineLarge: TextStyle(color: Colors.white, fontSize: 36),
@@ -85,7 +87,7 @@ class MyApp extends StatelessWidget {
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
         'add_trans': (context) => AddTransactionForm(),
-        'add_bud':(context) => AddBudgetForm(),
+
       },
 
     );

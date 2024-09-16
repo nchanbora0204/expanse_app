@@ -1,11 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 class TransactionModel {
   final String id;
   final String title;
   final double amount;
   final DateTime date;
   final String description;
-  final String budgetId;
-
+  final String categoryId;
 
   TransactionModel({
     required this.id,
@@ -13,30 +13,30 @@ class TransactionModel {
     required this.amount,
     required this.date,
     required this.description,
-    required this.budgetId,
+    required this.categoryId,
   });
 
-  // Phương thức để chuyển đổi từ Map (Firebase) sang đối tượng Transaction
-  factory TransactionModel.fromMap(Map<String, dynamic> map) {
+  // Phương thức fromMap để chuyển đổi từ Map<String, dynamic> sang TransactionModel
+  factory TransactionModel.fromMap(Map<String, dynamic> data) {
     return TransactionModel(
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      amount: map['amount']?.toDouble() ?? 0.0,
-      date: DateTime.parse(map['date']),
-      description: map['description'],
-      budgetId: map['budgetId'],
+      id: data['id'] ?? '',  // 'id' là chuỗi trong Firestore
+      title: data['title']?? '',  // 'title' là chuỗi
+      amount: data['amount'].toDouble() ?? '',  // 'amount' là số
+      date: (data['date'] as Timestamp).toDate() ,  // 'date' là Timestamp, chuyển thành DateTime
+      description: data['description']?? '' ,  // 'description' là chuỗi
+      categoryId: data['categoryId']?? '',  // 'budgetId' là chuỗi
     );
   }
 
-  // Phương thức để chuyển đổi từ Transaction sang Map (để lưu vào Firebase)
+  // Phương thức toMap nếu bạn muốn chuyển đổi ngược lại (không bắt buộc)
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'amount': amount,
-      'date': date.toIso8601String(),
-      'category': description,
-      'budgetId': budgetId,
+      'date': Timestamp.fromDate(date),  // Chuyển DateTime thành Timestamp
+      'description': description,
+      'categoryId': categoryId,
     };
   }
 }

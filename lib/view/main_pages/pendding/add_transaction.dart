@@ -14,7 +14,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   double _amount = 0;
   DateTime _selectedDate = DateTime.now();
   String _description = '';
-  String _budgetId = '';
+  String _categoryId = '';
   final TransactionService _transactionService = TransactionService();
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
@@ -150,7 +150,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
         return null;
       },
       onSaved: (value) {
-        _budgetId = value!;
+        _categoryId = value!;
       },
     );
   }
@@ -197,7 +197,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               amount: _amount,
               date: _selectedDate,
               description: _description,
-              budgetId: _budgetId,
+              categoryId: _categoryId,
             );
 
             try {
