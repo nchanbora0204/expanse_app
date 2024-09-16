@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/setting_page/edit_screen.dart';
 import 'package:money_lover/view/setting_page/forward_button.dart';
 import 'package:money_lover/view/setting_page/setting_item.dart';
 import 'package:money_lover/view/setting_page/setting_switch.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountSettingPage extends StatefulWidget {
   const AccountSettingPage({super.key});
@@ -15,11 +17,58 @@ class AccountSettingPage extends StatefulWidget {
 }
 
 class _AccountSettingPageState extends State<AccountSettingPage> {
+  Future<void> _showLanguagePicker(BuildContext context) async {
+    final languageProvider =
+        Provider.of<LanguageProvider>(context, listen: false);
+    final curLocale = languageProvider.locale.languageCode;
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                title: const Text('VietNam'),
+                onTap: () {
+                  languageProvider.setLocale(const Locale('vi'));
+                  Navigator.pop(context);
+                },
+                trailing: curLocale == 'vi'
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : null,
+              ),
+              ListTile(
+                title: const Text('English'),
+                onTap: () {
+                  languageProvider.setLocale(const Locale('en'));
+                  Navigator.pop(context);
+                },
+                trailing: curLocale == 'en'
+                    ? const Icon(
+                  Icons.check,
+                  color: Colors.green,
+                )
+                    : null,
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final currentMode = themeProvider.curThemeMode;
-
+    final languageProvider = Provider.of<LanguageProvider>(context);
     final theme = Theme.of(context);
 
     return Scaffold(
@@ -41,17 +90,16 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Cài Đặt",
-                style: theme.textTheme.bodyLarge?.copyWith(
+                AppLocalizations.of(context)!.setting, // Đổi sang dynamic text
+                style: theme.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
-                  fontSize: 36,
                 ),
               ),
               const SizedBox(height: 40),
               Text(
-                "Tài Khoản",
+                AppLocalizations.of(context)!.account,
+                // Đổi sang dynamic text
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  fontSize: 24,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -72,16 +120,14 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                         Text(
                           "User Account",
                           style: theme.textTheme.headlineSmall?.copyWith(
-                            fontSize: 18,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
                         const SizedBox(height: 15),
                         Text(
                           "Expense App",
-                          style: theme.textTheme.bodySmall?.copyWith(
+                          style: theme.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w300,
-                            fontSize: 14,
                           ),
                         ),
                       ],
@@ -102,24 +148,29 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               ),
               const SizedBox(height: 60),
               Text(
-                "Cài Đặt",
+                AppLocalizations.of(context)!.samesetting,
                 style: theme.textTheme.headlineMedium?.copyWith(
-                  fontSize: 27,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 40),
+              // Nút chọn ngôn ngữ
               SettingItem(
-                title: "Ngôn Ngữ",
+                title: AppLocalizations.of(context)!.language,
                 icon: Ionicons.earth,
                 bgColor: Colors.orange.shade100,
                 iconColor: Colors.orange,
-                value: "Viet",
-                onTap: () {},
+                value: languageProvider.locale.languageCode == 'vi'
+                    ? "VietNam"
+                    : "English",
+                onTap: ()  {
+                  _showLanguagePicker(context);
+                },
+                showDropdown: true,
               ),
               const SizedBox(height: 50),
               SettingItem(
-                title: "Thông Báo ",
+                title: AppLocalizations.of(context)!.notifications,
                 icon: Ionicons.notifications_circle,
                 bgColor: Colors.blue.shade100,
                 iconColor: Colors.blue,
@@ -127,7 +178,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               ),
               const SizedBox(height: 50),
               SettingSwitch(
-                title: "Giao Diện",
+                title: AppLocalizations.of(context)!.dark_mode,
                 icon: Ionicons.moon,
                 bgColor: Colors.purple.shade100,
                 iconColor: Colors.purple,
@@ -141,7 +192,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               ),
               const SizedBox(height: 50),
               SettingItem(
-                title: "Hổ Trợ",
+                title: AppLocalizations.of(context)!.support,
                 icon: Ionicons.nuclear,
                 bgColor: Colors.pink.shade100,
                 iconColor: Colors.pink,

@@ -1,0 +1,20 @@
+{
+  "@@locale": "vi",
+  "account": "Cài Đặt Tài Khoản",
+  "language": "Ngôn Ngữ",
+  "dark_mode": "Giao Diện",
+  "notifications": "Thông Báo",
+  "support": "Hổ Trợ",
+  "setting": "Cài Đặt",
+  "samesetting": "Cài Đặt Chung",
+  "darkMode": "Tối",
+  "lightMode": "Sáng",
+  "deviceMode": "Theo Thiết Bị",
+  "defaultMode": "Mặc Định",
+  "photo": "Ảnh Đại Diện",
+  "uploadImage": "Tải Lên Hình Ảnh",
+  "name": "Tên",
+  "gender": "Giới Tính",
+  "age": "Tuổi",
+  "email": "Email"
+}

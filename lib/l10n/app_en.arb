@@ -1,0 +1,21 @@
+{
+  "@@locale": "en",
+  "account": "Account Setting",
+  "language": "Language",
+  "dark_mode": "Theme",
+  "notifications": "Notifications",
+  "support": "Support",
+  "setting": "Setting",
+  "samesetting": "Setting",
+  "darkMode": "Dark",
+  "lightMode": "Light",
+  "deviceMode": "Device",
+  "defaultMode": "Default",
+  "photo": "Photo",
+  "uploadImage": "Upload Image",
+  "name": "Name",
+  "gender": "Gender",
+  "age": "Age",
+  "email": "Email"
+
+}

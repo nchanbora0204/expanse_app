@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
-import '../../common/color_extension.dart';
+
 import 'forward_button.dart';
 
 class SettingItem extends StatelessWidget {
@@ -11,7 +11,7 @@ class SettingItem extends StatelessWidget {
   final IconData icon;
   final Function() onTap;
   final String? value;
-
+  final bool showDropdown; // Add this flag to show dropdown or not
 
   const SettingItem({
     super.key,
@@ -21,6 +21,7 @@ class SettingItem extends StatelessWidget {
     required this.onTap,
     required this.icon,
     this.value,
+    this.showDropdown = false, // Default is false
   });
 
   @override
@@ -43,9 +44,7 @@ class SettingItem extends StatelessWidget {
               color: iconColor,
             ),
           ),
-          const SizedBox(
-            width: 20,
-          ),
+          const SizedBox(width: 20),
           Text(
             title,
             style: TextStyle(
@@ -57,18 +56,20 @@ class SettingItem extends StatelessWidget {
           const Spacer(),
           value != null
               ? Text(
-                  value!,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: textColor,
-                  ),
-                )
+            value!,
+            style: TextStyle(
+              fontSize: 14,
+              color: textColor,
+            ),
+          )
               : const SizedBox(),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           ForwardButton(
-            onTap: () {},
+            onTap: () {
+              if (showDropdown) {
+                onTap(); // Trigger dropdown display
+              }
+            },
           ),
         ],
       ),
