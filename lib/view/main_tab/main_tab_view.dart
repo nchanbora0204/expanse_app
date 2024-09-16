@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/view/main_pages/budgets_page/categoryTab/landing.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
-import '../main_pages/budgets_page/category_list.dart';
+import '../main_pages/budgets_page/categoryTab/income_cat_list.dart';
 import '../main_pages/pendding/transaction_list.dart';
 
 class MainTabView extends StatefulWidget {
@@ -20,8 +21,8 @@ class _MainTabViewState extends State<MainTabView> {
   final List<Widget> pages = [
     HomeView(),
     TransactionList(),
+    CatTabView(),
 
-    Category(),
     AccountSettingPage(),
   ];
 

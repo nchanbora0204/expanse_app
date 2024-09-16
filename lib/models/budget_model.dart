@@ -1,4 +1,4 @@
-import 'package:money_lover/view/main_pages/budgets_page/category_list.dart';
+import 'package:money_lover/view/main_pages/budgets_page/categoryTab/income_cat_list.dart';
 
 class BudgetModel {
   final String id;

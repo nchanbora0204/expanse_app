@@ -5,14 +5,14 @@ import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫ
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 
-class Category extends StatefulWidget {
+class IncomeCatList extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _CategoryScreenState();
   }
 }
 
-class _CategoryScreenState extends State<Category> {
+class _CategoryScreenState extends State<IncomeCatList> {
   bool _isExpanded = false;
   double? _devHeight, _devWidth;
   late Future<List<CategoryModel>> _categoryFuture;
@@ -33,17 +33,7 @@ class _CategoryScreenState extends State<Category> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        title: Image.asset(
-          "assets/img/app_logo.png",
-          width: _devWidth! * 0.4,
-          fit: BoxFit.contain,
-        ),
-        iconTheme: IconThemeData(
-          color: theme.appBarTheme.foregroundColor,
-        ),
-      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -76,7 +66,7 @@ class _CategoryScreenState extends State<Category> {
             padding: EdgeInsets.all(15),
             duration: Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            height:  _devHeight! * 0.75,
+            height:  _devHeight! * 0.67,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
