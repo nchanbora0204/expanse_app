@@ -13,17 +13,14 @@ class TransactionList extends StatefulWidget {
 
 class _TransactionListState extends State<TransactionList> {
   late Future<List<TransactionModel>> _transactionsList;
-
+  final TransactionService _transactionService = TransactionService();
   @override
   void initState() {
     super.initState();
-    _fetchTransactions();
+
   }
 
-  void _fetchTransactions() {
-    // Gọi phương thức từ TransactionService để lấy danh sách giao dịch
-    _transactionsList = TransactionService().getTransaction();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +28,8 @@ class _TransactionListState extends State<TransactionList> {
       appBar: AppBar(
         title: Text('Transactions'),
       ),
-      body: FutureBuilder<List<TransactionModel>>(
-        future: _transactionsList,
+      body: StreamBuilder<List<TransactionModel>>(
+        stream: _transactionService.getTransactionStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

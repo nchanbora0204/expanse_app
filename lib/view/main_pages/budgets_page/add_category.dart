@@ -12,19 +12,23 @@ class AddCategoryForm extends StatefulWidget {
 class _AddCategoryFormState extends State<AddCategoryForm> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
+  int _type =  3;
   final CategoryService _categoryService = CategoryService();
+  late Future<List<CategoryModel>> _categoriesFuture;
 
   @override
-  Widget build(BuildContext context) {
+  Widget  build(BuildContext context) {
     final theme = Theme.of(context);
 
     return Scaffold(
+
       appBar: AppBar(
         title: Text('Thêm Danh Mục Mới'),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
       body: Padding(
+
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
@@ -80,18 +84,19 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             _formKey.currentState!.save();
 
             // Sinh id ngẫu nhiên cho danh mục
-            final id = _generateRandomId();
-
+            final _id = _generateRandomId();
+            _type = 0;
             final category = CategoryModel(
-              id: id,
+              id: _id,
               name: _name,
+              type: _type,
             );
 
-            try {
+            try  {
               await _categoryService.addCategory(category);
-              await _categoryService.updateCategory(category);
+
               print('Danh mục đã được lưu');
-               Navigator.pop(context);
+                 Navigator.pop(context, true);
             } catch (e) {
               print('Lỗi khi lưu danh mục: $e');
             }

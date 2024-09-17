@@ -1,8 +1,11 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/models/category_model.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
-
+import 'package:money_lover/firebaseService/other_services.dart';
 class AddTransactionForm extends StatefulWidget {
   @override
   _AddTransactionFormState createState() => _AddTransactionFormState();
@@ -18,6 +21,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   final TransactionService _transactionService = TransactionService();
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
+  final CategoryService  _categoryService = CategoryService();
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               _buildTitleField(theme),
               _buildAmountField(theme),
               _buildDesField(theme),
-              _buildBudgetIdField(theme),
+              _buildCategoryDropdown(theme),
               SizedBox(height: 20),
               _buildDateSelector(theme),
               SizedBox(height: 20),
@@ -131,28 +135,45 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildBudgetIdField(ThemeData theme) {
-    return TextFormField(
-      decoration: InputDecoration(
-        labelText: 'Budget ID',
-        labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.dividerColor),
-        ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.primary),
-        ),
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập budget ID';
-        }
-        return null;
-      },
-      onSaved: (value) {
-        _categoryId = value!;
-      },
-    );
+  Widget _buildCategoryDropdown(ThemeData theme){
+    return FutureBuilder<List<CategoryModel>>(
+        future: _categoryService.getCategory(),
+        builder: (context, snapshot){
+          if(!snapshot.hasData){
+            return Text('Error Data', style: TextStyle(color: theme.textTheme.bodyMedium?.color),);
+          }
+        return DropdownButtonFormField(
+
+        items: snapshot.data!.map((category) {
+            return DropdownMenuItem<String>(
+            value: category.id,
+            child: Text(category.name),
+            );
+          }).toList(),
+        onChanged: (value) {
+          setState(() {
+          _categoryId = value!;
+          });
+          },
+        decoration: InputDecoration(
+            labelText: "Chọn danh mục chi tiêu",
+            labelStyle: TextStyle(
+              color: theme.textTheme.bodyMedium?.color,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+
+
+            ),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: TColor.gray80)
+            ),
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: TColor.primary)
+            ),
+          ),
+        );
+
+        });
   }
 
   Widget _buildDateSelector(ThemeData theme) {

@@ -46,4 +46,9 @@ class CategoryService{
       print('Transaction Service Class: Loi roi');
     }
   }
+  Stream<List<CategoryModel>> getCategoryStream() {
+    return categoryCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => CategoryModel.fromMap(doc.data() as Map<String, dynamic>)).toList();
+    });
+  }
 }

@@ -4,6 +4,7 @@ import 'package:money_lover/firebaseService/other_services.dart'; // Sửa đư�
 import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫn thành model cho Category
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
+import 'package:money_lover/firebaseService/other_services.dart';
 
 class ExpenseCatList extends StatefulWidget {
   @override
@@ -15,13 +16,11 @@ class ExpenseCatList extends StatefulWidget {
 class _CategoryScreenState extends State<ExpenseCatList> {
   bool _isExpanded = false;
   double? _devHeight, _devWidth;
-  late Future<List<CategoryModel>> _categoryFuture;
   final CategoryService _categoryService = CategoryService();
 
   @override
   void initState() {
     super.initState();
-    _categoryFuture = _categoryService.getCategory(); // Lấy danh sách category
   }
 
   @override
@@ -33,7 +32,6 @@ class _CategoryScreenState extends State<ExpenseCatList> {
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -49,8 +47,8 @@ class _CategoryScreenState extends State<ExpenseCatList> {
   }
 
   Widget _categoryList() {
-    return FutureBuilder<List<CategoryModel>>(
-      future: _categoryFuture,
+    return StreamBuilder<List<CategoryModel>>(
+      stream: _categoryService.getCategoryStream(), // Sử dụng stream
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
@@ -60,33 +58,31 @@ class _CategoryScreenState extends State<ExpenseCatList> {
           return Text('Chưa có dữ liệu danh mục');
         } else {
           final category = snapshot.data!;
-          final displayedCategories = _isExpanded ? category : category.take(4).toList();
+          final displayedCategories = category.toList();
 
           return AnimatedContainer(
             padding: EdgeInsets.all(15),
             duration: Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            height:  _devHeight! * 0.67,
+            height: _devHeight! * 0.67,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                  child: _categoryCard(category),
+                  child: _categoryCard(displayedCategories),
                 ),
                 Container(
                   width: _devWidth! * 0.44,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left :15),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-
                     children: [
                       SizedBox(
                         height: 100,
                       ),
                       addNewCategory(),
-
                     ],
                   ),
                 ),
@@ -97,8 +93,6 @@ class _CategoryScreenState extends State<ExpenseCatList> {
       },
     );
   }
-
-
 
   Widget _categoryCard(List<CategoryModel> categories) {
     return GridView.builder(
@@ -145,7 +139,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
       child: IconButton(
         icon: Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>AddCategoryForm() )); // Chức năng để thêm danh mục mới
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddCategoryForm()));
         },
       ),
     );

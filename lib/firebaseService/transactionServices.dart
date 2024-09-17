@@ -46,4 +46,13 @@ class TransactionService{
 
     }
  }
+
+  Stream<List<TransactionModel>> getTransactionStream() {
+    return transactionCollection.snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        // Chuyển đổi từng tài liệu thành đối tượng TransactionModel
+        return TransactionModel.fromMap(doc.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
 }
