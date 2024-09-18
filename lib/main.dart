@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/view/home/home_view.dart';
-import 'package:money_lover/view/login/sign_up.dart';
-import 'package:money_lover/view/login/signup_social.dart';
-import 'package:money_lover/view/login/welcome_view.dart';
+import 'package:money_lover/view/login_signup//sign_up.dart';
+import 'package:money_lover/view/login_signup//signup_social.dart';
+import 'package:money_lover/view/login_signup//welcome_view.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeMode,
-      initialRoute: 'main_tab',
+      initialRoute: 'sign_up',
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),
