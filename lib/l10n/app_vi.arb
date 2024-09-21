@@ -16,5 +16,16 @@
   "name": "Tên",
   "gender": "Giới Tính",
   "age": "Tuổi",
-  "email": "Email"
+  "email": "Email",
+  "password": "Mật Khẩu",
+  "oldPassword": "Nhập Mật Khẩu Củ",
+  "newPassword": "Mật khẩu mới",
+  "updatePassword": "Cập nhật mật khẩu",
+  "changePassword": "Cập nhật mật khẩu",
+  "logout": "Đăng Xuất",
+  "loggingOut": "Đang đăng xuất",
+  "logoutFailed" : "Đăng Xuất Thất Bại",
+  "permissionDenied": "Quyền truy cập bị từ chối. Không thể truy cập ảnh.",
+  "editProfile": "Chỉnh sửa hồ sơ",
+  "changePhoto": "Thay đổi ảnh"
 }

@@ -8,7 +8,6 @@ import 'package:money_lover/view/login/signup_social.dart';
 import 'package:money_lover/view/login/welcome_view.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
-import 'package:money_lover/view/theme_provider/theme.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 

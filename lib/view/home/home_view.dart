@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/common_widget/custom_arc_painter.dart';
 import 'package:money_lover/common_widget/segment_button.dart';
 import 'package:money_lover/common_widget/status_button.dart';
 import 'package:money_lover/common_widget/subcription_home_row.dart';
 import 'package:money_lover/common_widget/upcoming_view_row.dart';
-import 'package:provider/provider.dart';
-import 'package:money_lover/view/theme_provider/theme_provider.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
