@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:money_lover/language/language_provider.dart';
@@ -8,6 +9,8 @@ import 'package:money_lover/view/setting_page/setting_switch.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:money_lover/view/login/user_service.dart'; // Import UserService
+import 'package:money_lover/view/login/user_model.dart'; // Import UserModel
 
 class AccountSettingPage extends StatefulWidget {
   const AccountSettingPage({super.key});
@@ -17,6 +20,30 @@ class AccountSettingPage extends StatefulWidget {
 }
 
 class _AccountSettingPageState extends State<AccountSettingPage> {
+  UserModel? _user;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    setState(() {
+      _loading = true;
+    });
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      UserService userService = UserService();
+      UserModel? userModel = await userService.getUserDetails(user.uid);
+      setState(() {
+        _user = userModel;
+        _loading = false;
+      });
+    }
+  }
+
   Future<void> _showLanguagePicker(BuildContext context) async {
     final languageProvider =
         Provider.of<LanguageProvider>(context, listen: false);
@@ -52,9 +79,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 },
                 trailing: curLocale == 'en'
                     ? const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                )
+                        Icons.check,
+                        color: Colors.green,
+                      )
                     : null,
               )
             ],
@@ -74,14 +101,8 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.samesetting),
         backgroundColor: theme.appBarTheme.backgroundColor,
-        leading: IconButton(
-          onPressed: () {},
-          icon: const Icon(
-            Ionicons.chevron_back_outline,
-          ),
-        ),
-        leadingWidth: 80,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -90,7 +111,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.of(context)!.setting, // Đổi sang dynamic text
+                AppLocalizations.of(context)!.setting,
                 style: theme.textTheme.headlineLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
@@ -98,54 +119,81 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               const SizedBox(height: 40),
               Text(
                 AppLocalizations.of(context)!.account,
-                // Đổi sang dynamic text
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                 ),
               ),
               const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    Image.asset(
-                      "assets/img/u1.png",
-                      width: 70,
-                      height: 70,
-                    ),
-                    const SizedBox(height: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "User Account",
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w500,
+              _loading
+                  ? Center(child: CircularProgressIndicator())
+                  : SizedBox(
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          _user?.profileImageUrl != null &&
+                                  _user!.profileImageUrl.isNotEmpty
+                              ? ClipOval(
+                                  child: Image.network(
+                                    _user!.profileImageUrl,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        "assets/img/u1.png",
+                                        width: 70,
+                                        height: 70,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : ClipOval(
+                                  child: Image.asset(
+                                    "assets/img/u1.png",
+                                    width: 70,
+                                    height: 70,
+                                  ),
+                                ),
+                          const SizedBox(
+                            height: 30,
+                            width: 10,
                           ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          "Expense App",
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w300,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _user?.name ?? "User Name",
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Text(
+                                _user?.email ?? "Email",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    ForwardButton(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditScreen(),
+                          const Spacer(),
+                          ForwardButton(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const EditScreen(),
+                                ),
+                              );
+                              if (result == true) {
+                                await _loadUserData();
+                              }
+                            },
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
               const SizedBox(height: 60),
               Text(
                 AppLocalizations.of(context)!.samesetting,
@@ -154,7 +202,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              // Nút chọn ngôn ngữ
               SettingItem(
                 title: AppLocalizations.of(context)!.language,
                 icon: Ionicons.earth,
@@ -163,7 +210,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 value: languageProvider.locale.languageCode == 'vi'
                     ? "VietNam"
                     : "English",
-                onTap: ()  {
+                onTap: () {
                   _showLanguagePicker(context);
                 },
                 showDropdown: true,
@@ -197,6 +244,44 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 bgColor: Colors.pink.shade100,
                 iconColor: Colors.pink,
                 onTap: () {},
+              ),
+              const SizedBox(
+                height: 50,
+              ),
+              ElevatedButton(
+                onPressed: () async {
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Row(
+                          children: <Widget>[
+                            CircularProgressIndicator(),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Text(AppLocalizations.of(context)!.loggingOut)
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                    await Future.delayed(Duration(seconds: 3));
+                    Navigator.of(context).pop();
+                    Navigator.pushReplacementNamed(context, 'sign_in');
+                  } catch (e) {
+                    Navigator.of(context).pop();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content:
+                              Text(AppLocalizations.of(context)!.logoutFailed)),
+                    );
+                  }
+                },
+                child: Text(AppLocalizations.of(context)!.logout),
               ),
             ],
           ),

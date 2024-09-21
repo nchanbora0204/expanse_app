@@ -8,7 +8,6 @@ import 'package:money_lover/view/login/signup_social.dart';
 import 'package:money_lover/view/login/welcome_view.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
-import 'package:money_lover/view/theme_provider/theme.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -21,11 +20,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
-      apiKey: 'AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM',
-      appId: '1:258938640438:android:fd4a2fcc09f074f5df2097',
+      apiKey: "AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM",
+      appId: "1:258938640438:android:fd4a2fcc09f074f5df2097",
       messagingSenderId: '258938640438',
-      projectId: 'moneylover-v1',
-      storageBucket: 'moneylover-v1.appspot.com',
+      projectId: "moneylover-v1",
+      storageBucket: "moneylover-v1.appspot.com",
     ),
   );
 
@@ -82,7 +81,7 @@ class MyApp extends StatelessWidget {
       locale: languageProvider.locale, // Lấy locale từ LanguageProvider
       supportedLocales: L10n.all, // Xóa lặp lại supportedLocales
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      initialRoute: 'welcome_screen',
+      initialRoute: 'sign_up',
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),

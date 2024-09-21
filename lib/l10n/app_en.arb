@@ -16,6 +16,17 @@
   "name": "Name",
   "gender": "Gender",
   "age": "Age",
-  "email": "Email"
+  "email": "Email",
+  "password": "Password",
+  "oldPassword": "Old Password",
+  "newPassword": "New Password",
+  "updatePassword": "Update Password",
+  "changePassword": "Change Password",
+  "logout": "Log Out",
+  "loggingOut": "Logging Out",
+  "logoutFailed" : "Logout Failed",
+  "permissionDenied": "Permission denied. Unable to access photos.",
+  "editProfile": "Edit Profile",
+  "changePhoto": "Change Photo"
 
 }

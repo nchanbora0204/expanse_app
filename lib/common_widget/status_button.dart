@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../common/color_extension.dart';
 
 class StatusButton extends StatelessWidget {
   final String title;
