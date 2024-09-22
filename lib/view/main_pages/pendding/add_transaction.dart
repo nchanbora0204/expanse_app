@@ -135,45 +135,47 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildCategoryDropdown(ThemeData theme){
+  Widget _buildCategoryDropdown(ThemeData theme) {
     return FutureBuilder<List<CategoryModel>>(
-        future: _categoryService.getCategory(),
-        builder: (context, snapshot){
-          if(!snapshot.hasData){
-            return Text('Error Data', style: TextStyle(color: theme.textTheme.bodyMedium?.color),);
-          }
-        return DropdownButtonFormField(
+      future: _categoryService.getCategory(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return Text('Đang tải danh mục...', style: TextStyle(color: theme.textTheme.bodyMedium?.color));
+        }
 
-        items: snapshot.data!.map((category) {
+        if (snapshot.hasError) {
+          return Text('Lỗi khi tải danh mục', style: TextStyle(color: theme.textTheme.bodyMedium?.color));
+        }
+
+        return DropdownButtonFormField<String>(
+          items: snapshot.data!.map((category) {
             return DropdownMenuItem<String>(
-            value: category.id,
-            child: Text(category.name),
+              value: category.id,
+              child: Text(category.name),
             );
           }).toList(),
-        onChanged: (value) {
-          setState(() {
-          _categoryId = value!;
-          });
+          onChanged: (value) {
+            setState(() {
+              _categoryId = value!;
+            });
           },
-        decoration: InputDecoration(
+          decoration: InputDecoration(
             labelText: "Chọn danh mục chi tiêu",
             labelStyle: TextStyle(
               color: theme.textTheme.bodyMedium?.color,
               fontWeight: FontWeight.bold,
               fontSize: 18,
-
-
             ),
             enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: TColor.gray80)
+              borderSide: BorderSide(color: theme.dividerColor),
             ),
             focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: TColor.primary)
+              borderSide: BorderSide(color: theme.colorScheme.primary),
             ),
           ),
         );
-
-        });
+      },
+    );
   }
 
   Widget _buildDateSelector(ThemeData theme) {
@@ -217,8 +219,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               title: _title,
               amount: _amount,
               date: _selectedDate,
-              description: _description,
-              categoryId: _categoryId,
+
+              categoryId: _categoryId, // Chắc chắn rằng categoryId được truyền đúng
             );
 
             try {

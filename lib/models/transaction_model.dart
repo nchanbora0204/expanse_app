@@ -4,7 +4,6 @@ class TransactionModel {
   final String title;
   final double amount;
   final DateTime date;
-  final String description;
   final String categoryId;
 
   TransactionModel({
@@ -12,30 +11,27 @@ class TransactionModel {
     required this.title,
     required this.amount,
     required this.date,
-    required this.description,
     required this.categoryId,
   });
 
-  // Phương thức fromMap để chuyển đổi từ Map<String, dynamic> sang TransactionModel
+  // Chuyển từ map sang object
   factory TransactionModel.fromMap(Map<String, dynamic> data) {
     return TransactionModel(
-      id: data['id'] ?? '',  // 'id' là chuỗi trong Firestore
-      title: data['title']?? '',  // 'title' là chuỗi
-      amount: data['amount'].toDouble() ?? '',  // 'amount' là số
-      date: (data['date'] as Timestamp).toDate() ,  // 'date' là Timestamp, chuyển thành DateTime
-      description: data['description']?? '' ,  // 'description' là chuỗi
-      categoryId: data['categoryId']?? '',  // 'budgetId' là chuỗi
+      id: data['id'] ?? 'unknown_id',
+      title: data['title'] ?? 'Unknown Title',
+      amount: data['amount']?.toDouble() ?? 0.0,
+      date: (data['date'] as Timestamp).toDate(),
+      categoryId: data['categoryId'] ?? 'unknown_category',
     );
   }
 
-  // Phương thức toMap nếu bạn muốn chuyển đổi ngược lại (không bắt buộc)
+  // Chuyển từ object sang map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'amount': amount,
-      'date': Timestamp.fromDate(date),  // Chuyển DateTime thành Timestamp
-      'description': description,
+      'date': Timestamp.fromDate(date),
       'categoryId': categoryId,
     };
   }

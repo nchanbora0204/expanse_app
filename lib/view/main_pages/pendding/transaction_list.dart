@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:intl/intl.dart';
- // Đảm bảo đường dẫn chính xác đến file này
-
 
 class TransactionList extends StatefulWidget {
   @override
@@ -12,15 +9,7 @@ class TransactionList extends StatefulWidget {
 }
 
 class _TransactionListState extends State<TransactionList> {
-  late Future<List<TransactionModel>> _transactionsList;
   final TransactionService _transactionService = TransactionService();
-  @override
-  void initState() {
-    super.initState();
-
-  }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +34,7 @@ class _TransactionListState extends State<TransactionList> {
                 return ListTile(
                   title: Text(transaction.title),
                   subtitle: Text(transaction.amount.toString()),
-                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+                  trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
                   onTap: () {
                     // Navigate to transaction details or allow editing
                   },

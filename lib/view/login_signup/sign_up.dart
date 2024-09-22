@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/firebaseService/user_serices.dart';
+import 'package:money_lover/firebaseService/user_services.dart';
 import 'package:money_lover/models/user_model.dart';
 
 

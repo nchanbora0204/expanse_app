@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:money_lover/firebaseService/other_services.dart'; // Sửa đường dẫn thành service cho Category
 import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫn thành model cho Category
 import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/firebaseService/other_services.dart';
+import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
 
 class ExpenseCatList extends StatefulWidget {
   @override
@@ -21,6 +23,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
   @override
   void initState() {
     super.initState();
+    _categoryService.addDefaultCategories();
   }
 
   @override
@@ -103,24 +106,36 @@ class _CategoryScreenState extends State<ExpenseCatList> {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return Card(
-          color: getRandomColor(),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          elevation: 5.0,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  categories[index].name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () async {
+            String categoryId = categories[index].id;
+            List<TransactionModel> transactions = await _categoryService.getTransactionsByCategory(categoryId);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TransactionsPage(transactions: transactions),
+              ),
+            );
+          },
+          child: Card(
+            color: getRandomColor(),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            elevation: 5.0,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    categories[index].name,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

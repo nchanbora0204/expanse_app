@@ -81,4 +81,5 @@ class UserService {
       print('Error updating user info: $e');
     }
   }
+
 }
