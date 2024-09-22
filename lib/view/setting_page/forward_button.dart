@@ -12,6 +12,7 @@ class ForwardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = Theme.of(context).iconTheme.size;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -23,6 +24,7 @@ class ForwardButton extends StatelessWidget {
         child: Icon(
           Ionicons.chevron_forward_outline,
           color: TColor.gray30,
+          size: iconSize,
         ),
       ),
     );
