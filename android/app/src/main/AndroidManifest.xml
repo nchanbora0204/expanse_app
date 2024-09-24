@@ -1,34 +1,19 @@
-<<<<<<< HEAD
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-=======
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.money_lover">
 
-<!--    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>-->
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"-->
-<!--        android:maxSdkVersion="32" />-->
-<!--    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />-->
-<!--    <uses-permission android:name="android.permission.CAMERA" />-->
-<!--    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
->>>>>>> 778538053802531a564d4dcddce9d0028f3d070d
+    <!-- <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/> -->
+    <!-- <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" -->
+    <!-- android:maxSdkVersion="32" /> -->
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+    <!-- <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
 
     <application
         android:name="${applicationName}"
-<<<<<<< HEAD
-        android:icon="@mipmap/ic_launcher">
-        <service android:label="notifications" android:name="notification.listener.service.NotificationListener"
-            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" android:exported="true">
-            <intent-filter>
-                <action android:name="android.service.notification.NotificationListenerService" />
-            </intent-filter>
-        </service>
-=======
         android:icon="@mipmap/ic_launcher"
         android:label="money_lover">
->>>>>>> 778538053802531a564d4dcddce9d0028f3d070d
+
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
@@ -45,9 +30,22 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- Thêm service cho NotificationListener -->
+        <service
+            android:label="notifications"
+            android:name="notification.listener.service.NotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
     </application>
 
     <queries>
