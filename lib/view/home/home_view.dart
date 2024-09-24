@@ -4,6 +4,7 @@ import 'package:money_lover/common_widget/segment_button.dart';
 import 'package:money_lover/common_widget/status_button.dart';
 import 'package:money_lover/common_widget/subcription_home_row.dart';
 import 'package:money_lover/common_widget/upcoming_view_row.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -39,6 +40,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     media = MediaQuery.sizeOf(context);
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SingleChildScrollView(
@@ -144,7 +146,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
         Text(
-          "Chi Tiêu Trong Tháng",
+          AppLocalizations.of(context)!.monthlySpending,
           style: TextStyle(
             color: theme.textTheme.bodyMedium?.color,
             fontSize: 12,
@@ -166,7 +168,7 @@ class _HomeViewState extends State<HomeView> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
-              "Xem Chi Tiêu",
+              AppLocalizations.of(context)!.viewSpending,
               style: TextStyle(
                 color: theme.textTheme.bodyLarge?.color,
                 fontSize: 14,
@@ -190,7 +192,7 @@ class _HomeViewState extends State<HomeView> {
             children: [
               Expanded(
                 child: StatusButton(
-                  title: "Active Subs",
+                  title: AppLocalizations.of(context)!.activeSubs,
                   value: "12",
                   statusColor: theme.colorScheme.primary,
                   onPressed: () {},
@@ -201,7 +203,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               Expanded(
                 child: StatusButton(
-                  title: "Lowest Subs",
+                  title: AppLocalizations.of(context)!.lowestSubs,
                   value: "\$12",
                   statusColor: theme.colorScheme.secondary,
                   onPressed: () {},
@@ -212,7 +214,7 @@ class _HomeViewState extends State<HomeView> {
               ),
               Expanded(
                 child: StatusButton(
-                  title: "Highest Subs",
+                  title: AppLocalizations.of(context)!.highestSubs,
                   value: "\$12",
                   statusColor: theme.colorScheme.tertiary,
                   onPressed: () {},
@@ -239,7 +241,7 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Expanded(
             child: SegmentButton(
-              title: "Chi Tiêu",
+              title: AppLocalizations.of(context)!.spendingView,
               isAcitive: isSubscription,
               onPressed: () {
                 setState(() {
@@ -251,7 +253,7 @@ class _HomeViewState extends State<HomeView> {
           ),
           Expanded(
             child: SegmentButton(
-              title: "Hóa Đơn",
+              title: AppLocalizations.of(context)!.invoice,
               isAcitive: isInvoice,
               onPressed: () {
                 setState(() {

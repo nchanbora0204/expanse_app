@@ -272,7 +272,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                     await FirebaseAuth.instance.signOut();
                     await Future.delayed(Duration(seconds: 3));
                     Navigator.of(context).pop();
-                    Navigator.pushReplacementNamed(context, 'sign_in');
+                    Navigator.pushReplacementNamed(context, 'welcome_screen');
                   } catch (e) {
                     Navigator.of(context).pop();
                     ScaffoldMessenger.of(context).showSnackBar(

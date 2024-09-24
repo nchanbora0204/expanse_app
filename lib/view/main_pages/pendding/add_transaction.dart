@@ -6,6 +6,7 @@ import 'package:money_lover/models/category_model.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/firebaseService/other_services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class AddTransactionForm extends StatefulWidget {
   @override
   _AddTransactionFormState createState() => _AddTransactionFormState();
@@ -26,10 +27,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thêm Giao Dịch Mới'),
+        title: Text(AppLocalizations.of(context)!.addTransactionTitle),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -40,14 +42,14 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildTitleField(theme),
-              _buildAmountField(theme),
-              _buildDesField(theme),
-              _buildCategoryDropdown(theme),
+              _buildAmountField(theme, localizations!),
+              _buildTitleField(theme, localizations),
+              _buildDesField(theme,localizations),
+              _buildCategoryDropdown(theme,localizations),
               SizedBox(height: 20),
-              _buildDateSelector(theme),
+              _buildDateSelector(theme,localizations),
               SizedBox(height: 20),
-              _buildSaveButton(theme),
+              _buildSaveButton(theme,localizations),
             ],
           ),
         ),
@@ -55,10 +57,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildTitleField(ThemeData theme) {
+  Widget _buildTitleField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Tiêu đề',
+        labelText: AppLocalizations.of(context)!.transactionTitle,
         labelStyle: TextStyle(
           color: theme.textTheme.bodyMedium?.color,
           fontSize: 18,
@@ -74,7 +76,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập tiêu đề';
+          return AppLocalizations.of(context)!.errorTitleRequired;
         }
         return null;
       },
@@ -88,10 +90,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildAmountField(ThemeData theme) {
+  Widget _buildAmountField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Số tiền',
+        labelText: AppLocalizations.of(context)!.transactionAmount,
         labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 18, fontWeight: FontWeight.bold),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
@@ -103,10 +105,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập số tiền';
+          return AppLocalizations.of(context)!.errorAmountRequired;
         }
         if (double.tryParse(value) == null) {
-          return 'Vui lòng nhập một số hợp lệ';
+          return AppLocalizations.of(context)!.errorAmountInvalid;
         }
         return null;
       },
@@ -116,10 +118,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildDesField(ThemeData theme) {
+  Widget _buildDesField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Ghi chú chi tiết',
+        labelText: AppLocalizations.of(context)!.transactionDescription,
         labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 18, fontWeight: FontWeight.bold),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
@@ -135,7 +137,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildCategoryDropdown(ThemeData theme) {
+  Widget _buildCategoryDropdown(ThemeData theme, AppLocalizations localizations) {
     return FutureBuilder<List<CategoryModel>>(
       future: _categoryService.getCategory(),
       builder: (context, snapshot) {
@@ -160,7 +162,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             });
           },
           decoration: InputDecoration(
-            labelText: "Chọn danh mục chi tiêu",
+            labelText: AppLocalizations.of(context)!.transactionCategory,
             labelStyle: TextStyle(
               color: theme.textTheme.bodyMedium?.color,
               fontWeight: FontWeight.bold,
@@ -178,7 +180,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     );
   }
 
-  Widget _buildDateSelector(ThemeData theme) {
+  Widget _buildDateSelector(ThemeData theme, AppLocalizations localizations) {
     return Column(
       children: [
 
@@ -204,7 +206,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   }
 
 
-  Widget _buildSaveButton(ThemeData theme) {
+  Widget _buildSaveButton(ThemeData theme, AppLocalizations localizations) {
     return Center(
       child: ElevatedButton(
         onPressed: () async {
@@ -232,7 +234,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             }
           }
         },
-        child: Text('Lưu Giao Dịch'),
+        child: Text(AppLocalizations.of(context)!.saveTransaction),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,

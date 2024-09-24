@@ -32,13 +32,15 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildNameField(theme),
-              SizedBox(height: 20),
-              _buildSaveButton(theme),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildNameField(theme),
+                SizedBox(height: 20),
+                _buildSaveButton(theme),
+              ],
+            ),
           ),
         ),
       ),

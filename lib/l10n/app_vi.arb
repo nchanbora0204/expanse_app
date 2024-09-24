@@ -27,5 +27,61 @@
   "logoutFailed" : "Đăng Xuất Thất Bại",
   "permissionDenied": "Quyền truy cập bị từ chối. Không thể truy cập ảnh.",
   "editProfile": "Chỉnh sửa hồ sơ",
-  "changePhoto": "Thay đổi ảnh"
+  "changePhoto": "Thay đổi ảnh",
+  "activeSubs": "Đăng Ký Hoạt Động",
+  "lowestSubs": "Đăng Ký Thấp Nhất",
+  "highestSubs": "Đăng Ký Cao Nhất",
+  "spendingView": "Chi Tiêu",
+  "viewSpending": "Xem Chi Tiêu",
+  "subscription": "Chi Tiêu",
+  "invoice": "Hóa Đơn",
+  "monthlySpending": "Chi Tiêu Trong Tháng",
+  "appTitle": "Money Lover",
+  "addTransactionTitle": "Thêm Giao Dịch Mới",
+  "transactionTitle": "Tiêu đề",
+  "transactionAmount": "Số tiền",
+  "transactionDescription": "Ghi chú chi tiết",
+  "transactionCategory": "Chọn danh mục",
+  "transactionStartDate": "Ngày bắt đầu",
+  "transactionEndDate": "Ngày kết thúc",
+  "saveTransaction": "Lưu Giao Dịch",
+  "errorTitleRequired": "Vui lòng nhập tiêu đề",
+  "errorAmountRequired": "Vui lòng nhập số tiền",
+  "errorAmountInvalid": "Vui lòng nhập một số hợp lệ",
+  "@appTitle": {
+    "description": "Tiêu đề của ứng dụng"
+  },
+  "@addTransactionTitle": {
+    "description": "Tiêu đề cho việc thêm giao dịch mới"
+  },
+  "@transactionTitle": {
+    "description": "Nhãn cho trường tiêu đề giao dịch"
+  },
+  "@transactionAmount": {
+    "description": "Nhãn cho trường số tiền giao dịch"
+  },
+  "@transactionDescription": {
+    "description": "Nhãn cho trường mô tả giao dịch"
+  },
+  "@transactionCategory": {
+    "description": "Nhãn cho danh mục giao dịch"
+  },
+  "@transactionStartDate": {
+    "description": "Nhãn cho việc chọn ngày bắt đầu"
+  },
+  "@transactionEndDate": {
+    "description": "Nhãn cho việc chọn ngày kết thúc"
+  },
+  "@saveTransaction": {
+    "description": "Nhãn cho nút lưu giao dịch"
+  },
+  "@errorTitleRequired": {
+    "description": "Thông báo lỗi khi tiêu đề trống"
+  },
+  "@errorAmountRequired": {
+    "description": "Thông báo lỗi khi số tiền trống"
+  },
+  "@errorAmountInvalid": {
+    "description": "Thông báo lỗi khi số tiền không hợp lệ"
+  }
 }
