@@ -90,6 +90,35 @@ class _MainTabViewState extends State<MainTabView> {
   }
 
   Widget _addSpendingButton() {
+<<<<<<< HEAD
+    return Positioned(
+      bottom: 20,
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddTransactionForm(amount: '')), // Truyền giá trị amount mặc định (0 hoặc số khác)
+          );
+          // Hành động khi nhấn nút thêm chi tiêu
+        },
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: TColor.secondary.withOpacity(0.25),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            borderRadius: BorderRadius.circular(50),
+          ),
+          child: Image.asset(
+            "assets/img/center_btn.png",
+            width: 55,
+            height: 55,
+          ),
+=======
     return InkWell(
       onTap: () {
         Navigator.push(
@@ -113,6 +142,7 @@ class _MainTabViewState extends State<MainTabView> {
           "assets/img/center_btn.png",
           width: 60,
           height: 60,
+>>>>>>> 778538053802531a564d4dcddce9d0028f3d070d
         ),
       ),
     );

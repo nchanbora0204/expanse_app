@@ -10,12 +10,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class AddTransactionForm extends StatefulWidget {
   @override
   _AddTransactionFormState createState() => _AddTransactionFormState();
+  final String amount; //
+
+  // Constructor để nhận amount từ trang notification List Page
+  AddTransactionForm({required this.amount});
 }
 
 class _AddTransactionFormState extends State<AddTransactionForm> {
+
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   double _amount = 0;
+
   DateTime _selectedDate = DateTime.now();
   String _description = '';
   String _categoryId = '';
@@ -23,6 +29,13 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   DateTime _startDate = DateTime.now();
   DateTime _endDate = DateTime.now();
   final CategoryService  _categoryService = CategoryService();
+  @override
+  void initState() {
+    super.initState();
+    print("Received amount: ${widget.amount}");
+    // Khi nhận giá trị amount, gán nó vào _amount để hiển thị trong form
+    _amount = double.tryParse(widget.amount) ?? 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,9 +105,18 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
 
   Widget _buildAmountField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
+      initialValue: _amount.toString(), // Đặt giá trị khởi tạo
       decoration: InputDecoration(
+<<<<<<< HEAD
+        labelText: 'Số tiền',
+        labelStyle: TextStyle(
+            color: theme.textTheme.bodyMedium?.color,
+            fontSize: 18,
+            fontWeight: FontWeight.bold),
+=======
         labelText: AppLocalizations.of(context)!.transactionAmount,
         labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 18, fontWeight: FontWeight.bold),
+>>>>>>> 778538053802531a564d4dcddce9d0028f3d070d
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
         ),

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
+// Đường dẫn đến NotificationListPage
 
 class TransactionList extends StatefulWidget {
   @override
@@ -31,18 +34,37 @@ class _TransactionListState extends State<TransactionList> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final transaction = snapshot.data![index];
-                return ListTile(
-                  title: Text(transaction.title),
-                  subtitle: Text(transaction.amount.toString()),
-                  trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
-                  onTap: () {
-                    // Navigate to transaction details or allow editing
-                  },
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 4,
+                  child: ListTile(
+                    title: Text(transaction.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text("Amount: ${transaction.amount.toString()}"),
+                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+                    onTap: () {
+                      // Navigate to transaction details or allow editing
+                    },
+                  ),
                 );
               },
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Điều hướng đến NotificationListPage
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    NotificationListPage() // Truyền số tiền
+            ),
+          ); // Qu
+        },
+        child: Icon(Icons.notifications),
+        backgroundColor: Colors.blue, // Màu nền cho nút
+        tooltip: 'Notifications', // Tooltip cho nút
       ),
     );
   }
