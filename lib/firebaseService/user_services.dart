@@ -3,7 +3,8 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:money_lover/view/login/user_model.dart';
+import 'package:money_lover/models/user_model.dart';
+
 
 class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -61,7 +62,7 @@ class UserService {
       String name, String email, String password) async {
     try {
       UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -92,7 +93,7 @@ class UserService {
   Future<UserModel?> getUserDetails(String uid) async {
     try {
       DocumentSnapshot doc =
-          await _firestore.collection('users').doc(uid).get();
+      await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
         print("User data found: ${doc.data()}");
         return UserModel.fromMap(doc.data() as Map<String, dynamic>);
@@ -139,7 +140,7 @@ class UserService {
     String fileExtension = imageFile.path.split('.').last.toLowerCase();
     //Tao tham chieu luu tru nhieu dinh dang
     Reference storageRef =
-        _storage.ref().child('profile_image/$userId.${fileExtension}');
+    _storage.ref().child('profile_image/$userId.${fileExtension}');
 
     try {
       //tai len file

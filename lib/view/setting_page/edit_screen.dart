@@ -1,15 +1,16 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
-import 'package:money_lover/view/login/user_model.dart';
+import 'package:money_lover/firebaseService/user_services.dart';
+import 'package:money_lover/models/user_model.dart';
+
+
 import 'package:money_lover/view/setting_page/edit_item.dart';
-import 'package:money_lover/view/login/user_service.dart';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'update_password_screen.dart';
 
 class EditScreen extends StatefulWidget {
@@ -189,8 +190,6 @@ class _EditScreenState extends State<EditScreen> {
       );
     }
   }
-
-
 
   // void _showPermissonDeniedDialog(BuildContext context) {
   //   showDialog(

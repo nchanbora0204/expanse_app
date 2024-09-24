@@ -1,33 +1,38 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 class TransactionModel {
-  String id;
-  String title;
-  double amount;
-  DateTime date;
+  final String id;
+  final String title;
+  final double amount;
+  final DateTime date;
+  final String categoryId;
 
   TransactionModel({
     required this.id,
     required this.title,
     required this.amount,
     required this.date,
+    required this.categoryId,
   });
 
-  // Phương thức để chuyển đổi từ Map (Firebase) sang đối tượng Transaction
-  factory TransactionModel.fromMap(Map<String, dynamic> map) {
+  // Chuyển từ map sang object
+  factory TransactionModel.fromMap(Map<String, dynamic> data) {
     return TransactionModel(
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      amount: map['amount']?.toDouble() ?? 0.0,
-      date: DateTime.parse(map['date']),
+      id: data['id'] ?? 'unknown_id',
+      title: data['title'] ?? 'Unknown Title',
+      amount: data['amount']?.toDouble() ?? 0.0,
+      date: (data['date'] as Timestamp).toDate(),
+      categoryId: data['categoryId'] ?? 'unknown_category',
     );
   }
 
-  // Phương thức để chuyển đổi từ Transaction sang Map (để lưu vào Firebase)
+  // Chuyển từ object sang map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
       'title': title,
       'amount': amount,
-      'date': date.toIso8601String(),
+      'date': Timestamp.fromDate(date),
+      'categoryId': categoryId,
     };
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/view/login/user_model.dart';
-import 'package:money_lover/view/login/user_service.dart';
+import 'package:money_lover/firebaseService/user_services.dart';
+import 'package:money_lover/models/user_model.dart';
+
 
 class SignUp extends StatefulWidget {
   @override
@@ -130,8 +131,8 @@ class _SignUp extends State<SignUp> {
             _currentIndex == 0
                 ? "Tiếp tục"
                 : _currentIndex == 1
-                    ? "Tiếp tục"
-                    : "Hoàn tất đăng ký",
+                ? "Tiếp tục"
+                : "Hoàn tất đăng ký",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -242,7 +243,7 @@ class _SignUp extends State<SignUp> {
     }
 
     UserModel? user =
-        await _userService.registerWithEmailAndPassword(name, email, password);
+    await _userService.registerWithEmailAndPassword(name, email, password);
 
     if (user != null) {
       print("Đăng ký thành công với UID: ${user.uid}");

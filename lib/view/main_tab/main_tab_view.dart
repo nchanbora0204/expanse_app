@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/view/main_pages/pendding/addTransaction.dart';
+import 'package:money_lover/view/main_pages/budgets_page/categoryTab/landing.dart';
+
+import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
-import '../main_pages/budget.dart';
-import '../main_pages/pendding/transactionList.dart';
+
 
 class MainTabView extends StatefulWidget {
   const MainTabView({super.key});
@@ -19,7 +21,7 @@ class _MainTabViewState extends State<MainTabView> {
   final List<Widget> pages = [
     HomeView(),
     TransactionList(),
-    Budget(),
+    CatTabView(),
     AccountSettingPage(),
   ];
 
@@ -33,7 +35,7 @@ class _MainTabViewState extends State<MainTabView> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final bottomBarColor =
-        theme.brightness == Brightness.dark ? Colors.white : Colors.black;
+    theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -80,9 +82,9 @@ class _MainTabViewState extends State<MainTabView> {
         width: 25,
         height: 25,
         color:
-            _currentPage == index
-                ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
-                : theme.disabledColor,
+        _currentPage == index
+            ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
+            : theme.disabledColor,
       ),
     );
   }

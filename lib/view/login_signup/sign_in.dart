@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/view/login/user_service.dart'; // Import dịch vụ người dùng
+import 'package:money_lover/firebaseService/user_services.dart';
+
 
 class SignIn extends StatefulWidget {
   @override
@@ -194,16 +195,16 @@ class _SignIn extends State<SignIn> {
           ),
           suffixIcon: isPassword
               ? IconButton(
-                  icon: Icon(
-                    _obscureText ? Icons.visibility_off : Icons.visibility,
-                    color: Colors.grey,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _obscureText = !_obscureText;
-                    });
-                  },
-                )
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          )
               : null,
         ),
       ),
@@ -224,7 +225,7 @@ class _SignIn extends State<SignIn> {
     }
 
     bool success =
-        await _userService.signInWithEmailAndPassword(email, password);
+    await _userService.signInWithEmailAndPassword(email, password);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:money_lover/firebaseService/user_services.dart';
 import 'package:money_lover/language/language_provider.dart';
-import 'package:money_lover/view/login/user_model.dart';
-import 'package:money_lover/view/login/user_service.dart';
+import 'package:money_lover/models/user_model.dart';
 import 'package:money_lover/view/setting_page/edit_screen.dart';
 import 'package:money_lover/view/setting_page/forward_button.dart';
 import 'package:money_lover/view/setting_page/setting_item.dart';

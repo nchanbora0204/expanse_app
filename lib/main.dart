@@ -1,11 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:money_lover/l10n/l10n.dart';
 import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/home/home_view.dart';
-import 'package:money_lover/view/login/sign_in.dart';
-import 'package:money_lover/view/login/sign_up.dart';
-import 'package:money_lover/view/login/signup_social.dart';
-import 'package:money_lover/view/login/welcome_view.dart';
+import 'package:money_lover/view/login_signup/sign_in.dart';
+import 'package:money_lover/view/login_signup/sign_up.dart';
+import 'package:money_lover/view/login_signup/signup_social.dart';
+import 'package:money_lover/view/login_signup/welcome_view.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
@@ -90,6 +91,28 @@ class MyApp extends StatelessWidget {
         'sign_in': (context) => SignIn(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
+      },
+    );
+  }
+}
+
+// Widget để điều hướng dựa trên trạng thái đăng nhập
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          // Hiển thị loading trong khi kiểm tra trạng thái đăng nhập
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasData) {
+          // Người dùng đã đăng nhập, điều hướng đến trang chính
+          return MainTabView();
+        } else {
+          // Người dùng chưa đăng nhập, điều hướng đến trang đăng nhập
+          return SignIn();
+        }
       },
     );
   }
