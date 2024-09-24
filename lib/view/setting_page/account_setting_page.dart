@@ -198,7 +198,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 iconColor: Colors.pink,
                 onTap: () {},
               ),
-            ],
+            ],x
           ),
         ),
       ),
