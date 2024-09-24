@@ -82,6 +82,17 @@
   },
   "@errorAmountInvalid": {
     "description": "Error message when the amount is not a valid number"
-  }
+  },
+  "introApp": "Welcome to Expense",
+  "feature_1_title": "Track Expenses",
+  "feature_1_desc": "Feature 1: Efficient expense management",
+  "feature_2_title": "Payment Reminder",
+  "feature_2_desc": "Feature 2: Reminders to pay your bills",
+  "feature_3_title": "Data Analysis",
+  "feature_3_desc": "Feature 3: Generate detailed reports",
+  "sign_up_free": "Sign Up For Free",
+  "quick_sign_up": "Quick sign up",
+  "login": "Log In",
+  "login_now": "Log in now"
 
 }

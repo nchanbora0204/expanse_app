@@ -1,10 +1,12 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/login_signup/sign_up.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 
 class WelcomeView extends StatefulWidget {
   const WelcomeView({Key? key}) : super(key: key);
@@ -20,7 +22,7 @@ class _WelcomeViewState extends State<WelcomeView>
   bool _areButtonsVisible = false;
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
-  late PageController  _pageController;
+  late PageController _pageController;
   int _currentPage = 0;
   late Timer _timer;
 
@@ -56,6 +58,7 @@ class _WelcomeViewState extends State<WelcomeView>
       });
     });
   }
+
   void _startAutoSlide() {
     _timer = Timer.periodic(Duration(seconds: 3), (timer) {
       _currentPage++;
@@ -70,14 +73,16 @@ class _WelcomeViewState extends State<WelcomeView>
 
   @override
   void dispose() {
-   _timer.cancel();
-   _controller.dispose();
-   _pageController.dispose();
+    _timer.cancel();
+    _controller.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
     _devHeight = MediaQuery.of(context).size.height;
     _devWidth = MediaQuery.of(context).size.width;
 
@@ -110,6 +115,15 @@ class _WelcomeViewState extends State<WelcomeView>
                     duration: Duration(milliseconds: 1800),
                     child: Image.asset("assets/img/app_logo.png"),
                   ),
+                  IconButton(
+                      onPressed: () {
+                        _showLanguageSelection();
+                      },
+                      icon: Icon(
+                        Icons.language,
+                        color: Colors.white,
+                        size: 30,
+                      )),
                   SizedBox(
                     height: _devHeight! * 0.3,
                   ),
@@ -133,15 +147,61 @@ class _WelcomeViewState extends State<WelcomeView>
     );
   }
 
+  void _showLanguageSelection() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        final languageProvider =
+            Provider.of<LanguageProvider>(context, listen: false);
+        final curLocale = languageProvider.locale.languageCode;
+
+        return Container(
+          padding: EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                title: Text('VietNam'),
+                onTap: () {
+                  languageProvider.setLocale(Locale('vi'));
+                  Navigator.pop(context);
+                },
+                trailing: curLocale == 'vi'
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : null,
+              ),
+              ListTile(
+                title: Text('English'),
+                onTap: () {
+                  languageProvider.setLocale(Locale('en'));
+                  Navigator.pop(context);
+                },
+                trailing: curLocale == 'en'
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      )
+                    : null,
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildPageView() {
+    final localization = AppLocalizations.of(context)!;
+
     return PageView(
       controller: _pageController,
       children: [
-        _buildSlide(
-            "Giới thiệu ứng dụng", "Tính năng 1: Quản lý chi tiêu hiệu quả"),
-        _buildSlide("Theo dõi chi tiêu", "Tính năng 2: Nhắc nhở thanh toán"),
-        _buildSlide(
-            "Phân tích dữ liệu", "Tính năng 3: Đưa ra báo cáo chi tiết"),
+        _buildSlide(localization.introApp, localization.feature_1_desc),
+        _buildSlide(localization.feature_2_title, localization.feature_2_desc),
+        _buildSlide(localization.feature_3_title, localization.feature_3_desc),
       ],
     );
   }
@@ -176,6 +236,8 @@ class _WelcomeViewState extends State<WelcomeView>
   }
 
   Widget _startByNew() {
+    final localization = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         MaterialButton(
@@ -207,7 +269,7 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
             child: Center(
               child: Text(
-                "ĐĂNG KÝ MIỂN PHÍ",
+                localization.sign_up_free,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -224,7 +286,7 @@ class _WelcomeViewState extends State<WelcomeView>
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
             Text(
-              "Đăng ký nhanh chóng",
+              localization.quick_sign_up,
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -234,6 +296,8 @@ class _WelcomeViewState extends State<WelcomeView>
   }
 
   Widget _startByAccount() {
+    final localization = AppLocalizations.of(context)!;
+
     return Column(
       children: [
         MaterialButton(
@@ -265,7 +329,7 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
             child: Center(
               child: Text(
-                "ĐĂNG NHẬP",
+                localization.login,
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -279,10 +343,10 @@ class _WelcomeViewState extends State<WelcomeView>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.login, size: 16, color: Colors.white),
+            Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
             Text(
-              "Đăng nhập ngay",
+              localization.login,
               style: TextStyle(color: Colors.white),
             ),
           ],
