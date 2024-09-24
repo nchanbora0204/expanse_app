@@ -107,16 +107,16 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     return TextFormField(
       initialValue: _amount.toString(), // Đặt giá trị khởi tạo
       decoration: InputDecoration(
-<<<<<<< HEAD
-        labelText: 'Số tiền',
+
+
         labelStyle: TextStyle(
             color: theme.textTheme.bodyMedium?.color,
             fontSize: 18,
             fontWeight: FontWeight.bold),
-=======
+
         labelText: AppLocalizations.of(context)!.transactionAmount,
-        labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 18, fontWeight: FontWeight.bold),
->>>>>>> 778538053802531a564d4dcddce9d0028f3d070d
+
+
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
         ),

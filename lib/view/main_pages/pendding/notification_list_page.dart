@@ -39,8 +39,8 @@ class _NotificationListPageState extends State<NotificationListPage> with Widget
             Navigator.pop(
               context,
               MaterialPageRoute(
-                builder: (context) =>
-                   TransactionList() // Truyền số tiền
+                  builder: (context) =>
+                      TransactionList() // Truyền số tiền
               ),
             ); // Quay về trang trước
           },
