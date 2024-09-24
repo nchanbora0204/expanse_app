@@ -16,7 +16,7 @@ class ExpenseCatList extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<ExpenseCatList> {
-  bool _isExpanded = false;
+  final bool _isExpanded = false;
   double? _devHeight, _devWidth;
   final CategoryService _categoryService = CategoryService();
 
@@ -54,18 +54,18 @@ class _CategoryScreenState extends State<ExpenseCatList> {
       stream: _categoryService.getCategoryStream(), // Sử dụng stream
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Lỗi khi tải dữ liệu');
+          return const Text('Lỗi khi tải dữ liệu');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text('Chưa có dữ liệu danh mục');
+          return const Text('Chưa có dữ liệu danh mục');
         } else {
           final category = snapshot.data!;
           final displayedCategories = category.toList();
 
           return AnimatedContainer(
-            padding: EdgeInsets.all(15),
-            duration: Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(15),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             height: _devHeight! * 0.67,
             child: Column(
@@ -82,7 +82,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 100,
                       ),
                       addNewCategory(),
@@ -99,7 +99,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
 
   Widget _categoryCard(List<CategoryModel> categories) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
@@ -152,7 +152,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: IconButton(
-        icon: Icon(Icons.add),
+        icon: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => AddCategoryForm()));
         },

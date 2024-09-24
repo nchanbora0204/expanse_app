@@ -19,10 +19,10 @@ class MainTabView extends StatefulWidget {
 class _MainTabViewState extends State<MainTabView> {
   int _currentPage = 0;
   final List<Widget> pages = [
-    HomeView(),
+    const HomeView(),
     TransactionList(),
-    CatTabView(),
-    AccountSettingPage(),
+    const CatTabView(),
+    const AccountSettingPage(),
   ];
 
   @override

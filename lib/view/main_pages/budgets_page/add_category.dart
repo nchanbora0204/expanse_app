@@ -23,7 +23,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text('Thêm Danh Mục Mới'),
+        title: const Text('Thêm Danh Mục Mới'),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -37,7 +37,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildNameField(theme),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 _buildSaveButton(theme),
               ],
             ),
@@ -72,7 +72,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
       onSaved: (value) {
         _name = value!;
       },
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 18,
       ),
     );
@@ -104,11 +104,11 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             }
           }
         },
-        child: Text('Lưu Danh Mục'),
+        child: const Text('Lưu Danh Mục'),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

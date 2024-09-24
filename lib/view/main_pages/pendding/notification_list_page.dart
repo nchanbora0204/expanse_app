@@ -32,9 +32,9 @@ class _NotificationListPageState extends State<NotificationListPage> with Widget
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Thông báo'),
+        title: const Text('Thông báo'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(
               context,

@@ -18,27 +18,27 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Transactions'),
+        title: const Text('Transactions'),
       ),
       body: StreamBuilder<List<TransactionModel>>(
         stream: _transactionService.getTransactionStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: const CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No transactions available.'));
+            return const Center(child: const Text('No transactions available.'));
           } else {
             return ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final transaction = snapshot.data![index];
                 return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 4,
                   child: ListTile(
-                    title: Text(transaction.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(transaction.title, style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text("Amount: ${transaction.amount.toString()}"),
                     trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
                     onTap: () {
@@ -62,7 +62,7 @@ class _TransactionListState extends State<TransactionList> {
             ),
           ); // Qu
         },
-        child: Icon(Icons.notifications),
+        child: const Icon(Icons.notifications),
         backgroundColor: Colors.blue, // Màu nền cho nút
         tooltip: 'Notifications', // Tooltip cho nút
       ),

@@ -59,9 +59,9 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               _buildTitleField(theme, localizations),
               _buildDesField(theme,localizations),
               _buildCategoryDropdown(theme,localizations),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildDateSelector(theme,localizations),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               _buildSaveButton(theme,localizations),
             ],
           ),
@@ -96,7 +96,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       onSaved: (value) {
         _title = value!;
       },
-      style: TextStyle(
+      style: const TextStyle(
         fontFamily: 'Roboto', // Áp dụng font chữ cho TextFormField
         fontSize: 18,
       ),
@@ -260,7 +260,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,
-          padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),

@@ -48,7 +48,7 @@ class _CatTabView extends State<CatTabView> with SingleTickerProviderStateMixin 
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
-          tabs: [
+          tabs: const [
             Tab(text: 'Khoản Chi',),
             Tab(text: 'Khoản Thu',),
 

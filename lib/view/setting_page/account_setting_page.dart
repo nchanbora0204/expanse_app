@@ -126,7 +126,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               ),
               const SizedBox(height: 30),
               _loading
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : SizedBox(
                 width: double.infinity,
                 child: Row(
@@ -258,8 +258,8 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                       return AlertDialog(
                         content: Row(
                           children: <Widget>[
-                            CircularProgressIndicator(),
-                            SizedBox(
+                            const CircularProgressIndicator(),
+                            const SizedBox(
                               width: 20,
                             ),
                             Text(AppLocalizations.of(context)!.loggingOut)
@@ -270,7 +270,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                   );
                   try {
                     await FirebaseAuth.instance.signOut();
-                    await Future.delayed(Duration(seconds: 3));
+                    await Future.delayed(const Duration(seconds: 3));
                     Navigator.of(context).pop();
                     Navigator.pushReplacementNamed(context, 'welcome_screen');
                   } catch (e) {

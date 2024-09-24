@@ -19,7 +19,7 @@ final lightTheme = ThemeData(
     bodyLarge: TextStyle(fontFamily: 'Inter',color: Colors.black, fontSize: 18),
     bodyMedium: TextStyle(fontFamily: 'Inter',color: Colors.black, fontSize: 14),
   ),
-  iconTheme: IconThemeData(
+  iconTheme: const IconThemeData(
     size: 24,
   ),
 );

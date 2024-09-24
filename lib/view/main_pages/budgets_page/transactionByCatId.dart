@@ -10,7 +10,7 @@ class TransactionsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Danh sách giao dịch'),
+        title: const Text('Danh sách giao dịch'),
       ),
       body: ListView.builder(
         itemCount: transactions.length,

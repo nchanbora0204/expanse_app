@@ -20,7 +20,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
     if (user == null) {
       // Nếu user không đăng nhập, hãy xử lý thông báo lỗi
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('User is not signed in')),
+        const SnackBar(content:  Text('User is not signed in')),
       );
       return;
     }
@@ -28,14 +28,14 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Row(
-            children: [
+        return const AlertDialog(
+          content:  Row(
+            children:  [
               CircularProgressIndicator(),
               SizedBox(
                 width: 20,
               ),
-              Text("Đang cập nhật mật khẩu"),
+               Text("Đang cập nhật mật khẩu"),
             ],
           ),
         );
@@ -48,7 +48,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
         password: _oldPasswordController.text,
       );
       await Future.delayed(
-        Duration(seconds: 3),
+        const Duration(seconds: 3),
       );
       //Xac thuc lai voi thong tin tren
       await user.reauthenticateWithCredential(cred);
@@ -56,8 +56,8 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
       // Sau khi xác thực thành công, cập nhật mật khẩu mới
       await user.updatePassword(_newPasswordController.text);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Password updated successfully')),
+       ScaffoldMessenger.of(context).showSnackBar (
+        const SnackBar(content:  Text('Password updated successfully')),
       );
     } on FirebaseAuthException catch (e) {
       String message = 'Failed to update password';

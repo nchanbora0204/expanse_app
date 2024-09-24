@@ -43,11 +43,11 @@ class _WelcomeViewState extends State<WelcomeView>
     ));
     _pageController = PageController();
 
-    Future.delayed(Duration(milliseconds: 300), () {
+    Future.delayed(const Duration(milliseconds: 300), () {
       setState(() {
         _isLogoVisible = true;
       });
-      Future.delayed(Duration(milliseconds: 300), () {
+      Future.delayed(const Duration(milliseconds: 300), () {
         _controller.forward();
         setState(() {
           _areButtonsVisible = true;
@@ -57,12 +57,12 @@ class _WelcomeViewState extends State<WelcomeView>
     });
   }
   void _startAutoSlide() {
-    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       _currentPage++;
       if (_currentPage >= 3) _currentPage = 0; // Quay lại đầu khi đến cuối
       _pageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     });
@@ -87,7 +87,7 @@ class _WelcomeViewState extends State<WelcomeView>
           width: _devWidth,
           height: _devHeight,
           decoration: BoxDecoration(
-            image: DecorationImage(
+            image: const DecorationImage(
               image: AssetImage("assets/img/welcome_screen.png"),
               fit: BoxFit.cover,
             ),
@@ -104,10 +104,10 @@ class _WelcomeViewState extends State<WelcomeView>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  SizedBox(),
+                  const SizedBox(),
                   AnimatedOpacity(
                     opacity: _isLogoVisible ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 1800),
+                    duration: const Duration(milliseconds: 1800),
                     child: Image.asset("assets/img/app_logo.png"),
                   ),
                   SizedBox(
@@ -148,7 +148,7 @@ class _WelcomeViewState extends State<WelcomeView>
 
   Widget _buildSlide(String title, String description) {
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       color: Colors.black54,
       child: SingleChildScrollView(
         child: Column(
@@ -157,16 +157,16 @@ class _WelcomeViewState extends State<WelcomeView>
           children: [
             Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
               description,
-              style: TextStyle(color: Colors.white70, fontSize: 16),
+              style: const TextStyle(color: Colors.white70, fontSize: 16),
               textAlign: TextAlign.center,
             ),
           ],
@@ -192,7 +192,7 @@ class _WelcomeViewState extends State<WelcomeView>
           child: Container(
             height: 55,
             decoration: BoxDecoration(
-              image: DecorationImage(
+              image: const DecorationImage(
                 image: AssetImage("assets/img/primary_btn.png"),
                 fit: BoxFit.cover,
               ),
@@ -201,14 +201,14 @@ class _WelcomeViewState extends State<WelcomeView>
                 BoxShadow(
                   color: TColor.secondary.withOpacity(0.5),
                   blurRadius: 17,
-                  offset: Offset(0, 4),
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            child: Center(
+            child: const Center(
               child: Text(
                 "ĐĂNG KÝ MIỂN PHÍ",
-                style: TextStyle(
+                style:  TextStyle(
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -217,13 +217,13 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Row(
+        const SizedBox(height: 8),
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
+          children:  [
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
-            Text(
+            const Text(
               "Đăng ký nhanh chóng",
               style: TextStyle(color: Colors.white),
             ),
@@ -250,8 +250,8 @@ class _WelcomeViewState extends State<WelcomeView>
           child: Container(
             height: 55,
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/img/primary_btn.png"),
+              image: const DecorationImage(
+                image:  AssetImage("assets/img/primary_btn.png"),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(30),
@@ -263,8 +263,8 @@ class _WelcomeViewState extends State<WelcomeView>
                 ),
               ],
             ),
-            child: Center(
-              child: Text(
+            child: const Center(
+              child: const Text(
                 "ĐĂNG NHẬP",
                 style: TextStyle(
                   color: Colors.white,
@@ -275,13 +275,13 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
           ),
         ),
-        SizedBox(height: 8),
-        Row(
+        const SizedBox(height: 8),
+        const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.login, size: 16, color: Colors.white),
-            SizedBox(width: 4),
-            Text(
+          children: const [
+            const Icon(Icons.login, size: 16, color: Colors.white),
+            const SizedBox(width: 4),
+            const Text(
               "Đăng nhập ngay",
               style: TextStyle(color: Colors.white),
             ),

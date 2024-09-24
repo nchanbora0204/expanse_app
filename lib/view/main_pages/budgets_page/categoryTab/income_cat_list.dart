@@ -13,7 +13,7 @@ class IncomeCatList extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<IncomeCatList> {
-  bool _isExpanded = false;
+  final bool _isExpanded = false;
   double? _devHeight, _devWidth;
   late Future<List<CategoryModel>> _categoryFuture;
   final CategoryService _categoryService = CategoryService();
@@ -53,18 +53,18 @@ class _CategoryScreenState extends State<IncomeCatList> {
       future: _categoryFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator();
+          return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return Text('Lỗi khi tải dữ liệu');
+          return const Text('Lỗi khi tải dữ liệu');
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return Text('Chưa có dữ liệu danh mục');
+          return const Text('Chưa có dữ liệu danh mục');
         } else {
           final category = snapshot.data!;
           final displayedCategories = _isExpanded ? category : category.take(4).toList();
 
           return AnimatedContainer(
-            padding: EdgeInsets.all(15),
-            duration: Duration(milliseconds: 300),
+            padding: const EdgeInsets.all(15),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
             height:  _devHeight! * 0.67,
             child: Column(
@@ -82,7 +82,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
                     mainAxisAlignment: MainAxisAlignment.center,
 
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 100,
                       ),
                       addNewCategory(),
@@ -102,7 +102,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
 
   Widget _categoryCard(List<CategoryModel> categories) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 5.0,
         mainAxisSpacing: 5.0,
@@ -143,7 +143,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: IconButton(
-        icon: Icon(Icons.add),
+        icon: const Icon(Icons.add),
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder:(context)=>AddCategoryForm() )); // Chức năng để thêm danh mục mới
         },
@@ -161,7 +161,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
   }
 
   Widget calendarView() {
-    return Container(
+    return SizedBox(
       height: _devHeight! * 0.05,
       child: Text(
         "Tháng 9 ",

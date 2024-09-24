@@ -30,7 +30,7 @@ class _SignUp extends State<SignUp> {
     return Scaffold(
       backgroundColor: TColor.gray80,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: _devWidth,
           height: _devHeight,
           child: SingleChildScrollView(
@@ -40,7 +40,7 @@ class _SignUp extends State<SignUp> {
               children: [
                 if (_currentIndex > 0)
                   IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
                     onPressed: () {
                       setState(() {
                         if (_currentIndex > 0) {
@@ -52,7 +52,7 @@ class _SignUp extends State<SignUp> {
                 Image.asset("assets/img/app_logo.png"),
                 SizedBox(height: _devHeight! * 0.3),
                 AnimatedSwitcher(
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   child: _buildStep(),
                   transitionBuilder:
                       (Widget child, Animation<double> animation) {
@@ -82,9 +82,9 @@ class _SignUp extends State<SignUp> {
               context: context,
               barrierDismissible: false,
               builder: (BuildContext context) {
-                return AlertDialog(
+                return const AlertDialog(
                   content: Row(
-                    children: <Widget>[
+                    children:  <Widget>[
                       CircularProgressIndicator(),
                       SizedBox(
                         width: 20,
@@ -96,12 +96,12 @@ class _SignUp extends State<SignUp> {
               });
           bool success = await _registerUser();
           await Future.delayed(
-            Duration(seconds: 4),
+            const Duration(seconds: 4),
           );
           Navigator.of(context).pop();
           if (success) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+              const SnackBar(
                 content: Text("Đăng ký hoàn tất!"),
               ),
             );
@@ -110,7 +110,7 @@ class _SignUp extends State<SignUp> {
             Navigator.pushNamed(context, 'main_tab');
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Đăng ký thất bại, vui lòng thử lại")),
+              const SnackBar(content: Text("Đăng ký thất bại, vui lòng thử lại")),
             );
           }
         }
@@ -120,8 +120,8 @@ class _SignUp extends State<SignUp> {
       child: Container(
         height: 55,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/img/primary_btn.png"),
+          image: const DecorationImage(
+            image:  AssetImage("assets/img/primary_btn.png"),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(30),
@@ -133,7 +133,7 @@ class _SignUp extends State<SignUp> {
                 : _currentIndex == 1
                 ? "Tiếp tục"
                 : "Hoàn tất đăng ký",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -158,10 +158,10 @@ class _SignUp extends State<SignUp> {
       child: Container(
         width: _devWidth! * 0.85,
         height: 55,
-        child: Center(
+        child: const Center(
           child: Text(
             "Quay lại đăng nhập",
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -189,7 +189,7 @@ class _SignUp extends State<SignUp> {
 
   Widget _buildTextField(String hint, TextEditingController controller) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
@@ -207,7 +207,7 @@ class _SignUp extends State<SignUp> {
 
   Widget _buildPasswordField(String hint, TextEditingController controller) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
         controller: controller,
         obscureText: _obscureText,

@@ -18,7 +18,7 @@ class ForwardButton extends StatelessWidget {
       child: Container(
         height: 50,
         width: 50,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           shape: BoxShape.circle,
         ),
         child: Icon(

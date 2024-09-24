@@ -74,7 +74,7 @@ class _EditScreenState extends State<EditScreen> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
+        return const AlertDialog(
           content: Row(
             children: [
               CircularProgressIndicator(),
@@ -118,7 +118,7 @@ class _EditScreenState extends State<EditScreen> {
       await _initializeUserData();
 
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Thông tin đã được cập nhật thành công")),
+        const SnackBar(content: Text("Thông tin đã được cập nhật thành công")),
       );
 
       Navigator.of(context).pop(true);
@@ -184,8 +184,8 @@ class _EditScreenState extends State<EditScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text("Không có ảnh nào được chọn."),
+        const SnackBar(
+          content: const Text("Không có ảnh nào được chọn."),
         ),
       );
     }
@@ -249,7 +249,7 @@ class _EditScreenState extends State<EditScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -314,7 +314,7 @@ class _EditScreenState extends State<EditScreen> {
                         backgroundColor: gender == "man"
                             ? Colors.deepPurple
                             : Colors.grey.shade200,
-                        fixedSize: Size(50, 50),
+                        fixedSize: const Size(50, 50),
                       ),
                       icon: Icon(Ionicons.male,
                           color: gender == "man" ? Colors.green : Colors.grey,
@@ -327,7 +327,7 @@ class _EditScreenState extends State<EditScreen> {
                         backgroundColor: gender == "woman"
                             ? Colors.purpleAccent
                             : Colors.grey.shade200,
-                        fixedSize: Size(50, 50),
+                        fixedSize: const Size(50, 50),
                       ),
                       icon: Icon(Ionicons.female,
                           color: gender == "woman" ? Colors.green : Colors.grey,
@@ -363,7 +363,7 @@ class _EditScreenState extends State<EditScreen> {
                   child: Text(
                     localizations.changePassword,
                     style:
-                        TextStyle(color: Colors.lightBlueAccent, fontSize: 16),
+                    const TextStyle(color: Colors.lightBlueAccent, fontSize: 16),
                   ),
                 ),
               ),
