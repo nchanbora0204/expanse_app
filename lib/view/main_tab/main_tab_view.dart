@@ -94,7 +94,7 @@ class _MainTabViewState extends State<MainTabView> {
       onTap: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => AddTransactionForm()),
+          MaterialPageRoute(builder: (context) => AddTransactionForm(amount: '',)),
         );
       },
       child: Container(
