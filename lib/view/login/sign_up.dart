@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/view/login/user_model.dart';
+import 'package:money_lover/view/login/user_service.dart';
 
 class SignUp extends StatefulWidget {
   @override
@@ -11,7 +13,13 @@ class SignUp extends StatefulWidget {
 class _SignUp extends State<SignUp> {
   double? _devHeight, _devWidth;
   int _currentIndex = 0;
-  bool _obscureText = true; // Biến để theo dõi trạng thái ẩn/hiện mật khẩu
+  bool _obscureText = true;
+
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  final UserService _userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -24,39 +32,87 @@ class _SignUp extends State<SignUp> {
         child: Container(
           width: _devWidth,
           height: _devHeight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(),
-              Image.asset("assets/img/app_logo.png"),
-              SizedBox(height: _devHeight! * 0.3),
-
-              AnimatedSwitcher(
-                duration: Duration(milliseconds: 500), // Thời gian chuyển đổi
-                child: _buildStep(),
-                transitionBuilder: (Widget child, Animation<double> animation) {
-                  return FadeTransition(opacity: animation, child: child);
-                },
-              ),
-              _signupWithFacebook(),
-              SizedBox(height: _devHeight! * 0.1),
-              _signIn(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (_currentIndex > 0)
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        if (_currentIndex > 0) {
+                          _currentIndex--;
+                        }
+                      });
+                    },
+                  ),
+                Image.asset("assets/img/app_logo.png"),
+                SizedBox(height: _devHeight! * 0.3),
+                AnimatedSwitcher(
+                  duration: Duration(milliseconds: 500),
+                  child: _buildStep(),
+                  transitionBuilder:
+                      (Widget child, Animation<double> animation) {
+                    return FadeTransition(opacity: animation, child: child);
+                  },
+                ),
+                _signupButton(),
+                SizedBox(height: _devHeight! * 0.3),
+                _signIn(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _signupWithFacebook() {
+  Widget _signupButton() {
     return MaterialButton(
-      onPressed: () {
-        setState(() {
-          if (_currentIndex < 4) {
-            _currentIndex++; // Chuyển sang bước tiếp theo
+      onPressed: () async {
+        if (_currentIndex < 2) {
+          setState(() {
+            _currentIndex++;
+          });
+        } else {
+          showDialog(
+              context: context,
+              barrierDismissible: false,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: Row(
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Text("Đang Đăng Ký..."),
+                    ],
+                  ),
+                );
+              });
+          bool success = await _registerUser();
+          await Future.delayed(
+            Duration(seconds: 4),
+          );
+          Navigator.of(context).pop();
+          if (success) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Đăng ký hoàn tất!"),
+              ),
+            );
+            print("Đăng ký hoàn tất!");
+            // Chuyển trang hoặc thông báo thành công
+            Navigator.pushNamed(context, 'main_tab');
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Đăng ký thất bại, vui lòng thử lại")),
+            );
           }
-        });
+        }
       },
       minWidth: _devWidth! * 0.7,
       height: _devHeight! * 0.06,
@@ -72,10 +128,10 @@ class _SignUp extends State<SignUp> {
         child: Center(
           child: Text(
             _currentIndex == 0
-                ? "Bắt đầu thôi nào" // Hiển thị ban đầu
-                : (_currentIndex > 4 ? "Tiếp tục" : "Hoàn tất đăng ký"),
-
-            // Thay đổi sau khi nhấn
+                ? "Tiếp tục"
+                : _currentIndex == 1
+                    ? "Tiếp tục"
+                    : "Hoàn tất đăng ký",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -103,7 +159,7 @@ class _SignUp extends State<SignUp> {
         height: 55,
         child: Center(
           child: Text(
-            "Đăng Nhập",
+            "Quay lại đăng nhập",
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -117,26 +173,24 @@ class _SignUp extends State<SignUp> {
 
   Widget _buildStep() {
     List<Widget> steps = [
-      SizedBox(),
-      _buildTextField("Email"),
-      _buildTextField("Mật khẩu", isPassword: true),
-      _buildTextField("Họ tên"),
-      _buildTextField("Tên"),
+      _buildTextField("Email", _emailController),
+      _buildPasswordField("Mật khẩu", _passwordController),
+      _buildTextField("Họ tên", _nameController),
     ];
 
     return Column(
       key: ValueKey<int>(_currentIndex),
       children: [
-        if (_currentIndex > 0) steps[_currentIndex],
+        steps[_currentIndex],
       ],
     );
   }
 
-  Widget _buildTextField(String hint, {bool isPassword = false}) {
+  Widget _buildTextField(String hint, TextEditingController controller) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
-        obscureText: isPassword ? _obscureText : false, // Áp dụng thuộc tính obscureText
+        controller: controller,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
@@ -145,21 +199,57 @@ class _SignUp extends State<SignUp> {
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide.none,
           ),
-          suffixIcon: isPassword
-              ? IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
-            ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField(String hint, TextEditingController controller) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+      child: TextField(
+        controller: controller,
+        obscureText: _obscureText,
+        decoration: InputDecoration(
+          hintText: hint,
+          filled: true,
+          fillColor: TColor.gray70,
+          border: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          suffixIcon: IconButton(
             onPressed: () {
               setState(() {
                 _obscureText = !_obscureText;
               });
             },
-          )
-              : null,
+            icon: Icon(_obscureText ? Icons.visibility_off : Icons.visibility),
+          ),
         ),
       ),
     );
+  }
+
+  Future<bool> _registerUser() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+    String name = _nameController.text;
+
+    if (email.isEmpty || password.isEmpty || name.isEmpty) {
+      print('Vui lòng nhập đầy đủ thông tin.');
+      return false;
+    }
+
+    UserModel? user =
+        await _userService.registerWithEmailAndPassword(name, email, password);
+
+    if (user != null) {
+      print("Đăng ký thành công với UID: ${user.uid}");
+      return true;
+    } else {
+      print('Đăng ký thất bại.');
+      return false;
+    }
   }
 }

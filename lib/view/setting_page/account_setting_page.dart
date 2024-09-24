@@ -52,9 +52,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 },
                 trailing: curLocale == 'en'
                     ? const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                )
+                        Icons.check,
+                        color: Colors.green,
+                      )
                     : null,
               )
             ],
@@ -163,7 +163,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 value: languageProvider.locale.languageCode == 'vi'
                     ? "VietNam"
                     : "English",
-                onTap: ()  {
+                onTap: () {
                   _showLanguagePicker(context);
                 },
                 showDropdown: true,
@@ -198,7 +198,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 iconColor: Colors.pink,
                 onTap: () {},
               ),
-            ],x
+            ],
           ),
         ),
       ),
