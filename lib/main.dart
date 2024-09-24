@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
       locale: languageProvider.locale, // Lấy locale từ LanguageProvider
       supportedLocales: L10n.all, // Xóa lặp lại supportedLocales
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      initialRoute: 'sign_up',
+      initialRoute: 'welcome_screen',
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),
