@@ -1,35 +1,44 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:money_lover/l10n/l10n.dart';
+import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/home/home_view.dart';
+import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/login_signup/sign_up.dart';
 import 'package:money_lover/view/login_signup/signup_social.dart';
 import 'package:money_lover/view/login_signup/welcome_view.dart';
-import 'package:money_lover/view/login_signup/sign_in.dart';
-import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
-import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
+
+
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
+
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'common/color_extension.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-      options: FirebaseOptions(
-        apiKey: 'AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM',
-        appId: '1:258938640438:android:fd4a2fcc09f074f5df2097',
-        messagingSenderId: '258938640438',
-        projectId: 'moneylover-v1',
-        storageBucket: 'moneylover-v1.appspot.com',
-      )
+    options: FirebaseOptions(
+      apiKey: "AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM",
+      appId: "1:258938640438:android:fd4a2fcc09f074f5df2097",
+      messagingSenderId: '258938640438',
+      projectId: "moneylover-v1",
+      storageBucket: "moneylover-v1.appspot.com",
+    ),
   );
 
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ThemeProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => LanguageProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -42,6 +51,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final themeMode = themeProvider.curThemeMode;
+    final languageProvider = Provider.of<LanguageProvider>(context);
 
     return MaterialApp(
       title: 'Mooney',
@@ -49,7 +59,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: "Inter",
         colorScheme: ColorScheme.fromSeed(
-          seedColor: TColor.primary,
+          seedColor: TColor.secondary,
           primary: TColor.gray70,
           primaryContainer: TColor.gray60,
           secondary: TColor.secondary,
@@ -73,18 +83,27 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeMode,
+
       home: AuthWrapper(),
       initialRoute: 'main_tab',
+
+      locale: languageProvider.locale, // Lấy locale từ LanguageProvider
+      supportedLocales: L10n.all, // Xóa lặp lại supportedLocales
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+
+
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),
         'sign_up': (context) => SignUp(),
-        'sign_in': (context) => SignIn(),
         'signUp_social': (context) => SocialSignUp(),
+        'sign_in': (context) => SignIn(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
 
+
         'notifi_list_page': (context) => NotificationListPage(),
+
       },
     );
   }

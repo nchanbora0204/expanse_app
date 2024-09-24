@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
-
+import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/firebaseService/user_services.dart';
-import 'package:money_lover/models/user_model.dart';
+
 
 class SignIn extends StatefulWidget {
   @override
-  _SignInState createState() => _SignInState();
+  State<StatefulWidget> createState() {
+    return _SignIn();
+  }
 }
 
-class _SignInState extends State<SignIn> {
+class _SignIn extends State<SignIn> {
   double? _devHeight, _devWidth;
+  bool _obscureText = true;
+
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final UserService _userService = UserService();
+
+  final UserService _userService = UserService(); // Khởi tạo dịch vụ người dùng
 
   @override
   Widget build(BuildContext context) {
@@ -20,42 +25,105 @@ class _SignInState extends State<SignIn> {
     _devWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Colors.grey[800],
+      backgroundColor: TColor.gray80,
       body: SafeArea(
         child: Container(
           width: _devWidth,
           height: _devHeight,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset("assets/img/app_logo.png"),
-              SizedBox(height: _devHeight! * 0.05),
-              _buildTextField("Email", _emailController),
-              _buildTextField("Mật khẩu", _passwordController, obscureText: true),
-              SizedBox(height: _devHeight! * 0.05),
-              _signInButton(),
-              _signUpRedirect(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(),
+                Image.asset("assets/img/app_logo.png"),
+                SizedBox(height: _devHeight! * 0.3),
+                _buildSignInForm(),
+                SizedBox(
+                  height: 10,
+                ),
+                _signInWithFacebook(),
+                SizedBox(height: _devHeight! * 0.1),
+                _navigateToSignUp(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _signInButton() {
+  Widget _buildSignInForm() {
+    return Container(
+      child: Column(
+        children: [
+          _buildTextField("Email", _emailController),
+          _buildTextField("Mật khẩu", _passwordController, isPassword: true),
+          SizedBox(height: 20),
+          MaterialButton(
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  barrierDismissible: false,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      content: Row(
+                        children: <Widget>[
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Text("Đang đăng nhập..."),
+                        ],
+                      ),
+                    );
+                  });
+              bool success = await _signInUser();
+              await Future.delayed(Duration(seconds: 4));
+              Navigator.of(context).pop();
+              if (success) {
+                print("Đăng nhập thành công!");
+                Navigator.pushNamed(context, 'main_tab');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Đăng Nhập Thất Bại. Vui lòng thử lại sau"),
+                  ),
+                );
+              }
+            },
+            minWidth: _devWidth! * 0.7,
+            height: _devHeight! * 0.06,
+            child: Container(
+              height: 55,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/img/primary_btn.png"),
+                  fit: BoxFit.cover,
+                ),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Center(
+                child: Text(
+                  "Đăng nhập",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _signInWithFacebook() {
     return MaterialButton(
-      onPressed: () async {
-        bool success = await _signInUser();
-        if (success) {
-          // Điều hướng sau khi đăng nhập thành công
-          print('Đăng nhập thành công!');
-          Navigator.pushReplacementNamed(context, 'main_tab');
-          // Navigator.pushReplacement... (Chuyển sang trang khác)
-        } else {
-          // Xử lý khi đăng nhập thất bại
-          print('Đăng nhập thất bại.');
-        }
+      onPressed: () {
+        // Xử lý đăng nhập với Facebook ở đây
       },
       minWidth: _devWidth! * 0.7,
       height: _devHeight! * 0.06,
@@ -70,7 +138,7 @@ class _SignInState extends State<SignIn> {
         ),
         child: Center(
           child: Text(
-            "Đăng nhập",
+            "Đăng nhập bằng Facebook",
             style: TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -82,13 +150,12 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _signUpRedirect() {
+  Widget _navigateToSignUp() {
     return MaterialButton(
       onPressed: () {
-        // Điều hướng sang trang đăng ký
-        Navigator.pushNamed(context, '/signup');
+        Navigator.pushNamed(context, 'sign_up');
       },
-      color: Colors.grey[700],
+      color: TColor.gray70,
       minWidth: _devWidth! * 0.7,
       height: _devHeight! * 0.06,
       shape: RoundedRectangleBorder(
@@ -99,7 +166,7 @@ class _SignInState extends State<SignIn> {
         height: 55,
         child: Center(
           child: Text(
-            "Đăng ký tài khoản",
+            "Chưa có tài khoản? Đăng ký",
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -111,20 +178,34 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Widget _buildTextField(String hint, TextEditingController controller, {bool obscureText = false}) {
+  Widget _buildTextField(String hint, TextEditingController controller,
+      {bool isPassword = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
         controller: controller,
-        obscureText: obscureText,
+        obscureText: isPassword ? _obscureText : false,
         decoration: InputDecoration(
           hintText: hint,
           filled: true,
-          fillColor: Colors.grey[700],
+          fillColor: TColor.gray70,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(30),
             borderSide: BorderSide.none,
           ),
+          suffixIcon: isPassword
+              ? IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility_off : Icons.visibility,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              setState(() {
+                _obscureText = !_obscureText;
+              });
+            },
+          )
+              : null,
         ),
       ),
     );
@@ -135,12 +216,31 @@ class _SignInState extends State<SignIn> {
     String password = _passwordController.text;
 
     if (email.isEmpty || password.isEmpty) {
-      print('Vui lòng nhập đầy đủ thông tin.');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Vui lòng nhập đầy đủ thông tin."),
+        ),
+      );
       return false;
     }
 
-    UserModel? user = await _userService.signInWithEmailAndPassword(email, password);
+    bool success =
+    await _userService.signInWithEmailAndPassword(email, password);
 
-    return user != null;
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Đăng nhập thành công."),
+        ),
+      );
+      return true;
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."),
+        ),
+      );
+      return false;
+    }
   }
 }

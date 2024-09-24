@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:money_lover/language/language_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingSwitch extends StatelessWidget {
   final String title;
@@ -7,7 +10,8 @@ class SettingSwitch extends StatelessWidget {
   final Color iconColor;
   final IconData icon;
   final ThemeMode currentMode; // Thay đổi từ bool thành ThemeMode
-  final Function(ThemeMode mode) onModeChange; // Thay đổi từ bool thành ThemeMode
+  final Function(ThemeMode mode)
+      onModeChange; // Thay đổi từ bool thành ThemeMode
   final VoidCallback onSystemModeTap;
 
   const SettingSwitch({
@@ -23,6 +27,7 @@ class SettingSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
     return SizedBox(
       width: double.infinity,
       child: Column(
@@ -58,23 +63,22 @@ class SettingSwitch extends StatelessWidget {
                 itemBuilder: (context) => [
                   PopupMenuItem(
                     value: ThemeMode.light,
-                    child: Text("Sáng"),
+                    child: Text(AppLocalizations.of(context)!.lightMode),
                   ),
                   PopupMenuItem(
                     value: ThemeMode.dark,
-                    child: Text("Tối"),
+                    child: Text(AppLocalizations.of(context)!.darkMode),
                   ),
                   PopupMenuItem(
                     value: ThemeMode.system,
-                    child: Text("Theo Thiết Bị"),
+                    child: Text(AppLocalizations.of(context)!.deviceMode),
                   ),
                 ],
                 child: Row(
                   children: [
                     Text(
-                      _getModeText(currentMode),
+                      _getModeText(context, currentMode),
                       style: TextStyle(
-                        fontSize: 14,
                         color: Theme.of(context).textTheme.bodyMedium?.color,
                       ),
                     ),
@@ -93,16 +97,16 @@ class SettingSwitch extends StatelessWidget {
     );
   }
 
-  String _getModeText(ThemeMode mode) {
+  String _getModeText(BuildContext context, ThemeMode mode) {
     switch (mode) {
       case ThemeMode.dark:
-        return "Tối";
+        return AppLocalizations.of(context)!.darkMode;
       case ThemeMode.light:
-        return "Sáng";
+        return AppLocalizations.of(context)!.lightMode;
       case ThemeMode.system:
-        return "Theo Thiết Bị";
+        return AppLocalizations.of(context)!.deviceMode;
       default:
-        return "Mặc định";
+        return AppLocalizations.of(context)!.defaultMode;
     }
   }
 }

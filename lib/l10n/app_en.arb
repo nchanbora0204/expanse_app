@@ -1,0 +1,87 @@
+{
+  "@@locale": "en",
+  "account": "Account Setting",
+  "language": "Language",
+  "dark_mode": "Theme",
+  "notifications": "Notifications",
+  "support": "Support",
+  "setting": "Setting",
+  "samesetting": "Setting",
+  "darkMode": "Dark",
+  "lightMode": "Light",
+  "deviceMode": "Device",
+  "defaultMode": "Default",
+  "photo": "Photo",
+  "uploadImage": "Upload Image",
+  "name": "Name",
+  "gender": "Gender",
+  "age": "Age",
+  "email": "Email",
+  "password": "Password",
+  "oldPassword": "Old Password",
+  "newPassword": "New Password",
+  "updatePassword": "Update Password",
+  "changePassword": "Change Password",
+  "logout": "Log Out",
+  "loggingOut": "Logging Out",
+  "logoutFailed" : "Logout Failed",
+  "permissionDenied": "Permission denied. Unable to access photos.",
+  "editProfile": "Edit Profile",
+  "changePhoto": "Change Photo",
+  "activeSubs": "Active Subs",
+  "lowestSubs": "Lowest Subs",
+  "highestSubs": "Highest Subs",
+  "spendingView": "Spending View",
+  "viewSpending": "View Spending",
+  "subscription": "Subscription",
+  "invoice": "Invoice",
+  "monthlySpending": "Monthly Spending",
+  "addTransactionTitle": "Add New Transaction",
+  "transactionTitle": "Title",
+  "transactionAmount": "Amount",
+  "transactionDescription": "Description",
+  "transactionCategory": "Select Category",
+  "transactionStartDate": "Start Date",
+  "transactionEndDate": "End Date",
+  "saveTransaction": "Save Transaction",
+  "errorTitleRequired": "Please enter the title",
+  "errorAmountRequired": "Please enter the amount",
+  "errorAmountInvalid": "Please enter a valid number",
+  "@appTitle": {
+    "description": "The title of the app"
+  },
+  "@addTransactionTitle": {
+    "description": "The title for adding a new transaction"
+  },
+  "@transactionTitle": {
+    "description": "Label for transaction title input field"
+  },
+  "@transactionAmount": {
+    "description": "Label for transaction amount input field"
+  },
+  "@transactionDescription": {
+    "description": "Label for transaction description input field"
+  },
+  "@transactionCategory": {
+    "description": "Label for transaction category dropdown"
+  },
+  "@transactionStartDate": {
+    "description": "Label for start date selector"
+  },
+  "@transactionEndDate": {
+    "description": "Label for end date selector"
+  },
+  "@saveTransaction": {
+    "description": "Button text to save the transaction"
+  },
+  "@errorTitleRequired": {
+    "description": "Error message when the title is empty"
+  },
+  "@errorAmountRequired": {
+    "description": "Error message when the amount is empty"
+  },
+  "@errorAmountInvalid": {
+    "description": "Error message when the amount is not a valid number"
+  }
+
+}
