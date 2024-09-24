@@ -6,6 +6,7 @@ import 'package:money_lover/view/login_signup/welcome_view.dart';
 import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
+import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: themeMode,
       home: AuthWrapper(),
-      initialRoute: 'sign_in',
+      initialRoute: 'main_tab',
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),
@@ -82,7 +83,8 @@ class MyApp extends StatelessWidget {
         'signUp_social': (context) => SocialSignUp(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
-        'add_trans': (context) => AddTransactionForm(),
+
+        'notifi_list_page': (context) => NotificationListPage(),
       },
     );
   }

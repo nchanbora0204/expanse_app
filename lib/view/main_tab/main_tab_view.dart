@@ -129,7 +129,10 @@ class _MainTabViewState extends State<MainTabView> {
       bottom: 20,
       child: InkWell(
         onTap: () {
-          Navigator.push(context, MaterialPageRoute(builder:(context)=> AddTransactionForm() ));
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AddTransactionForm(amount: '')), // Truyền giá trị amount mặc định (0 hoặc số khác)
+          );
           // Hành động khi nhấn nút thêm chi tiêu
         },
         child: Container(
