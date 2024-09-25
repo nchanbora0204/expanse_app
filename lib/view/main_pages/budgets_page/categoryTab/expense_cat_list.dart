@@ -1,11 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:money_lover/firebaseService/other_services.dart'; // Sửa đường dẫn thành service cho Category
-import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫn thành model cho Category
+import 'package:money_lover/firebaseService/other_services.dart'; // Đảm bảo đường dẫn đúng
+import 'package:money_lover/models/category_model.dart'; // Đảm bảo đường dẫn đúng
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
-import 'package:money_lover/firebaseService/other_services.dart';
 import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
 
 class ExpenseCatList extends StatefulWidget {
@@ -16,20 +15,12 @@ class ExpenseCatList extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<ExpenseCatList> {
-  final bool _isExpanded = false;
-  double? _devHeight, _devWidth;
   final CategoryService _categoryService = CategoryService();
-
-  @override
-  void initState() {
-    super.initState();
-    _categoryService.addDefaultCategories();
-  }
+  double? _devHeight, _devWidth;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
     _devHeight = MediaQuery.of(context).size.height;
     _devWidth = MediaQuery.of(context).size.width;
 
@@ -42,7 +33,8 @@ class _CategoryScreenState extends State<ExpenseCatList> {
           mainAxisSize: MainAxisSize.max,
           children: [
             _categoryList(),
-            calendarView(),
+            _addNewCategoryButton(),
+            _calendarView(),
           ],
         ),
       ),
@@ -51,7 +43,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
 
   Widget _categoryList() {
     return StreamBuilder<List<CategoryModel>>(
-      stream: _categoryService.getCategoryStream(), // Sử dụng stream
+      stream: _categoryService.getCategoryStream(), // Sử dụng stream để lấy danh sách category
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -60,8 +52,12 @@ class _CategoryScreenState extends State<ExpenseCatList> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text('Chưa có dữ liệu danh mục');
         } else {
-          final category = snapshot.data!;
-          final displayedCategories = category.toList();
+          // Lọc các danh mục chỉ có type là 0 (khoản chi)
+          final categories = snapshot.data!.where((category) => category.type == 0).toList();
+
+          if (categories.isEmpty) {
+            return const Text('Chưa có khoản chi nào.');
+          }
 
           return AnimatedContainer(
             padding: const EdgeInsets.all(15),
@@ -73,22 +69,9 @@ class _CategoryScreenState extends State<ExpenseCatList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                  child: _categoryCard(displayedCategories),
+                  child: _categoryCard(categories),
                 ),
-                Container(
-                  width: _devWidth! * 0.44,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      addNewCategory(),
-                    ],
-                  ),
-                ),
+                _addNewCategoryButton(),
               ],
             ),
           );
@@ -134,6 +117,12 @@ class _CategoryScreenState extends State<ExpenseCatList> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                  const SizedBox(height: 5),
+                  // Hiển thị số tiền cho mỗi khoản chi
+                  Text(
+                    '${categories[index].amount} VNĐ', // Giả sử 'amount' là field trong CategoryModel
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
                 ],
               ),
             ),
@@ -143,7 +132,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
     );
   }
 
-  Widget addNewCategory() {
+  Widget _addNewCategoryButton() {
     return Container(
       height: 50,
       width: _devWidth! * 0.4,
@@ -169,11 +158,11 @@ class _CategoryScreenState extends State<ExpenseCatList> {
     return colors[random.nextInt(colors.length)];
   }
 
-  Widget calendarView() {
+  Widget _calendarView() {
     return Container(
       height: _devHeight! * 0.05,
       child: Text(
-        "Tháng 9 ",
+        "Tháng 9",
         style: TextStyle(
             fontWeight: FontWeight.w900, fontSize: 30, color: TColor.gray20),
       ),

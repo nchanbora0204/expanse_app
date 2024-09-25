@@ -42,6 +42,7 @@ dependencies:
   notification_listener_service: '0.3.3'
   hive: ^2.0.0
   hive_flutter: ^1.1.0
+  fl_chart: '0.69.0'
 
 
 

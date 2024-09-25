@@ -1,19 +1,26 @@
 // Model cho Category
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class CategoryModel {
   final String id;
   final String name;
-  final int type;
+  final int type; // 0: khoản chi, 1: khoản thu
+  final double amount; // Số tiền dự định chi
 
-
-  CategoryModel({required this.id, required this.name, required this.type });
+  CategoryModel({
+    required this.id,
+    required this.name,
+    required this.type,
+    required this.amount,
+  });
 
   // Chuyển từ map sang object
   factory CategoryModel.fromMap(Map<String, dynamic> data) {
     return CategoryModel(
-      id: data['id'] ?? 'unknown_id',  // Đảm bảo không có giá trị null
+      id: data['id'] ?? 'unknown_id',
       name: data['name'] ?? 'Unknown Category',
-      type: data['type'] ?? 'Unknown Type',
-
+      type: data['type'] ?? 0,
+      amount: data['amount']?.toDouble() ?? 0.0,
     );
   }
 
@@ -22,8 +29,8 @@ class CategoryModel {
     return {
       'id': id,
       'name': name,
-      'type': type
-
+      'type': type,
+      'amount': amount,
     };
   }
 }

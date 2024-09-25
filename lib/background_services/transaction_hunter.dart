@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:get/get.dart';
 import 'package:notification_listener_service/notification_event.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
@@ -11,15 +13,8 @@ class HunterService extends GetxController {
 
   bool _isListening = false;
 
-  @override
-  void onInit() {
-    super.onInit();
-    initHive();  // Khởi tạo Hive
-    loadNotificationsFromHive(); // Tải thông báo đã lưu khi khởi động ứng dụng
-    requestPermission();  // Yêu cầu quyền thông báo
-  }
 
-  // Khởi tạo Hive và mở box lưu trữ
+  @override
   void initHive() async {
     await Hive.initFlutter();
 
@@ -28,6 +23,15 @@ class HunterService extends GetxController {
       await Hive.openBox('notificationBox');
     }
   }
+  void onInit() {
+    super.onInit();
+    initHive();  // Khởi tạo Hive
+    loadNotificationsFromHive(); // Tải thông báo đã lưu khi khởi động ứng dụng
+    requestPermission();  // Yêu cầu quyền thông báo
+  }
+
+  // Khởi tạo Hive và mở box lưu trữ
+
 
   // Yêu cầu quyền nhận thông báo
   void requestPermission() async {
@@ -77,13 +81,21 @@ class HunterService extends GetxController {
 
   // Lưu thông báo vào Hive
   void saveNotificationsToHive() {
-    var box = Hive.box('notificationBox'); // Chắc chắn box đã được mở với tên đúng
+    var box = Hive.box('notificationBox');
     box.put('displayList', displayList);
   }
+  String generationNotificationId() {
+    final random = Random();
+    String _idNotifi;
+    do{
 
+      _idNotifi ='Noti Id${random.nextInt(10000000).toString().padLeft(6,'0')}';
+    }while(notiList.any((notification)=> notification['id'] == _idNotifi));
+    return _idNotifi;
+  }
   // Tải thông báo từ Hive khi ứng dụng mở lại
   void loadNotificationsFromHive() {
-    var box = Hive.box('notificationBox'); // Chắc chắn box đã được mở với tên đúng
+    var box = Hive.box('notificationBox');
     List<dynamic>? storedNotifications = box.get('displayList', defaultValue: []);
 
     if (storedNotifications != null && storedNotifications.isNotEmpty) {
@@ -150,4 +162,5 @@ class HunterService extends GetxController {
       return difference > 15;
     });
   }
+
 }

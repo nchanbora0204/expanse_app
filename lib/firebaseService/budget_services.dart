@@ -6,7 +6,7 @@ class BudgetService {
   FirebaseFirestore.instance.collection('budget');
 
   // Thêm một ngân sách mới
-  Future<void> addBudget(BudgetModel budget) async {
+  Future<void> addBudget(CategoryModel budget) async {
     try {
       await budgetCollection.doc(budget.id).set(budget.toMap());
       print("Đã thêm mới ngân sách");
@@ -16,11 +16,11 @@ class BudgetService {
   }
 
   // Lấy danh sách ngân sách
-  Future<List<BudgetModel>> getBudgets() async {
+  Future<List<CategoryModel>> getBudgets() async {
     try {
       QuerySnapshot snapshot = await budgetCollection.get();
       return snapshot.docs.map(
-            (doc) => BudgetModel.fromMap(doc.data() as Map<String, dynamic>),
+            (doc) => CategoryModel.fromMap(doc.data() as Map<String, dynamic>),
       ).toList();
     } catch (e) {
       print("Lỗi khi lấy danh sách ngân sách: $e");
@@ -29,7 +29,7 @@ class BudgetService {
   }
 
   // Cập nhật ngân sách
-  Future<void> updateBudget(BudgetModel budget) async {
+  Future<void> updateBudget(CategoryModel budget) async {
     try {
       await budgetCollection.doc(budget.id).update(budget.toMap());
       print('Cập nhật ngân sách thành công');

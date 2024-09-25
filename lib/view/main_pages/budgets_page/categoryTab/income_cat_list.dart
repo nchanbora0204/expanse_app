@@ -41,6 +41,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
           mainAxisSize: MainAxisSize.max,
           children: [
             _categoryList(),
+            _addNewCategory(),
             calendarView(),
           ],
         ),
@@ -59,33 +60,34 @@ class _CategoryScreenState extends State<IncomeCatList> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text('Chưa có dữ liệu danh mục');
         } else {
-          final category = snapshot.data!;
-          final displayedCategories = _isExpanded ? category : category.take(4).toList();
+          final categories = snapshot.data!;
+          // Lọc danh mục chỉ có type là 0 (khoản thu)
+          final displayedCategories = categories.where((category) => category.type == 0).toList();
+
+          if (displayedCategories.isEmpty) {
+            return const Text('Chưa có khoản thu nào.');
+          }
 
           return AnimatedContainer(
             padding: const EdgeInsets.all(15),
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeInOut,
-            height:  _devHeight! * 0.67,
+            height: _devHeight! * 0.67,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                  child: _categoryCard(category),
+                  child: _categoryCard(displayedCategories), // Hiển thị danh sách khoản thu
                 ),
                 Container(
                   width: _devWidth! * 0.44,
                   alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left :15),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-
                     children: [
-                      const SizedBox(
-                        height: 100,
-                      ),
-                      addNewCategory(),
+                      const SizedBox(height: 100),
 
                     ],
                   ),
@@ -97,6 +99,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
       },
     );
   }
+
 
 
 
@@ -134,7 +137,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
     );
   }
 
-  Widget addNewCategory() {
+  Widget _addNewCategory() {
     return Container(
       height: 50,
       width: _devWidth! * 0.4,

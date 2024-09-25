@@ -1,32 +1,31 @@
-import 'package:money_lover/view/main_pages/budgets_page/categoryTab/income_cat_list.dart';
-
-class BudgetModel {
+class CategoryModel {
   final String id;
-  final String tittle;
-  final double amount;
-  final DateTime date;
-  BudgetModel({
+  final String name;
+  final int type;
+  final double amount; // Thêm trường amount
+
+  CategoryModel({
     required this.id,
-    required this.tittle,
-    required this.amount,
-    required this.date
-});
-  // Firebase Data => đối tượng Budget
-  factory BudgetModel.fromMap(Map<String, dynamic> map){
-    return BudgetModel(
-        id: map['id']?? '',
-        tittle: map['tittle'] ?? '',
-        amount: map['amount']?.toDouble() ?? 0.0,
-        date: DateTime.parse(map['date']),
+    required this.name,
+    required this.type,
+    required this.amount, // Thêm tham số amount vào constructor
+  });
+
+  factory CategoryModel.fromMap(Map<String, dynamic> data) {
+    return CategoryModel(
+      id: data['id'] ?? 'unknown_id',
+      name: data['name'] ?? 'Unknown Category',
+      type: data['type'] ?? 0,
+      amount: data['amount']?.toDouble() ?? 0.0, // Chuyển đổi từ map
     );
   }
-  // Đối tượng Budget => Firebase Data
-  Map<String, dynamic> toMap(){
+
+  Map<String, dynamic> toMap() {
     return {
-      'id':id,
-      'tittle': tittle,
-      'amount': amount,
-      'date': date.toIso8601String(),
+      'id': id,
+      'name': name,
+      'type': type,
+      'amount': amount, // Thêm amount vào map
     };
   }
 }

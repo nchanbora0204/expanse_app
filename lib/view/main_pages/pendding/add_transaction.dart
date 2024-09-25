@@ -33,8 +33,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   void initState() {
     super.initState();
     print("Received amount: ${widget.amount}");
+    String numericAmount = widget.amount.replaceAll(RegExp(r'[^0-9]'), '');
     // Khi nhận giá trị amount, gán nó vào _amount để hiển thị trong form
-    _amount = double.tryParse(widget.amount) ?? 0;
+    _amount = double.tryParse(numericAmount) ?? 0;
+    print('add: ${_amount}');
+
   }
 
   @override
@@ -96,6 +99,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       onSaved: (value) {
         _title = value!;
       },
+
       style: const TextStyle(
         fontFamily: 'Roboto', // Áp dụng font chữ cho TextFormField
         fontSize: 18,
@@ -205,19 +209,18 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   Widget _buildDateSelector(ThemeData theme, AppLocalizations localizations) {
     return Column(
       children: [
-
         Row(
           children: [
             Expanded(
               child: Text(
-                'Ngày kết thúc: ${_endDate.toLocal()}',
+                'Ngày giao dịch: ${_selectedDate.toLocal().toString().split(' ')[0]}',
                 style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
               ),
             ),
             TextButton(
-              onPressed: () => _selectDate(isStartDate: false),
+              onPressed: () => _selectDate(),
               child: Text(
-                'Chọn ngày kết thúc',
+                'Chọn ngày giao dịch',
                 style: TextStyle(color: theme.textTheme.bodyMedium?.color),
               ),
             ),
@@ -276,27 +279,17 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     return 'tr' + List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
   }
 
-  Future<void> _selectDate({required bool isStartDate}) async {
+  Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? _startDate : _endDate,
+      initialDate: _selectedDate,
       firstDate: DateTime(2020),
       lastDate: DateTime(2100),
     );
-    if (_selectedDate != null && _selectedDate != DateTime.now()) {
-      // Chỉ giữ lại ngày, tháng và năm
-      DateTime dateOnly = DateTime(
-          _selectedDate.year, _selectedDate.month, _selectedDate.day);
-
-      if (picked != null) {
-        setState(() {
-          if (isStartDate) {
-            _startDate = picked;
-          } else {
-            _endDate = picked;
-          }
-        });
-      }
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
     }
   }
 }
