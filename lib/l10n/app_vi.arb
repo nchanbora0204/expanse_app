@@ -33,8 +33,8 @@
   "highestSubs": "Đăng Ký Cao Nhất",
   "spendingView": "Chi Tiêu",
   "viewSpending": "Xem Chi Tiêu",
-  "subscription": "Chi Tiêu",
-  "invoice": "Hóa Đơn",
+  "subscription": "Thu Nhập",
+  "invoice": "Chi Tiêu",
   "monthlySpending": "Chi Tiêu Trong Tháng",
   "appTitle": "Money Lover",
   "addTransactionTitle": "Thêm Giao Dịch Mới",
@@ -83,5 +83,17 @@
   },
   "@errorAmountInvalid": {
     "description": "Thông báo lỗi khi số tiền không hợp lệ"
-  }
+  },
+  "introApp": "Chào mừng đến với Expense",
+  "feature_1_title": "Theo dõi chi tiêu",
+  "feature_1_desc": "Tính năng 1: Quản lý chi tiêu hiệu quả",
+  "feature_2_title": "Nhắc nhở thanh toán",
+  "feature_2_desc": "Tính năng 2: Nhắc nhở thanh toán hóa đơn",
+  "feature_3_title": "Phân tích dữ liệu",
+  "feature_3_desc": "Tính năng 3: Đưa ra báo cáo chi tiết",
+  "sign_up_free": "Đăng Ký Miễn Phí",
+  "quick_sign_up": "Đăng ký nhanh chóng",
+  "login": "Đăng Nhập",
+  "login_now": "Đăng nhập ngay"
+
 }

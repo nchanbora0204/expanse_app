@@ -168,7 +168,7 @@ class _HomeViewState extends State<HomeView> {
               borderRadius: BorderRadius.circular(15),
             ),
             child: Text(
-              AppLocalizations.of(context)!.viewSpending,
+              AppLocalizations.of(context)!.spendingView,
               style: TextStyle(
                 color: theme.textTheme.bodyLarge?.color,
                 fontSize: 14,
@@ -241,7 +241,7 @@ class _HomeViewState extends State<HomeView> {
         children: [
           Expanded(
             child: SegmentButton(
-              title: AppLocalizations.of(context)!.spendingView,
+              title: AppLocalizations.of(context)!.subscription,
               isAcitive: isSubscription,
               onPressed: () {
                 setState(() {

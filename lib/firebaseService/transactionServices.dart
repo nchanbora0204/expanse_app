@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:money_lover/models/category_model.dart';
 import 'package:money_lover/models/transaction_model.dart';
 
 class TransactionService {
@@ -100,9 +99,5 @@ class TransactionService {
     });
 
   }
-
-
-
-
 }
 
