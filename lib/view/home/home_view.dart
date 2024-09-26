@@ -16,7 +16,7 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  int _currentPage = 0;
+  final int _currentPage = 0;
   final List<Widget> pages = [];
 
   bool isSubscription = true; // Trạng thái cho "Đăng Ký"

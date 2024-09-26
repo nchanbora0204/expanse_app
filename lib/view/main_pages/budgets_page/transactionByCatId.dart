@@ -4,7 +4,7 @@ import 'package:money_lover/models/transaction_model.dart';
 class TransactionsPage extends StatelessWidget {
   final List<TransactionModel> transactions;
 
-  TransactionsPage({required this.transactions});
+  const TransactionsPage({super.key, required this.transactions});
 
   @override
   Widget build(BuildContext context) {

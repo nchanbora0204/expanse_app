@@ -33,7 +33,7 @@ class StatisticService {
       // Tính toán ngày bắt đầu và kết thúc của tuần
       int currentWeekday = date.weekday;
       DateTime startOfWeek = date.subtract(Duration(days: currentWeekday - 1)); // Bắt đầu tuần
-      DateTime endOfWeek = startOfWeek.add(Duration(days: 6, hours: 23, minutes: 59, seconds: 59)); // Kết thúc tuần
+      DateTime endOfWeek = startOfWeek.add(const Duration(days: 6, hours: 23, minutes: 59, seconds: 59)); // Kết thúc tuần
 
       // Lấy giao dịch từ Category
       List<TransactionModel> transactionByWeek = [];
@@ -57,7 +57,7 @@ class StatisticService {
         }
 
         transactionByWeek.addAll(transactionSnapshot.docs.map(
-                (doc) => TransactionModel.fromMap(doc.data() as Map<String, dynamic>)));
+                (doc) => TransactionModel.fromMap(doc.data())));
 
         totalTrans += transactionSnapshot.docs.fold(0.0, (sum, doc) {
           double amount = doc.data()['amount']?.toDouble() ?? 0.0; // Đảm bảo lấy đúng kiểu
@@ -83,7 +83,7 @@ class StatisticService {
       QuerySnapshot snapshot = await _firestore
           .collection('transactions')
           .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(day))
-          .where('date', isLessThan: Timestamp.fromDate(day.add(Duration(days: 1))))
+          .where('date', isLessThan: Timestamp.fromDate(day.add(const Duration(days: 1))))
           .get();
 
       // Tính tổng số tiền cho ngày

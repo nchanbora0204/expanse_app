@@ -83,11 +83,11 @@ class HunterService extends GetxController {
 
   String generationNotificationId() {
     final random = Random();
-    String _idNotifi;
+    String idNotifi;
     do {
-      _idNotifi = 'Noti Id${random.nextInt(10000000).toString().padLeft(6, '0')}';
-    } while (notiList.any((notification) => notification['id'] == _idNotifi));
-    return _idNotifi;
+      idNotifi = 'Noti Id${random.nextInt(10000000).toString().padLeft(6, '0')}';
+    } while (notiList.any((notification) => notification['id'] == idNotifi));
+    return idNotifi;
   }
 
   // Tải thông báo từ Hive khi ứng dụng mở lại

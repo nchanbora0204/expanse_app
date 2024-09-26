@@ -24,7 +24,7 @@ void main() async {
   await Hive.openBox('settingsBox');//Mở box để lưu trữ trạng thái.
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: FirebaseOptions(
+    options: const FirebaseOptions(
       apiKey: "AIzaSyDqV2zJhaZWUIJ4s24vP9vKv2qtMOvUDFM",
       appId: "1:258938640438:android:fd4a2fcc09f074f5df2097",
       messagingSenderId: '258938640438',
@@ -65,7 +65,7 @@ class MyApp extends StatelessWidget {
           secondary: TColor.secondary,
         ),
         useMaterial3: false,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headlineLarge: TextStyle(color: Colors.black, fontSize: 36),
           headlineMedium: TextStyle(color: Colors.black, fontSize: 27),
           headlineSmall: TextStyle(color: Colors.black, fontSize: 24),
@@ -74,7 +74,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       darkTheme: ThemeData.dark().copyWith(
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headlineLarge: TextStyle(color: Colors.white, fontSize: 36),
           headlineMedium: TextStyle(color: Colors.white, fontSize: 27),
           headlineSmall: TextStyle(color: Colors.white, fontSize: 24),
@@ -92,13 +92,13 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
 
       routes: {
-        'account_setting': (context) => AccountSettingPage(),
-        'welcome_screen': (context) => WelcomeView(),
+        'account_setting': (context) => const AccountSettingPage(),
+        'welcome_screen': (context) => const WelcomeView(),
         'sign_up': (context) => SignUp(),
         'signUp_social': (context) => SocialSignUp(),
         'sign_in': (context) => SignIn(),
-        'home': (context) => HomeView(),
-        'main_tab': (context) => MainTabView(),
+        'home': (context) => const HomeView(),
+        'main_tab': (context) => const MainTabView(),
 
         'notifi_list_page': (context) => NotificationListPage(),
 
@@ -109,6 +109,8 @@ class MyApp extends StatelessWidget {
 
 // Widget để điều hướng dựa trên trạng thái đăng nhập
 class AuthWrapper extends StatelessWidget {
+  const AuthWrapper({super.key});
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
@@ -116,10 +118,10 @@ class AuthWrapper extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // Hiển thị loading trong khi kiểm tra trạng thái đăng nhập
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           // Người dùng đã đăng nhập, điều hướng đến trang chính
-          return MainTabView();
+          return const MainTabView();
         } else {
           // Người dùng chưa đăng nhập, điều hướng đến trang đăng nhập
           return SignIn();

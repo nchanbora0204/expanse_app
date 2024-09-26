@@ -13,9 +13,6 @@ class CategoryService {
     return _auth.currentUser?.uid;
   }
 
-
-
-
   // Lấy danh sách category cho user hiện tại
   Future<List<CategoryModel>> getCategory() async {
     String? uid = getCurrentUserId();
@@ -79,16 +76,42 @@ class CategoryService {
       print('Category Service Class: Lỗi khi cập nhật Category');
     }
   }
-  Future<List<CategoryModel>> getCategoriesByType(int type) async {
-    final snapshot = await _db
-        .collection('category')
-        .where('type', isEqualTo: type = 0)
-        .get();
 
-    return snapshot.docs
-        .map((doc) => CategoryModel.fromMap(doc.data() as Map<String, dynamic>))
-        .toList();
+  // Lấy danh sách category theo type
+  Future<List<CategoryModel>> getCategoriesByType(int type) async {
+    String? uid = getCurrentUserId();
+    if (uid == null) {
+      print("Chưa có người dùng đăng nhập.");
+      return [];
+    }
+
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('category')
+          .where('type', isEqualTo: type)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => CategoryModel.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print("Category Service Class: Lỗi khi lấy danh sách category theo type: $e");
+      return [];
+    }
   }
+
+  // Lấy danh sách category có type là 0 (khoản chi)
+  Future<List<CategoryModel>> getCategoriesForExpenses() async {
+    return await getCategoriesByType(0);
+  }
+
+  // Lấy danh sách category có type là 1 (khoản thu)
+  Future<List<CategoryModel>> getCategoriesForIncome() async {
+    return await getCategoriesByType(1);
+  }
+
   // Stream danh sách category cho user hiện tại
   Stream<List<CategoryModel>> getCategoryStream() {
     String? uid = getCurrentUserId();
@@ -138,6 +161,4 @@ class CategoryService {
       return [];
     }
   }
-
-
 }

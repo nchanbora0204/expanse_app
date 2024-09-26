@@ -5,6 +5,8 @@ import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 
 class NotificationListPage extends StatefulWidget {
+  const NotificationListPage({super.key});
+
   @override
   _NotificationListPageState createState() => _NotificationListPageState();
 }
@@ -56,7 +58,7 @@ class _NotificationListPageState extends State<NotificationListPage> with Widget
               onTap: () {
                 // Lưu giá trị từ thông báo
                 String value = notification['value'];
-                print('notification_list:${value}');
+                print('notification_list:$value');
                 // Xóa phần tử khi nhấp vào
                 hunterService.displayList.removeAt(index);
 

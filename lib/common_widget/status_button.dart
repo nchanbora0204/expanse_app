@@ -68,7 +68,7 @@ class StatusButton extends StatelessWidget {
                 width: 68, // Set width to match the button width
                 decoration: BoxDecoration(
                   color: statusColor,
-                  borderRadius: BorderRadius.vertical(
+                  borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(15),
                   ),
                 ),

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../common/color_extension.dart';
 
 class EditItem extends StatelessWidget {
   final Widget widget;

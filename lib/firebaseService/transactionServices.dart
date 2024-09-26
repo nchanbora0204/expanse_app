@@ -93,7 +93,7 @@ class TransactionService {
             .collection('transactions')
             .get();
         transactions.addAll(transactionsSnapshot.docs.map((doc) =>
-            TransactionModel.fromMap(doc.data() as Map<String, dynamic>)));
+            TransactionModel.fromMap(doc.data())));
       }
       return transactions;
     });

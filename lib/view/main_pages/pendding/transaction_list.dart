@@ -6,9 +6,12 @@ import 'package:money_lover/firebaseService/statistic_service.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_list_screen.dart';
 // import 'package:money_lover/view/main_pages/transaction_history_page.dart';
 
 class TransactionList extends StatefulWidget {
+  const TransactionList({super.key});
+
   @override
   _TransactionListState createState() => _TransactionListState();
 }
@@ -18,7 +21,7 @@ class _TransactionListState extends State<TransactionList> {
   final StatisticService _statisticService = StatisticService();
   final HunterService _hunterService = HunterService();
   double _totalAmount = 0.0;
-  List<double> _weeklyTotals = List.generate(2, (index) => 0.0); // 2 tuần
+  final List<double> _weeklyTotals = List.generate(2, (index) => 0.0); // 2 tuần
 
   @override
   void initState() {
@@ -47,12 +50,12 @@ class _TransactionListState extends State<TransactionList> {
       appBar: AppBar(
         title: const Text('Transactions'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
+          preferredSize: const Size.fromHeight(50.0),
           child: Container(
             alignment: Alignment.center,
             child: Text(
               'Tổng số tiền tuần này: ${_totalAmount.toStringAsFixed(2)} VNĐ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -76,18 +79,18 @@ class _TransactionListState extends State<TransactionList> {
                 MaterialPageRoute(builder: (context) => NotificationListPage()),
               );
             },
-            child: Icon(Icons.notifications),
             backgroundColor: Colors.blue,
             tooltip: 'Notifications',
+            child: Icon(Icons.notifications),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           FloatingActionButton(
             onPressed: _pickImage,
-            child: Icon(Icons.photo_library),
             backgroundColor: Colors.green,
             tooltip: 'Chọn ảnh từ thư viện',
+            child: Icon(Icons.photo_library),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16,
           ),
           // FloatingActionButton(
@@ -102,6 +105,17 @@ class _TransactionListState extends State<TransactionList> {
           //   backgroundColor: Colors.orange,
           //   tooltip: 'Lịch sử giao dịch',
           // ),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TransactionListPage()), // Điều hướng đến trang mới
+              );
+            },
+            child: Icon(Icons.add), // Hoặc sử dụng biểu tượng phù hợp khác
+            backgroundColor: Colors.purple, // Màu sắc cho nút
+            tooltip: 'Đi đến trang mới',
+          ),
         ],
       ),
     );
@@ -118,8 +132,8 @@ class ChartHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
       child: Text(
         'Biểu đồ tổng số tiền hàng tuần',
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -153,7 +167,7 @@ class TransactionBarChart extends StatelessWidget {
             );
           }).toList(),
           titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
+            leftTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: true),
             ),
             bottomTitles: AxisTitles(
@@ -162,20 +176,20 @@ class TransactionBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt() == 0 ? 'Tuần này' : 'Tuần trước',
-                    style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
                   );
                 },
               ),
             ),
           ),
           borderData: FlBorderData(show: false), // Ẩn đường biên
-          gridData: FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
+          gridData: const FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${rod.toY}\n',
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                  const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
                 );
               },
             ),
@@ -205,7 +219,7 @@ class TransactionListView extends StatelessWidget {
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final transaction = snapshot.data![index];

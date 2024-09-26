@@ -5,6 +5,8 @@ import 'package:money_lover/models/user_model.dart';
 
 
 class SignUp extends StatefulWidget {
+  const SignUp({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _SignUp();
@@ -155,13 +157,13 @@ class _SignUp extends State<SignUp> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      child: Container(
+      child: SizedBox(
         width: _devWidth! * 0.85,
         height: 55,
         child: const Center(
           child: Text(
             "Quay lại đăng nhập",
-            style: const TextStyle(
+            style: TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.bold,

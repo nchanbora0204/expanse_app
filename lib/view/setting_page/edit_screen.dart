@@ -185,7 +185,7 @@ class _EditScreenState extends State<EditScreen> {
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: const Text("Không có ảnh nào được chọn."),
+          content: Text("Không có ảnh nào được chọn."),
         ),
       );
     }
