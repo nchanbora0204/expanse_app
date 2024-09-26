@@ -1,11 +1,8 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
-import 'package:notification_listener_service/notification_event.dart';
-import 'package:notification_listener_service/notification_listener_service.dart';
-import 'package:intl/intl.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:notification_listener_service/notification_listener_service.dart';
 
 class HunterService extends GetxController {
   RxList<Map<String, dynamic>> notiList = RxList<Map<String, dynamic>>();
@@ -15,17 +12,15 @@ class HunterService extends GetxController {
 
 
   @override
-  void initHive() async {
+  Future<void> initHive() async {
     await Hive.initFlutter();
-
-    // Mở box 'notificationBox' thay vì 'notificationsBox'
-    if (!Hive.isBoxOpen('notificationBox')) {
+    // Mở box 'notificationBox' 
       await Hive.openBox('notificationBox');
-    }
+    
   }
-  void onInit() {
+  void onInit()async {
     super.onInit();
-    initHive();  // Khởi tạo Hive
+    await initHive();  // Khởi tạo Hive
     loadNotificationsFromHive(); // Tải thông báo đã lưu khi khởi động ứng dụng
     requestPermission();  // Yêu cầu quyền thông báo
   }
@@ -34,21 +29,25 @@ class HunterService extends GetxController {
 
 
   // Yêu cầu quyền nhận thông báo
-  void requestPermission() async {
-    final bool status = await NotificationListenerService.isPermissionGranted();
-    if (!status) {
-      print("Chưa được cấp quyền. Yêu cầu quyền truy cập...");
-      final bool permissionGranted = await NotificationListenerService.requestPermission();
-      if (permissionGranted) {
-        print("Quyền truy cập thông báo đã được cấp");
-        _startListening();
-      } else {
-        print("Người dùng từ chối quyền truy cập thông báo");
-      }
-    } else {
+  Future<bool> requestPermission() async {
+  final bool status = await NotificationListenerService.isPermissionGranted();
+  if (!status) {
+    print("Chưa được cấp quyền. Yêu cầu quyền truy cập...");
+    final bool permissionGranted = await NotificationListenerService.requestPermission();
+    if (permissionGranted) {
+      print("Quyền truy cập thông báo đã được cấp");
       _startListening();
+      return true; // Trả về true nếu quyền được cấp thành công
+    } else {
+      print("Người dùng từ chối quyền truy cập thông báo");
+      return false; // Trả về false nếu người dùng từ chối
     }
+  } else {
+    _startListening();
+    return true; // Trả về true nếu quyền đã có sẵn
   }
+}
+
 
   // Hàm khởi tạo lắng nghe thông báo
   void _startListening() async {

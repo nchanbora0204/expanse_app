@@ -1,11 +1,12 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:money_lover/background_services/transaction_hunter.dart';
 import 'package:money_lover/firebaseService/statistic_service.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
-import 'package:intl/intl.dart';
-import 'package:get/get.dart';
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
-import 'package:fl_chart/fl_chart.dart';
+// import 'package:money_lover/view/main_pages/transaction_history_page.dart';
 
 class TransactionList extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class TransactionList extends StatefulWidget {
 class _TransactionListState extends State<TransactionList> {
   final TransactionService _transactionService = TransactionService();
   final StatisticService _statisticService = StatisticService();
+  final HunterService _hunterService = HunterService();
   double _totalAmount = 0.0;
   List<double> _weeklyTotals = List.generate(2, (index) => 0.0); // 2 tuần
 
@@ -64,18 +66,50 @@ class _TransactionListState extends State<TransactionList> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => NotificationListPage()),
-          );
-        },
-        child: const Icon(Icons.notifications),
-        backgroundColor: Colors.blue,
-        tooltip: 'Notifications',
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationListPage()),
+              );
+            },
+            child: Icon(Icons.notifications),
+            backgroundColor: Colors.blue,
+            tooltip: 'Notifications',
+          ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: _pickImage,
+            child: Icon(Icons.photo_library),
+            backgroundColor: Colors.green,
+            tooltip: 'Chọn ảnh từ thư viện',
+          ),
+          SizedBox(
+            height: 16,
+          ),
+          // FloatingActionButton(
+          //   onPressed: () {
+          //     Navigator.push(
+          //       context,
+          //       MaterialPageRoute(
+          //           builder: (context) => TransactionHistoryPage()),
+          //     );
+          //   },
+          //   child: Icon(Icons.history),
+          //   backgroundColor: Colors.orange,
+          //   tooltip: 'Lịch sử giao dịch',
+          // ),
+        ],
       ),
     );
+  }
+
+  void _pickImage() {
+    // Chọn ảnh từ thư viện (bạn cần xử lý chức năng này)
+    print("Chọn ảnh từ thư viện!");
   }
 }
 
@@ -138,7 +172,6 @@ class TransactionBarChart extends StatelessWidget {
           gridData: FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
-
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${rod.toY}\n',
