@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
-import 'package:notification_listener_service/notification_event.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
-import 'package:intl/intl.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -24,8 +22,8 @@ class HunterService extends GetxController {
     await Hive.initFlutter();
 
     // Mở box 'notificationBox' thay vì 'notificationsBox'
-    if (!Hive.isBoxOpen('notificationBox')) {
-      await Hive.openBox('notificationBox');
+    if (!Hive.isBoxOpen('notificationsBox')) {
+      await Hive.openBox('notificationsBox');
     }
   }
 
@@ -77,13 +75,13 @@ class HunterService extends GetxController {
 
   // Lưu thông báo vào Hive
   void saveNotificationsToHive() {
-    var box = Hive.box('notificationBox'); // Chắc chắn box đã được mở với tên đúng
+    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
     box.put('displayList', displayList);
   }
 
   // Tải thông báo từ Hive khi ứng dụng mở lại
   void loadNotificationsFromHive() {
-    var box = Hive.box('notificationBox'); // Chắc chắn box đã được mở với tên đúng
+    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
     List<dynamic>? storedNotifications = box.get('displayList', defaultValue: []);
 
     if (storedNotifications != null && storedNotifications.isNotEmpty) {

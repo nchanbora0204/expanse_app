@@ -38,9 +38,25 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
     if (user != null) {
       UserService userService = UserService();
       UserModel? userModel = await userService.getUserDetails(user.uid);
+
+      if (userModel == null) {
+        // Nếu không tìm thấy dữ liệu người dùng, tạo một UserModel mới từ thông tin hiện có
+        userModel = UserModel(
+          uid: user.uid,
+          name: user.displayName ?? '',
+          email: user.email ?? '',
+          age: 0,
+          gender: '',
+          profileImageUrl: user.photoURL ?? '',
+        );
+        // Lưu thông tin người dùng mới vào Firestore
+        await userService.saveUserDetails(userModel);
+      }
+
       setState(() {
         _user = userModel;
         _loading = false;
+        print(_user);
       });
     }
   }
@@ -131,11 +147,10 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 width: double.infinity,
                 child: Row(
                   children: [
-                    _user?.profileImageUrl != null &&
-                        _user!.profileImageUrl.isNotEmpty
+                    _user?.profileImageUrl != null && _user!.profileImageUrl!.isNotEmpty
                         ? ClipOval(
                       child: Image.network(
-                        _user!.profileImageUrl,
+                        _user!.profileImageUrl!,
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
@@ -156,10 +171,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                         height: 70,
                       ),
                     ),
-                    const SizedBox(
-                      height: 30,
-                      width: 10,
-                    ),
+                    const SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -195,6 +207,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                   ],
                 ),
               ),
+
               const SizedBox(height: 60),
               Text(
                 AppLocalizations.of(context)!.samesetting,
