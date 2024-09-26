@@ -1,274 +1,80 @@
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:get/get.dart';
 import 'package:money_lover/background_services/transaction_hunter.dart';
-import 'package:money_lover/firebaseService/statistic_service.dart';
-import 'package:money_lover/firebaseService/transactionServices.dart';
-import 'package:money_lover/models/transaction_model.dart';
-<<<<<<< HEAD:lib/view/main_pages/pendding/transaction_list.dart
-import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
-// import 'package:money_lover/view/main_pages/transaction_history_page.dart';
-=======
-import 'package:intl/intl.dart';
->>>>>>> origin/fix_merge:lib/view/main_pages/pendding/transaction_analysis/transaction_history_page.dart
+import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 
-class TransactionHistoryPage extends StatelessWidget {
-  final TransactionService _transactionService = TransactionService();
-  final StatisticService _statisticService = StatisticService();
-  final HunterService _hunterService = HunterService();
-  double _totalAmount = 0.0;
-  List<double> _weeklyTotals = List.generate(2, (index) => 0.0); // 2 tuần
+class NotificationListPage extends StatefulWidget {
+  @override
+  _NotificationListPageState createState() => _NotificationListPageState();
+}
+
+class _NotificationListPageState extends State<NotificationListPage> with WidgetsBindingObserver {
+  final HunterService hunterService = Get.put(HunterService());
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Khi ứng dụng quay lại foreground, kiểm tra quyền và tiếp tục lắng nghe
+      hunterService.requestPermission();
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _fetchTotalAmount();
-    _fetchWeeklyTotals();
-  }
-
-  Future<void> _fetchTotalAmount() async {
-    DateTime now = DateTime.now();
-    _totalAmount = await _statisticService.getTotalAmountByDate(now);
-    setState(() {});
-  }
-
-  Future<void> _fetchWeeklyTotals() async {
-    for (int i = 0; i < 2; i++) { // Lấy tổng cho 2 tuần
-      DateTime startOfWeek = DateTime.now().subtract(Duration(days: i * 7));
-      _weeklyTotals[i] = await _statisticService.getTotalAmountByDate(startOfWeek);
-    }
-    setState(() {});
+    WidgetsBinding.instance.addObserver(this);
+    hunterService.requestPermission(); // Yêu cầu quyền thông báo khi khởi tạo trang
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-<<<<<<< HEAD:lib/view/main_pages/pendding/transaction_list.dart
-        title: const Text('Transactions'),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              'Tổng số tiền tuần này: ${_totalAmount.toStringAsFixed(2)} VNĐ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const ChartHeader(),
-            TransactionBarChart(weeklyTotals: _weeklyTotals),
-            TransactionListView(transactionService: _transactionService),
-          ],
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationListPage()),
-              );
-            },
-            child: Icon(Icons.notifications),
-            backgroundColor: Colors.blue,
-            tooltip: 'Notifications',
-          ),
-          SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: _pickImage,
-            child: Icon(Icons.photo_library),
-            backgroundColor: Colors.green,
-            tooltip: 'Chọn ảnh từ thư viện',
-          ),
-          SizedBox(
-            height: 16,
-          ),
-          // FloatingActionButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => TransactionHistoryPage()),
-          //     );
-          //   },
-          //   child: Icon(Icons.history),
-          //   backgroundColor: Colors.orange,
-          //   tooltip: 'Lịch sử giao dịch',
-          // ),
-        ],
-      ),
-    );
-  }
-
-  void _pickImage() {
-    // Chọn ảnh từ thư viện (bạn cần xử lý chức năng này)
-    print("Chọn ảnh từ thư viện!");
-  }
-}
-
-class ChartHeader extends StatelessWidget {
-  const ChartHeader({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        'Biểu đồ tổng số tiền hàng tuần',
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-}
-
-class TransactionBarChart extends StatelessWidget {
-  final List<double> weeklyTotals;
-
-  const TransactionBarChart({Key? key, required this.weeklyTotals}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.5,
-      child: BarChart(
-        BarChartData(
-          barGroups: weeklyTotals.asMap().entries.map((entry) {
-            return BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: entry.value,
-                  color: entry.key == 0 ? Colors.blue : Colors.orange, // Màu sắc khác nhau cho từng tuần
-                  width: 40, // Độ rộng của thanh
-                  borderRadius: BorderRadius.circular(5), // Bo góc thanh
-                ),
-              ],
-            );
-          }).toList(),
-          titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  return Text(
-                    value.toInt() == 0 ? 'Tuần này' : 'Tuần trước',
-                    style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-                  );
-                },
+        title: const Text('Thông báo'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                   TransactionList() // Truyền số tiền
               ),
-            ),
-          ),
-          borderData: FlBorderData(show: false), // Ẩn đường biên
-          gridData: FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
-          barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  '${rod.toY}\n',
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
-                );
-              },
-            ),
-          ),
+            ); // Quay về trang trước
+          },
         ),
       ),
-    );
-  }
-}
+      body: Obx(() {
+        return ListView.builder(
+          itemCount: hunterService.displayList.length,
+          itemBuilder: (context, index) {
+            final notification = hunterService.displayList[index];
+            return ListTile(
+              title: Text("${notification['key']} - ${notification['value']}"),
+              subtitle: Text(hunterService.getTimeElapsed(notification['timestamp'])),
+              onTap: () {
+                // Lưu giá trị từ thông báo
+                String value = notification['value'];
+                print('notification_list:${value}');
+                // Xóa phần tử khi nhấp vào
+                hunterService.displayList.removeAt(index);
 
-class TransactionListView extends StatelessWidget {
-  final TransactionService transactionService;
-
-  const TransactionListView({Key? key, required this.transactionService}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<List<TransactionModel>>(
-      stream: transactionService.getTransactionStream(), // Lấy giao dịch chi
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No transactions available.'));
-        } else {
-          return ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: snapshot.data!.length,
-            itemBuilder: (context, index) {
-              final transaction = snapshot.data![index];
-              return TransactionCard(transaction: transaction);
-            },
-          );
-        }
-      },
-    );
-  }
-}
-
-class TransactionCard extends StatelessWidget {
-  final TransactionModel transaction;
-
-  const TransactionCard({Key? key, required this.transaction}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 4,
-      child: ListTile(
-        title: Text(transaction.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text("Amount: ${transaction.amount.toString()}"),
-        trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
-        onTap: () {
-          // Navigate to transaction details or allow editing
-=======
-        title: Text('Lịch sử giao dịch'),
-      ),
-      body: StreamBuilder<List<TransactionModel>>(
-        stream: _transactionService.getTransactionStream(), // Lấy dữ liệu từ Firestore
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Không có giao dịch nào.'));
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                final transaction = snapshot.data![index];
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  elevation: 4,
-                  child: ListTile(
-                    title: Text(transaction.title, style: TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text("Số tiền: ${transaction.amount.toString()}"),
-                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
-                    onTap: () {
-                      // Điều hướng đến chi tiết giao dịch nếu cần
-                    },
+                // Điều hướng đến trang AddTransactionForm
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        AddTransactionForm(amount: value),
+                    // Truyền số tiền
                   ),
                 );
+
               },
             );
-          }
->>>>>>> origin/fix_merge:lib/view/main_pages/pendding/transaction_analysis/transaction_history_page.dart
-        },
-      ),
+          },
+        );
+      }),
     );
   }
 }

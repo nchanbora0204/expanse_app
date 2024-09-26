@@ -1,11 +1,12 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/login_signup/sign_up.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 
 class WelcomeView extends StatefulWidget {
@@ -45,11 +46,11 @@ class _WelcomeViewState extends State<WelcomeView>
     ));
     _pageController = PageController();
 
-    Future.delayed(const Duration(milliseconds: 300), () {
+    Future.delayed(Duration(milliseconds: 300), () {
       setState(() {
         _isLogoVisible = true;
       });
-      Future.delayed(const Duration(milliseconds: 300), () {
+      Future.delayed(Duration(milliseconds: 300), () {
         _controller.forward();
         setState(() {
           _areButtonsVisible = true;
@@ -60,12 +61,12 @@ class _WelcomeViewState extends State<WelcomeView>
   }
 
   void _startAutoSlide() {
-    _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
       _currentPage++;
       if (_currentPage >= 3) _currentPage = 0; // Quay lại đầu khi đến cuối
       _pageController.animateToPage(
         _currentPage,
-        duration: const Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     });
@@ -92,13 +93,13 @@ class _WelcomeViewState extends State<WelcomeView>
           width: _devWidth,
           height: _devHeight,
           decoration: BoxDecoration(
-            image: const DecorationImage(
+            image: DecorationImage(
               image: AssetImage("assets/img/welcome_screen.png"),
               fit: BoxFit.cover,
             ),
             gradient: LinearGradient(
               colors: [Colors.black.withOpacity(0.3), Colors.transparent],
-              begin: Alignment.bottomCenter,
+begin: Alignment.bottomCenter,
               end: Alignment.topCenter,
             ),
           ),
@@ -109,10 +110,10 @@ class _WelcomeViewState extends State<WelcomeView>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  const SizedBox(),
+                  SizedBox(),
                   AnimatedOpacity(
                     opacity: _isLogoVisible ? 1.0 : 0.0,
-                    duration: const Duration(milliseconds: 1800),
+                    duration: Duration(milliseconds: 1800),
                     child: Image.asset("assets/img/app_logo.png"),
                   ),
                   IconButton(
@@ -194,7 +195,7 @@ class _WelcomeViewState extends State<WelcomeView>
   }
 
   Widget _buildPageView() {
-    final localization = AppLocalizations.of(context)!;
+final localization = AppLocalizations.of(context)!;
 
     return PageView(
       controller: _pageController,
@@ -208,7 +209,7 @@ class _WelcomeViewState extends State<WelcomeView>
 
   Widget _buildSlide(String title, String description) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16),
       color: Colors.black54,
       child: SingleChildScrollView(
         child: Column(
@@ -217,16 +218,16 @@ class _WelcomeViewState extends State<WelcomeView>
           children: [
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                   color: Colors.white,
                   fontSize: 24,
                   fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10),
             Text(
               description,
-              style: const TextStyle(color: Colors.white70, fontSize: 16),
+              style: TextStyle(color: Colors.white70, fontSize: 16),
               textAlign: TextAlign.center,
             ),
           ],
@@ -254,7 +255,7 @@ class _WelcomeViewState extends State<WelcomeView>
           child: Container(
             height: 55,
             decoration: BoxDecoration(
-              image: const DecorationImage(
+              image: DecorationImage(
                 image: AssetImage("assets/img/primary_btn.png"),
                 fit: BoxFit.cover,
               ),
@@ -263,19 +264,14 @@ class _WelcomeViewState extends State<WelcomeView>
                 BoxShadow(
                   color: TColor.secondary.withOpacity(0.5),
                   blurRadius: 17,
-                  offset: const Offset(0, 4),
+                  offset: Offset(0, 4),
                 ),
               ],
             ),
-            child: const Center(
+            child: Center(
               child: Text(
-<<<<<<< HEAD
-                "ĐĂNG KÝ MIỂN PHÍ",
-                style:  TextStyle(
-=======
                 localization.sign_up_free,
                 style: TextStyle(
->>>>>>> origin/fix_merge
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -284,19 +280,14 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        const Row(
+        SizedBox(height: 8),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children:  [
+          children: [
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
-<<<<<<< HEAD
-            const Text(
-              "Đăng ký nhanh chóng",
-=======
             Text(
               localization.quick_sign_up,
->>>>>>> origin/fix_merge
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -309,7 +300,7 @@ class _WelcomeViewState extends State<WelcomeView>
     final localization = AppLocalizations.of(context)!;
 
     return Column(
-      children: [
+children: [
         MaterialButton(
           onPressed: () {
             Navigator.push(
@@ -324,8 +315,8 @@ class _WelcomeViewState extends State<WelcomeView>
           child: Container(
             height: 55,
             decoration: BoxDecoration(
-              image: const DecorationImage(
-                image:  AssetImage("assets/img/primary_btn.png"),
+              image: DecorationImage(
+                image: AssetImage("assets/img/primary_btn.png"),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(30),
@@ -337,15 +328,9 @@ class _WelcomeViewState extends State<WelcomeView>
                 ),
               ],
             ),
-<<<<<<< HEAD
-            child: const Center(
-              child: const Text(
-                "ĐĂNG NHẬP",
-=======
             child: Center(
               child: Text(
                 localization.login,
->>>>>>> origin/fix_merge
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -355,22 +340,14 @@ class _WelcomeViewState extends State<WelcomeView>
             ),
           ),
         ),
-        const SizedBox(height: 8),
-        const Row(
+        SizedBox(height: 8),
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
-<<<<<<< HEAD
-          children: const [
-            const Icon(Icons.login, size: 16, color: Colors.white),
-            const SizedBox(width: 4),
-            const Text(
-              "Đăng nhập ngay",
-=======
           children: [
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
             Text(
               localization.login,
->>>>>>> origin/fix_merge
               style: TextStyle(color: Colors.white),
             ),
           ],

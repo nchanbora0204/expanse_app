@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:money_lover/background_services/transaction_hunter.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
-import 'package:money_lover/view/main_tab/main_tab_view.dart';
 
 class NotificationListPage extends StatefulWidget {
   @override
@@ -39,8 +38,8 @@ class _NotificationListPageState extends State<NotificationListPage> with Widget
             Navigator.pop(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      TransactionList() // Truyền số tiền
+                builder: (context) =>
+                   TransactionList() // Truyền số tiền
               ),
             ); // Quay về trang trước
           },

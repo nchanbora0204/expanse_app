@@ -1,66 +1,50 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
-<<<<<<< HEAD
-=======
-import 'package:notification_listener_service/notification_listener_service.dart';
-import 'package:hive/hive.dart';
->>>>>>> origin/fix_merge
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
 
 class HunterService extends GetxController {
   RxList<Map<String, dynamic>> notiList = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> displayList = RxList<Map<String, dynamic>>(); // Danh sách hiển thị
-
   bool _isListening = false;
-
 
   @override
   Future<void> initHive() async {
     await Hive.initFlutter();
     // Mở box 'notificationBox' 
+    if (!Hive.isBoxOpen('notificationBox')) {
       await Hive.openBox('notificationBox');
-    
+    }
   }
-  void onInit()async {
+
+  @override
+  void onInit() async {
     super.onInit();
     await initHive();  // Khởi tạo Hive
     loadNotificationsFromHive(); // Tải thông báo đã lưu khi khởi động ứng dụng
     requestPermission();  // Yêu cầu quyền thông báo
   }
 
-  // Khởi tạo Hive và mở box lưu trữ
-
-<<<<<<< HEAD
-=======
-    // Mở box 'notificationBox' thay vì 'notificationsBox'
-    if (!Hive.isBoxOpen('notificationsBox')) {
-      await Hive.openBox('notificationsBox');
-    }
-  }
->>>>>>> origin/fix_merge
-
   // Yêu cầu quyền nhận thông báo
   Future<bool> requestPermission() async {
-  final bool status = await NotificationListenerService.isPermissionGranted();
-  if (!status) {
-    print("Chưa được cấp quyền. Yêu cầu quyền truy cập...");
-    final bool permissionGranted = await NotificationListenerService.requestPermission();
-    if (permissionGranted) {
-      print("Quyền truy cập thông báo đã được cấp");
-      _startListening();
-      return true; // Trả về true nếu quyền được cấp thành công
+    final bool status = await NotificationListenerService.isPermissionGranted();
+    if (!status) {
+      print("Chưa được cấp quyền. Yêu cầu quyền truy cập...");
+      final bool permissionGranted = await NotificationListenerService.requestPermission();
+      if (permissionGranted) {
+        print("Quyền truy cập thông báo đã được cấp");
+        _startListening();
+        return true; // Trả về true nếu quyền được cấp thành công
+      } else {
+        print("Người dùng từ chối quyền truy cập thông báo");
+        return false; // Trả về false nếu người dùng từ chối
+      }
     } else {
-      print("Người dùng từ chối quyền truy cập thông báo");
-      return false; // Trả về false nếu người dùng từ chối
+      _startListening();
+      return true; // Trả về true nếu quyền đã có sẵn
     }
-  } else {
-    _startListening();
-    return true; // Trả về true nếu quyền đã có sẵn
   }
-}
-
 
   // Hàm khởi tạo lắng nghe thông báo
   void _startListening() async {
@@ -93,29 +77,22 @@ class HunterService extends GetxController {
 
   // Lưu thông báo vào Hive
   void saveNotificationsToHive() {
-<<<<<<< HEAD
     var box = Hive.box('notificationBox');
-=======
-    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
->>>>>>> origin/fix_merge
     box.put('displayList', displayList);
   }
+
   String generationNotificationId() {
     final random = Random();
     String _idNotifi;
-    do{
-
-      _idNotifi ='Noti Id${random.nextInt(10000000).toString().padLeft(6,'0')}';
-    }while(notiList.any((notification)=> notification['id'] == _idNotifi));
+    do {
+      _idNotifi = 'Noti Id${random.nextInt(10000000).toString().padLeft(6, '0')}';
+    } while (notiList.any((notification) => notification['id'] == _idNotifi));
     return _idNotifi;
   }
+
   // Tải thông báo từ Hive khi ứng dụng mở lại
   void loadNotificationsFromHive() {
-<<<<<<< HEAD
-    var box = Hive.box('notificationBox');
-=======
-    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
->>>>>>> origin/fix_merge
+    var box = Hive.box('notificationBox'); // Sử dụng tên box đúng
     List<dynamic>? storedNotifications = box.get('displayList', defaultValue: []);
 
     if (storedNotifications != null && storedNotifications.isNotEmpty) {
@@ -182,9 +159,4 @@ class HunterService extends GetxController {
       return difference > 15;
     });
   }
-<<<<<<< HEAD
-
 }
-=======
-}
->>>>>>> origin/fix_merge
