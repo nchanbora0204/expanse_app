@@ -1,6 +1,11 @@
 import 'dart:math';
 
 import 'package:get/get.dart';
+<<<<<<< HEAD
+=======
+import 'package:notification_listener_service/notification_listener_service.dart';
+import 'package:hive/hive.dart';
+>>>>>>> origin/fix_merge
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:notification_listener_service/notification_listener_service.dart';
 
@@ -27,6 +32,14 @@ class HunterService extends GetxController {
 
   // Khởi tạo Hive và mở box lưu trữ
 
+<<<<<<< HEAD
+=======
+    // Mở box 'notificationBox' thay vì 'notificationsBox'
+    if (!Hive.isBoxOpen('notificationsBox')) {
+      await Hive.openBox('notificationsBox');
+    }
+  }
+>>>>>>> origin/fix_merge
 
   // Yêu cầu quyền nhận thông báo
   Future<bool> requestPermission() async {
@@ -80,7 +93,11 @@ class HunterService extends GetxController {
 
   // Lưu thông báo vào Hive
   void saveNotificationsToHive() {
+<<<<<<< HEAD
     var box = Hive.box('notificationBox');
+=======
+    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
+>>>>>>> origin/fix_merge
     box.put('displayList', displayList);
   }
   String generationNotificationId() {
@@ -94,7 +111,11 @@ class HunterService extends GetxController {
   }
   // Tải thông báo từ Hive khi ứng dụng mở lại
   void loadNotificationsFromHive() {
+<<<<<<< HEAD
     var box = Hive.box('notificationBox');
+=======
+    var box = Hive.box('notificationsBox'); // Chắc chắn box đã được mở với tên đúng
+>>>>>>> origin/fix_merge
     List<dynamic>? storedNotifications = box.get('displayList', defaultValue: []);
 
     if (storedNotifications != null && storedNotifications.isNotEmpty) {
@@ -161,5 +182,9 @@ class HunterService extends GetxController {
       return difference > 15;
     });
   }
+<<<<<<< HEAD
 
 }
+=======
+}
+>>>>>>> origin/fix_merge

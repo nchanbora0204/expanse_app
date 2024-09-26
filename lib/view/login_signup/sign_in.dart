@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/firebaseService/user_services.dart';
-
 
 class SignIn extends StatefulWidget {
   @override
@@ -122,8 +122,41 @@ class _SignIn extends State<SignIn> {
 
   Widget _signInWithFacebook() {
     return MaterialButton(
-      onPressed: () {
+      onPressed: () async {
         // Xử lý đăng nhập với Facebook ở đây
+        showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      width: 20,
+                    ),
+                    Text("Đang Đăng Nhập Facebook..."),
+                  ],
+                ),
+              );
+            });
+        bool success = await _userService.signInWithFacebook();
+
+        Navigator.of(context).pop(); //Dong dialog
+
+        if (success) {
+          //Neu dang nhap thanh cong
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Đăng Nhập Facebook thành công")),
+          );
+          Navigator.pushNamed(context, 'main_tab');
+        } else {
+          //Neu that bai
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+                content: Text("Đăng nhập Facebook thất bại. Vui lòng thử lại")),
+          );
+        }
       },
       minWidth: _devWidth! * 0.7,
       height: _devHeight! * 0.06,
@@ -131,20 +164,30 @@ class _SignIn extends State<SignIn> {
         height: 55,
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/img/primary_btn.png"),
+            image: AssetImage("assets/img/fb_btn.png"),
             fit: BoxFit.cover,
           ),
           borderRadius: BorderRadius.circular(30),
         ),
-        child: Center(
-          child: Text(
-            "Đăng nhập bằng Facebook",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "assets/img/fb.png",
+              height: 24,
             ),
-          ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Đăng nhập bằng Facebook",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -195,16 +238,16 @@ class _SignIn extends State<SignIn> {
           ),
           suffixIcon: isPassword
               ? IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility_off : Icons.visibility,
-              color: Colors.grey,
-            ),
-            onPressed: () {
-              setState(() {
-                _obscureText = !_obscureText;
-              });
-            },
-          )
+                  icon: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                )
               : null,
         ),
       ),
@@ -225,7 +268,7 @@ class _SignIn extends State<SignIn> {
     }
 
     bool success =
-    await _userService.signInWithEmailAndPassword(email, password);
+        await _userService.signInWithEmailAndPassword(email, password);
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(

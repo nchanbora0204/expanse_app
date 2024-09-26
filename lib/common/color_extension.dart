@@ -4,6 +4,8 @@ class TColor {
   static var red;
   static var black;
 
+  static var green;
+
   static Color get primary => const Color(0xff5E00F5);
   static Color get primary500 => const Color(0xff7722FF );
   static Color get primary20 => const Color(0xff924EFF);

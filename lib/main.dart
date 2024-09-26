@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:money_lover/firebaseService/user_services.dart';
 import 'package:money_lover/l10n/l10n.dart';
 import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/view/home/home_view.dart';
@@ -7,17 +10,18 @@ import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/login_signup/sign_up.dart';
 import 'package:money_lover/view/login_signup/signup_social.dart';
 import 'package:money_lover/view/login_signup/welcome_view.dart';
+import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'common/color_extension.dart';
 
 void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('settingsBox');//Mở box để lưu trữ trạng thái.
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
@@ -79,10 +83,14 @@ class MyApp extends StatelessWidget {
         ),
       ),
       themeMode: themeMode,
+
+      home: AuthWrapper(),
+      initialRoute: 'sign_in',
+
       locale: languageProvider.locale, // Lấy locale từ LanguageProvider
       supportedLocales: L10n.all, // Xóa lặp lại supportedLocales
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      initialRoute: 'welcome_screen',
+
       routes: {
         'account_setting': (context) => AccountSettingPage(),
         'welcome_screen': (context) => WelcomeView(),
@@ -91,6 +99,9 @@ class MyApp extends StatelessWidget {
         'sign_in': (context) => SignIn(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
+
+        'notifi_list_page': (context) => NotificationListPage(),
+
       },
     );
   }

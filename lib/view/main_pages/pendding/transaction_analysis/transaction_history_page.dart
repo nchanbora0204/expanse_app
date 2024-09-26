@@ -5,15 +5,14 @@ import 'package:money_lover/background_services/transaction_hunter.dart';
 import 'package:money_lover/firebaseService/statistic_service.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
+<<<<<<< HEAD:lib/view/main_pages/pendding/transaction_list.dart
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
 // import 'package:money_lover/view/main_pages/transaction_history_page.dart';
+=======
+import 'package:intl/intl.dart';
+>>>>>>> origin/fix_merge:lib/view/main_pages/pendding/transaction_analysis/transaction_history_page.dart
 
-class TransactionList extends StatefulWidget {
-  @override
-  _TransactionListState createState() => _TransactionListState();
-}
-
-class _TransactionListState extends State<TransactionList> {
+class TransactionHistoryPage extends StatelessWidget {
   final TransactionService _transactionService = TransactionService();
   final StatisticService _statisticService = StatisticService();
   final HunterService _hunterService = HunterService();
@@ -45,6 +44,7 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+<<<<<<< HEAD:lib/view/main_pages/pendding/transaction_list.dart
         title: const Text('Transactions'),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(50.0),
@@ -234,6 +234,39 @@ class TransactionCard extends StatelessWidget {
         trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
         onTap: () {
           // Navigate to transaction details or allow editing
+=======
+        title: Text('Lịch sử giao dịch'),
+      ),
+      body: StreamBuilder<List<TransactionModel>>(
+        stream: _transactionService.getTransactionStream(), // Lấy dữ liệu từ Firestore
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('Không có giao dịch nào.'));
+          } else {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                final transaction = snapshot.data![index];
+                return Card(
+                  margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                  elevation: 4,
+                  child: ListTile(
+                    title: Text(transaction.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text("Số tiền: ${transaction.amount.toString()}"),
+                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+                    onTap: () {
+                      // Điều hướng đến chi tiết giao dịch nếu cần
+                    },
+                  ),
+                );
+              },
+            );
+          }
+>>>>>>> origin/fix_merge:lib/view/main_pages/pendding/transaction_analysis/transaction_history_page.dart
         },
       ),
     );
