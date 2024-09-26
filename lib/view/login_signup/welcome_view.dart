@@ -267,15 +267,15 @@ class _WelcomeViewState extends State<WelcomeView>
                 ),
               ],
             ),
-            child: const Center(
+            child:  Center(
               child: Text(
-<<<<<<< HEAD
+
                 "ĐĂNG KÝ MIỂN PHÍ",
                 style:  TextStyle(
-=======
+
                 localization.sign_up_free,
                 style: TextStyle(
->>>>>>> fix_merge
+
                   color: Colors.white,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -290,13 +290,12 @@ class _WelcomeViewState extends State<WelcomeView>
           children:  [
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
-<<<<<<< HEAD
+
             const Text(
               "Đăng ký nhanh chóng",
-=======
+
             Text(
               localization.quick_sign_up,
->>>>>>> fix_merge
               style: TextStyle(color: Colors.white),
             ),
           ],
@@ -337,15 +336,15 @@ class _WelcomeViewState extends State<WelcomeView>
                 ),
               ],
             ),
-<<<<<<< HEAD
+
             child: const Center(
               child: const Text(
                 "ĐĂNG NHẬP",
-=======
+
             child: Center(
               child: Text(
                 localization.login,
->>>>>>> fix_merge
+
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 18,
@@ -358,19 +357,17 @@ class _WelcomeViewState extends State<WelcomeView>
         const SizedBox(height: 8),
         const Row(
           mainAxisAlignment: MainAxisAlignment.center,
-<<<<<<< HEAD
+
           children: const [
             const Icon(Icons.login, size: 16, color: Colors.white),
             const SizedBox(width: 4),
             const Text(
               "Đăng nhập ngay",
-=======
           children: [
             Icon(Icons.arrow_forward, size: 16, color: Colors.white),
             SizedBox(width: 4),
             Text(
               localization.login,
->>>>>>> fix_merge
               style: TextStyle(color: Colors.white),
             ),
           ],
