@@ -239,10 +239,15 @@ class _EditScreenState extends State<EditScreen> {
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
-            child: IconButton(
+            child: TextButton(
               onPressed: _updateProfile,
-              icon: Icon(Ionicons.checkmark,
-                  color: theme.appBarTheme.foregroundColor),
+              child: Text(
+                "Lưu",
+                style: TextStyle(
+                  color: theme.appBarTheme.foregroundColor,
+                  fontSize: 16,
+                ),
+              ),
             ),
           ),
         ],

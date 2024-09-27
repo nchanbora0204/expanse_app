@@ -1,14 +1,11 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/budgets_page/categoryTab/landing.dart';
-
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
-
 
 class MainTabView extends StatefulWidget {
   const MainTabView({super.key});
@@ -35,8 +32,6 @@ class _MainTabViewState extends State<MainTabView> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final bottomBarColor =
-    theme.brightness == Brightness.dark ? Colors.white : Colors.black;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
@@ -54,13 +49,13 @@ class _MainTabViewState extends State<MainTabView> {
                     : theme.scaffoldBackgroundColor,
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Sử dụng spaceBetween
                 children: [
-                  _buildIconButton(0, "assets/img/home.png"),
-                  _buildIconButton(1, "assets/img/budgets.png"),
-                  _addSpendingButton(), // Center button
-                  _buildIconButton(2, "assets/img/calendar.png"),
-                  _buildIconButton(3, "assets/img/creditcards.png"),
+                  _buildIconButton(0, "assets/img/home.png", "Trang Chủ"),
+                  _buildIconButton(1, "assets/img/creditcards.png", "Sổ Giao Dịch"),
+                  _addSpendingButton(), // Nút trung tâm
+                  _buildIconButton(2, "assets/img/budgets.png", "Ngân Sách"),
+                  _buildIconButton(3, "assets/img/settings.png", "Cài Đặt Chung"),
                 ],
               ),
             ],
@@ -70,23 +65,36 @@ class _MainTabViewState extends State<MainTabView> {
     );
   }
 
-  Widget _buildIconButton(int index, String iconPath) {
+  Widget _buildIconButton(int index, String iconPath, String label) {
     final theme = Theme.of(context);
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          _currentPage = index;
-        });
-      },
-      icon: Image.asset(
-        iconPath,
-        width: 25,
-        height: 25,
-        color:
-        _currentPage == index
-            ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
-            : theme.disabledColor,
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              _currentPage = index;
+            });
+          },
+          icon: Image.asset(
+            iconPath,
+            width: 25,
+            height: 25,
+            color: _currentPage == index
+                ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
+                : theme.disabledColor,
+          ),
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: _currentPage == index
+                ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
+                : theme.disabledColor,
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 

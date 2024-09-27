@@ -80,7 +80,7 @@ class _TransactionListState extends State<TransactionList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Transactions'),
+        title: const Text('Sổ Giao Dịch'),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(50.0),
           child: Container(

@@ -231,14 +231,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 showDropdown: true,
               ),
               const SizedBox(height: 50),
-              SettingItem(
-                title: AppLocalizations.of(context)!.notifications,
-                icon: Ionicons.notifications_circle,
-                bgColor: Colors.blue.shade100,
-                iconColor: Colors.blue,
-                onTap: () {},
-              ),
-              const SizedBox(height: 50),
               SettingSwitch(
                 title: AppLocalizations.of(context)!.dark_mode,
                 icon: Ionicons.moon,
@@ -255,9 +247,17 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               const SizedBox(height: 50),
               SettingItem(
                 title: AppLocalizations.of(context)!.support,
-                icon: Ionicons.nuclear,
+                icon: Ionicons.help_circle,
                 bgColor: Colors.pink.shade100,
                 iconColor: Colors.pink,
+                onTap: () {},
+              ),
+              const SizedBox(height: 50),
+              SettingItem(
+                title: AppLocalizations.of(context)!.notifications,
+                icon: Ionicons.notifications_circle,
+                bgColor: Colors.blue.shade100,
+                iconColor: Colors.blue,
                 onTap: () {},
               ),
               const SizedBox(

@@ -20,46 +20,47 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   Future<void> _updatePassword() async {
     final user = _auth.currentUser;
     if (user == null) {
-      // Nếu user không đăng nhập, hãy xử lý thông báo lỗi
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content:  Text('User is not signed in')),
+        const SnackBar(content: Text('User is not signed in')),
       );
       return;
     }
+
+    // Kiểm tra mật khẩu mới có đủ mạnh không
+    if (_newPasswordController.text.length < 6) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('New password must be at least 6 characters long')),
+      );
+      return;
+    }
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return const AlertDialog(
-          content:  Row(
-            children:  [
+          content: Row(
+            children: [
               CircularProgressIndicator(),
-              SizedBox(
-                width: 20,
-              ),
-               Text("Đang cập nhật mật khẩu"),
+              SizedBox(width: 20),
+              Text("Đang cập nhật mật khẩu"),
             ],
           ),
         );
       },
     );
+
     try {
-      // Xác thực lại bằng mật khẩu cũ
       final cred = EmailAuthProvider.credential(
         email: user.email!,
         password: _oldPasswordController.text,
       );
-      await Future.delayed(
-        const Duration(seconds: 3),
-      );
-      //Xac thuc lai voi thong tin tren
+      await Future.delayed(const Duration(seconds: 3));
       await user.reauthenticateWithCredential(cred);
-
-      // Sau khi xác thực thành công, cập nhật mật khẩu mới
       await user.updatePassword(_newPasswordController.text);
 
-       ScaffoldMessenger.of(context).showSnackBar (
-        const SnackBar(content:  Text('Password updated successfully')),
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password updated successfully')),
       );
     } on FirebaseAuthException catch (e) {
       String message = 'Failed to update password';
@@ -80,7 +81,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(localizations!.changePassword), // Đổi ngôn ngữ tiêu đề
+        title: Text(localizations!.changePassword),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -92,7 +93,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               obscureText: !_isOldPasswordVisible,
               decoration: InputDecoration(
                 labelText: localizations.oldPassword,
-                // Sử dụng chuỗi đa ngôn ngữ
                 suffixIcon: IconButton(
                   icon: Icon(
                     _isOldPasswordVisible ? Ionicons.eye : Ionicons.eye_off,
@@ -111,7 +111,6 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
               obscureText: !_isNewPasswordVisible,
               decoration: InputDecoration(
                 labelText: localizations.newPassword,
-                // Sử dụng chuỗi đa ngôn ngữ
                 suffixIcon: IconButton(
                   icon: Icon(
                     _isNewPasswordVisible ? Ionicons.eye : Ionicons.eye_off,
@@ -127,8 +126,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
             const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _updatePassword,
-              child: Text(
-                  localizations.changePassword), // Sử dụng chuỗi đa ngôn ngữ
+              child: Text(localizations.changePassword),
             ),
           ],
         ),
