@@ -7,7 +7,7 @@ import 'package:money_lover/common/color_extension.dart';
 class BarChartSample extends StatefulWidget {
   final double income;
   final double expense;
-  BarChartSample({required this.income, required this.expense, Key? key}) : super(key: key);
+  const BarChartSample({required this.income, required this.expense, Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => BarChartSampleState();
@@ -40,11 +40,11 @@ class BarChartSampleState extends State<BarChartSample> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Text(
+          const Text(
             'Kết quả phân tích từ ảnh:',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
             child: BarChart(
               BarChartData(
@@ -53,7 +53,7 @@ class BarChartSampleState extends State<BarChartSample> {
                     getTooltipItem: (a, b, c, d) {
                       return BarTooltipItem(
                         '${c.toY}',
-                        TextStyle(color: Colors.white),
+                        const TextStyle(color: Colors.white),
                       );
                     },
                   ),
@@ -87,18 +87,18 @@ class BarChartSampleState extends State<BarChartSample> {
                       getTitlesWidget: (value, meta) {
                         return Text(
                           'Tháng ${value.toInt() + 1}', // Giả định tháng là 0-11
-                          style: TextStyle(color: Colors.black, fontSize: 12),
+                          style: const TextStyle(color: Colors.black, fontSize: 12),
                         );
                       },
                     ),
                   ),
-                  leftTitles: AxisTitles(
+                  leftTitles: const AxisTitles(
                     sideTitles: SideTitles(showTitles: true),
                   ),
                 ),
                 borderData: FlBorderData(show: false),
                 barGroups: showingBarGroups,
-                gridData: FlGridData(show: false),
+                gridData: const FlGridData(show: false),
               ),
             ),
           ),

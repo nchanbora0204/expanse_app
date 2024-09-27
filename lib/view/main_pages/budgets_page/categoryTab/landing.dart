@@ -3,10 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/budgets_page/categoryTab/expense_cat_list.dart';
 import 'package:money_lover/view/main_pages/budgets_page/categoryTab/income_cat_list.dart';
-import 'package:money_lover/view/main_pages/budgets_page/categoryTab/landing.dart';
-import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
-import 'package:money_lover/view/setting_page/account_setting_page.dart';
-import 'package:money_lover/view/home/home_view.dart';
 
 
 class CatTabView extends StatefulWidget {

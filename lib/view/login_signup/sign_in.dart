@@ -4,6 +4,8 @@ import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/firebaseService/user_services.dart';
 
 class SignIn extends StatefulWidget {
+  const SignIn({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _SignIn();
@@ -27,7 +29,7 @@ class _SignIn extends State<SignIn> {
     return Scaffold(
       backgroundColor: TColor.gray80,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: _devWidth,
           height: _devHeight,
           child: SingleChildScrollView(
@@ -35,11 +37,11 @@ class _SignIn extends State<SignIn> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(),
+                const SizedBox(),
                 Image.asset("assets/img/app_logo.png"),
                 SizedBox(height: _devHeight! * 0.3),
                 _buildSignInForm(),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 _signInWithFacebook(),
@@ -59,14 +61,14 @@ class _SignIn extends State<SignIn> {
         children: [
           _buildTextField("Email", _emailController),
           _buildTextField("Mật khẩu", _passwordController, isPassword: true),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           MaterialButton(
             onPressed: () async {
               showDialog(
                   context: context,
                   barrierDismissible: false,
                   builder: (BuildContext context) {
-                    return AlertDialog(
+                    return const AlertDialog(
                       content: Row(
                         children: <Widget>[
                           CircularProgressIndicator(),
@@ -79,14 +81,14 @@ class _SignIn extends State<SignIn> {
                     );
                   });
               bool success = await _signInUser();
-              await Future.delayed(Duration(seconds: 4));
+              await Future.delayed(const Duration(seconds: 4));
               Navigator.of(context).pop();
               if (success) {
                 print("Đăng nhập thành công!");
                 Navigator.pushNamed(context, 'main_tab');
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text("Đăng Nhập Thất Bại. Vui lòng thử lại sau"),
                   ),
                 );
@@ -97,13 +99,13 @@ class _SignIn extends State<SignIn> {
             child: Container(
               height: 55,
               decoration: BoxDecoration(
-                image: DecorationImage(
+                image: const DecorationImage(
                   image: AssetImage("assets/img/primary_btn.png"),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.circular(30),
               ),
-              child: Center(
+              child: const Center(
                 child: Text(
                   "Đăng nhập",
                   style: TextStyle(
@@ -128,7 +130,7 @@ class _SignIn extends State<SignIn> {
             context: context,
             barrierDismissible: false,
             builder: (BuildContext context) {
-              return AlertDialog(
+              return const AlertDialog(
                 content: Row(
                   children: <Widget>[
                     CircularProgressIndicator(),
@@ -147,13 +149,13 @@ class _SignIn extends State<SignIn> {
         if (success) {
           //Neu dang nhap thanh cong
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Đăng Nhập Facebook thành công")),
+            const SnackBar(content: Text("Đăng Nhập Facebook thành công")),
           );
           Navigator.pushNamed(context, 'main_tab');
         } else {
           //Neu that bai
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
+            const SnackBar(
                 content: Text("Đăng nhập Facebook thất bại. Vui lòng thử lại")),
           );
         }
@@ -163,7 +165,7 @@ class _SignIn extends State<SignIn> {
       child: Container(
         height: 55,
         decoration: BoxDecoration(
-          image: DecorationImage(
+          image: const DecorationImage(
             image: AssetImage("assets/img/fb_btn.png"),
             fit: BoxFit.cover,
           ),
@@ -176,10 +178,10 @@ class _SignIn extends State<SignIn> {
               "assets/img/fb.png",
               height: 24,
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
-            Text(
+            const Text(
               "Đăng nhập bằng Facebook",
               style: TextStyle(
                 color: Colors.white,
@@ -204,10 +206,10 @@ class _SignIn extends State<SignIn> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30),
       ),
-      child: Container(
+      child: SizedBox(
         width: _devWidth! * 0.85,
         height: 55,
-        child: Center(
+        child: const Center(
           child: Text(
             "Chưa có tài khoản? Đăng ký",
             style: TextStyle(
@@ -224,7 +226,7 @@ class _SignIn extends State<SignIn> {
   Widget _buildTextField(String hint, TextEditingController controller,
       {bool isPassword = false}) {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10, horizontal: 30),
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 30),
       child: TextField(
         controller: controller,
         obscureText: isPassword ? _obscureText : false,
@@ -260,7 +262,7 @@ class _SignIn extends State<SignIn> {
 
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Vui lòng nhập đầy đủ thông tin."),
         ),
       );
@@ -272,14 +274,14 @@ class _SignIn extends State<SignIn> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Đăng nhập thành công."),
         ),
       );
       return true;
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+        const SnackBar(
           content: Text("Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin."),
         ),
       );

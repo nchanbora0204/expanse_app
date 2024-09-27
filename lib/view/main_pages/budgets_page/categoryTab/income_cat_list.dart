@@ -1,11 +1,16 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/firebaseService/other_services.dart'; // Sửa đường dẫn thành service cho Category
 import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫn thành model cho Category
-import 'package:money_lover/common/color_extension.dart';
+import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
+import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
 
 class IncomeCatList extends StatefulWidget {
+  const IncomeCatList({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _CategoryScreenState();
@@ -49,9 +54,10 @@ class _CategoryScreenState extends State<IncomeCatList> {
     );
   }
 
+ 
   Widget _categoryList() {
-    return FutureBuilder<List<CategoryModel>>(
-      future: _categoryFuture,
+    return StreamBuilder<List<CategoryModel>>(
+      stream: _categoryService.getCategoryStream(), // Lấy danh sách category
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -60,12 +66,11 @@ class _CategoryScreenState extends State<IncomeCatList> {
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return const Text('Chưa có dữ liệu danh mục');
         } else {
-          final categories = snapshot.data!;
-          // Lọc danh mục chỉ có type là 0 (khoản thu)
-          final displayedCategories = categories.where((category) => category.type == 0).toList();
+          // Lọc danh mục chỉ có type là 0 (khoản chi)
+          final categories = snapshot.data!.where((category) => category.type == 1).toList();
 
-          if (displayedCategories.isEmpty) {
-            return const Text('Chưa có khoản thu nào.');
+          if (categories.isEmpty) {
+            return const Text('Chưa có khoản chi nào.');
           }
 
           return AnimatedContainer(
@@ -78,19 +83,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Expanded(
-                  child: _categoryCard(displayedCategories), // Hiển thị danh sách khoản thu
-                ),
-                Container(
-                  width: _devWidth! * 0.44,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.only(left: 15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 100),
-
-                    ],
-                  ),
+                  child: _categoryCard(categories),
                 ),
               ],
             ),
@@ -112,24 +105,43 @@ class _CategoryScreenState extends State<IncomeCatList> {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return Card(
-          color: getRandomColor(),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
-          elevation: 5.0,
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  categories[index].name,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+        return GestureDetector(
+          onTap: () async {
+            
+            String categoryId = categories[index].id;
+            List<TransactionModel> transactions = await _categoryService.getTransactionsByCategory(categoryId);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TransactionsPage(transactions: transactions),
+              ),
+            );
+          },
+          child: Card(
+            color: getRandomColor(),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(25)),
+            elevation: 5.0,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    categories[index].name,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 5),
+                  // Hiển thị số tiền cho mỗi khoản chi
+                  Text(
+                    '${categories[index].amount} VNĐ', // Giả sử 'amount' là field trong CategoryModel
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
             ),
           ),
         );

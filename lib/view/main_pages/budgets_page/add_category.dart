@@ -1,10 +1,12 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:money_lover/firebaseService/other_services.dart';
-// Thay đổi service để phù hợp với category
 import 'package:money_lover/models/category_model.dart';
 
 class AddCategoryForm extends StatefulWidget {
+  const AddCategoryForm({super.key});
+
   @override
   _AddCategoryFormState createState() => _AddCategoryFormState();
 }
@@ -99,6 +101,8 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
       validator: (value) {
         if (value == null || value.isEmpty) {
           return 'Vui lòng nhập số tiền';
+        } else if (double.tryParse(value) == null) {
+          return 'Vui lòng nhập một số hợp lệ';
         }
         return null;
       },
@@ -116,7 +120,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
+        const Text(
           'Loại Danh Mục:',
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
@@ -154,7 +158,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
                   Radio<int>(
                     value: 1,
                     groupValue: _type,
-                    onChanged: (value) {
+                    onChanged: (value) {  
                       setState(() {
                         _type = value!;
                       });
@@ -178,9 +182,9 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             _formKey.currentState!.save();
 
             // Sinh id ngẫu nhiên cho danh mục
-            final _id = _generateRandomId();
+            final id = _generateRandomId();
             final category = CategoryModel(
-              id: _id,
+              id: id,
               name: _name,
               type: _type,
               amount: _amount, // Số tiền có thể chi
@@ -195,7 +199,6 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             }
           }
         },
-        child: const Text('Lưu Danh Mục'),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,
@@ -204,6 +207,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
+        child: const Text('Lưu Danh Mục'),
       ),
     );
   }
@@ -212,6 +216,6 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
   String _generateRandomId() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
-    return 'cat' + List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    return 'cat${List.generate(6, (index) => chars[random.nextInt(chars.length)]).join()}';
   }
 }

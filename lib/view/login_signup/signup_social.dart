@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:money_lover/common/color_extension.dart';
 
 class SocialSignUp extends StatefulWidget {
+  const SocialSignUp({super.key});
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -20,7 +22,7 @@ class _SignupSocial extends State<SocialSignUp> {
     return Scaffold(
       backgroundColor: TColor.gray80,
       body: SafeArea(
-        child: Container(
+        child: SizedBox(
           width: _devWidth,
           height: _devHegiht,
           child: Column(
@@ -28,12 +30,12 @@ class _SignupSocial extends State<SocialSignUp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: [
-              SizedBox(),
+              const SizedBox(),
               Image.asset("assets/img/app_logo.png"),
               SizedBox(
                 height: _devHegiht! * 0.1,
               ),
-              Container(
+              SizedBox(
                 height:300,
                 child:  Image.asset("assets/img/dollar.png"),
               ),
@@ -173,11 +175,11 @@ class _SignupSocial extends State<SocialSignUp> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30), // Thêm borderRadius
       ),
-      child: Container(
+      child: SizedBox(
         width: _devWidth!*0.85,
         height: 55,
         child: const Center(
-          child: const Text(
+          child: Text(
             "Sign Up with Email",
             style: TextStyle(
               color: Colors.white,

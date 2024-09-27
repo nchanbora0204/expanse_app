@@ -1,8 +1,9 @@
 import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/firebaseService/other_services.dart'; // Đảm bảo đường dẫn đúng
 import 'package:money_lover/models/category_model.dart'; // Đảm bảo đường dẫn đúng
-import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
@@ -71,7 +72,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
                 Expanded(
                   child: _categoryCard(categories),
                 ),
-                _addNewCategoryButton(),
+             
               ],
             ),
           );

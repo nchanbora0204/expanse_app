@@ -14,7 +14,7 @@ class UserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final LocalAuthentication _localAuth = LocalAuthentication();
-  final FlutterSecureStorage _secureStorage = FlutterSecureStorage();
+  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
 
   // Check email uniqueness
   Future<bool> isEmailUnique(String email) async {
@@ -274,7 +274,7 @@ class UserService {
         .toLowerCase();
     //Tao tham chieu luu tru nhieu dinh dang
     Reference storageRef =
-    _storage.ref().child('profile_image/$userId.${fileExtension}');
+    _storage.ref().child('profile_image/$userId.$fileExtension');
 
     try {
       //tai len file

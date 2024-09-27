@@ -148,10 +148,10 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 width: double.infinity,
                 child: Row(
                   children: [
-                    _user?.profileImageUrl != null && _user!.profileImageUrl!.isNotEmpty
+                    _user?.profileImageUrl != null && _user!.profileImageUrl.isNotEmpty
                         ? ClipOval(
                       child: Image.network(
-                        _user!.profileImageUrl!,
+                        _user!.profileImageUrl,
                         width: 70,
                         height: 70,
                         fit: BoxFit.cover,
