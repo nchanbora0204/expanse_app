@@ -93,6 +93,10 @@
   "sign_up_free": "Sign Up For Free",
   "quick_sign_up": "Quick sign up",
   "login": "Log In",
-  "login_now": "Log in now"
+  "login_now": "Log in now",
+  "sendEmailSupport": "Send Email Support",
+  "contactSupport": "Contact Support",
+  "faqs": "FAQs",
+  "supportDescription": "Support Description"
 
 }

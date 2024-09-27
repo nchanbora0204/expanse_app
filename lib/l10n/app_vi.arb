@@ -94,6 +94,10 @@
   "sign_up_free": "Đăng Ký Miễn Phí",
   "quick_sign_up": "Đăng ký nhanh chóng",
   "login": "Đăng Nhập",
-  "login_now": "Đăng nhập ngay"
+  "login_now": "Đăng nhập ngay",
+  "sendEmailSupport": "Gửi Email Hổ Trợ",
+  "contactSupport": "Liên Hệ Hổ Trợ",
+  "faqs": "FAQs",
+  "supportDescription": "Support Description"
 
 }

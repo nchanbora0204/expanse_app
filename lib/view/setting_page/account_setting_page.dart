@@ -6,12 +6,13 @@ import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/models/user_model.dart';
 import 'package:money_lover/view/setting_page/edit_screen.dart';
 import 'package:money_lover/view/setting_page/forward_button.dart';
+import 'package:money_lover/view/setting_page/noitification_page.dart';
 import 'package:money_lover/view/setting_page/setting_item.dart';
 import 'package:money_lover/view/setting_page/setting_switch.dart';
+import 'package:money_lover/view/setting_page/support_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class AccountSettingPage extends StatefulWidget {
   const AccountSettingPage({super.key});
@@ -28,7 +29,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
   void initState() {
     super.initState();
     _loadUserData();
-
   }
 
   Future<void> _loadUserData() async {
@@ -64,7 +64,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
 
   Future<void> _showLanguagePicker(BuildContext context) async {
     final languageProvider =
-    Provider.of<LanguageProvider>(context, listen: false);
+        Provider.of<LanguageProvider>(context, listen: false);
     final curLocale = languageProvider.locale.languageCode;
 
     showModalBottomSheet(
@@ -84,9 +84,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 },
                 trailing: curLocale == 'vi'
                     ? const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                )
+                        Icons.check,
+                        color: Colors.green,
+                      )
                     : null,
               ),
               ListTile(
@@ -97,9 +97,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 },
                 trailing: curLocale == 'en'
                     ? const Icon(
-                  Icons.check,
-                  color: Colors.green,
-                )
+                        Icons.check,
+                        color: Colors.green,
+                      )
                     : null,
               )
             ],
@@ -145,70 +145,70 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               _loading
                   ? const Center(child: CircularProgressIndicator())
                   : SizedBox(
-                width: double.infinity,
-                child: Row(
-                  children: [
-                    _user?.profileImageUrl != null && _user!.profileImageUrl.isNotEmpty
-                        ? ClipOval(
-                      child: Image.network(
-                        _user!.profileImageUrl,
-                        width: 70,
-                        height: 70,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            "assets/img/u1.png",
-                            width: 70,
-                            height: 70,
-                            fit: BoxFit.cover,
-                          );
-                        },
+                      width: double.infinity,
+                      child: Row(
+                        children: [
+                          _user?.profileImageUrl != null &&
+                                  _user!.profileImageUrl.isNotEmpty
+                              ? ClipOval(
+                                  child: Image.network(
+                                    _user!.profileImageUrl,
+                                    width: 70,
+                                    height: 70,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        "assets/img/u1.png",
+                                        width: 70,
+                                        height: 70,
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  ),
+                                )
+                              : ClipOval(
+                                  child: Image.asset(
+                                    "assets/img/u1.png",
+                                    width: 70,
+                                    height: 70,
+                                  ),
+                                ),
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                _user?.name ?? "User Name",
+                                style: theme.textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                              const SizedBox(height: 15),
+                              Text(
+                                _user?.email ?? "Email",
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w300,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          ForwardButton(
+                            onTap: () async {
+                              final result = await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const EditScreen(),
+                                ),
+                              );
+                              if (result == true) {
+                                await _loadUserData();
+                              }
+                            },
+                          ),
+                        ],
                       ),
-                    )
-                        : ClipOval(
-                      child: Image.asset(
-                        "assets/img/u1.png",
-                        width: 70,
-                        height: 70,
-                      ),
                     ),
-                    const SizedBox(width: 10),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _user?.name ?? "User Name",
-                          style: theme.textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 15),
-                        Text(
-                          _user?.email ?? "Email",
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w300,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const Spacer(),
-                    ForwardButton(
-                      onTap: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const EditScreen(),
-                          ),
-                        );
-                        if (result == true) {
-                          await _loadUserData();
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-
               const SizedBox(height: 60),
               Text(
                 AppLocalizations.of(context)!.samesetting,
@@ -250,7 +250,14 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 icon: Ionicons.help_circle,
                 bgColor: Colors.pink.shade100,
                 iconColor: Colors.pink,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SupportPage()),
+                  );
+                },
+                showDropdown: false,
               ),
               const SizedBox(height: 50),
               SettingItem(
@@ -258,7 +265,15 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 icon: Ionicons.notifications_circle,
                 bgColor: Colors.blue.shade100,
                 iconColor: Colors.blue,
-                onTap: () {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NotificationSettingsPage(),
+                    ),
+                  );
+                },
+                showDropdown: false,
               ),
               const SizedBox(
                 height: 50,
@@ -292,7 +307,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content:
-                          Text(AppLocalizations.of(context)!.logoutFailed)),
+                              Text(AppLocalizations.of(context)!.logoutFailed)),
                     );
                   }
                 },

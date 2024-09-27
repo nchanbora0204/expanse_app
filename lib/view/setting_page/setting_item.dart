@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:money_lover/common/color_extension.dart';
 
 import 'forward_button.dart';
 
@@ -9,7 +11,7 @@ class SettingItem extends StatelessWidget {
   final IconData icon;
   final Function() onTap;
   final String? value;
-  final bool showDropdown; // Add this flag to show dropdown or not
+  final bool showDropdown;
 
   const SettingItem({
     super.key,
@@ -19,7 +21,7 @@ class SettingItem extends StatelessWidget {
     required this.onTap,
     required this.icon,
     this.value,
-    this.showDropdown = false, // Default is false
+    this.showDropdown = false,
   });
 
   @override
@@ -52,25 +54,28 @@ class SettingItem extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          value != null
-              ? Text(
-            value!,
-            style: TextStyle(
-              fontSize: 14,
-              color: textColor,
+          if (value != null)
+            Text(
+              value!,
+              style: TextStyle(
+                fontSize: 14,
+                color: textColor,
+              ),
             ),
-          )
-              : const SizedBox(),
           const SizedBox(width: 10),
-          ForwardButton(
-            onTap: () {
-              if (showDropdown) {
-                onTap(); // Trigger dropdown display
-              }
-            },
-          ),
+          if (showDropdown)
+            IconButton(
+              icon: Icon(Ionicons.chevron_forward_outline, color: TColor.gray30),
+              onPressed: onTap, // Để mở dropdown
+            ),
+          if (!showDropdown)
+            IconButton(
+              icon: Icon(Ionicons.chevron_forward_outline, color: TColor.gray30),
+              onPressed: onTap, // Để chuyển trang
+            ),
         ],
       ),
     );
   }
 }
+
