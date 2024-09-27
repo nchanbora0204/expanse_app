@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -5,8 +6,11 @@ import 'package:money_lover/background_services/transaction_hunter.dart';
 import 'package:money_lover/firebaseService/statistic_service.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';
+import 'package:get/get.dart';
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
-// import 'package:money_lover/view/main_pages/transaction_history_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_analysis_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_list_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TransactionList extends StatefulWidget {
   @override
@@ -15,14 +19,20 @@ class TransactionList extends StatefulWidget {
 
 class _TransactionListState extends State<TransactionList> {
   final TransactionService _transactionService = TransactionService();
+  late final TransactionAnalysis _transactionAnalysis;
   final StatisticService _statisticService = StatisticService();
   final HunterService _hunterService = HunterService();
   double _totalAmount = 0.0;
-  List<double> _weeklyTotals = List.generate(2, (index) => 0.0); // 2 tuần
+  final List<double> _weeklyTotals = List.generate(2, (index) => 0.0);
+  String _income = '';
+  String _expense = '';
+  String _date = '';
 
   @override
   void initState() {
     super.initState();
+    _transactionAnalysis = Get.put(TransactionAnalysis());
+    _loadSavedData();
     _fetchTotalAmount();
     _fetchWeeklyTotals();
   }
@@ -41,18 +51,43 @@ class _TransactionListState extends State<TransactionList> {
     setState(() {});
   }
 
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _income = prefs.getString('savedIncome') ?? '';
+      _expense = prefs.getString('savedExpense') ?? '';
+      _date = prefs.getString('savedDate') ?? '';
+    });
+    print("Loaded Income: $_income, Expense: $_expense, Date: $_date");
+  }
+
+  Future<void> _saveTransactionData(String income, String expense, DateTime date) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('savedIncome', income);
+    await prefs.setString('savedExpense', expense);
+    await prefs.setString('savedDate', DateFormat('dd/MM/yyyy').format(date));
+
+    setState(() {
+      _income = income;
+      _expense = expense;
+      _date = DateFormat('dd/MM/yyyy').format(date);
+    });
+
+    print("Saved Income: $_income, Expense: $_expense, Date: $_date");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transactions'),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
+          preferredSize: const Size.fromHeight(50.0),
           child: Container(
             alignment: Alignment.center,
             child: Text(
               'Tổng số tiền tuần này: ${_totalAmount.toStringAsFixed(2)} VNĐ',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -76,40 +111,35 @@ class _TransactionListState extends State<TransactionList> {
                 MaterialPageRoute(builder: (context) => NotificationListPage()),
               );
             },
-            child: Icon(Icons.notifications),
             backgroundColor: Colors.blue,
             tooltip: 'Notifications',
+            child: const Icon(Icons.notifications),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           FloatingActionButton(
-            onPressed: _pickImage,
-            child: Icon(Icons.photo_library),
+            onPressed: () async {
+              await _transactionAnalysis.pickImage();
+              _loadSavedData();
+            },
+            child: const Icon(Icons.photo_library),
             backgroundColor: Colors.green,
             tooltip: 'Chọn ảnh từ thư viện',
           ),
-          SizedBox(
-            height: 16,
+          const SizedBox(height: 16),
+          FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TransactionListPage()),
+              );
+            },
+            child: const Icon(Icons.add),
+            backgroundColor: Colors.purple,
+            tooltip: 'Đi đến trang mới',
           ),
-          // FloatingActionButton(
-          //   onPressed: () {
-          //     Navigator.push(
-          //       context,
-          //       MaterialPageRoute(
-          //           builder: (context) => TransactionHistoryPage()),
-          //     );
-          //   },
-          //   child: Icon(Icons.history),
-          //   backgroundColor: Colors.orange,
-          //   tooltip: 'Lịch sử giao dịch',
-          // ),
         ],
       ),
     );
-  }
-
-  void _pickImage() {
-    // Chọn ảnh từ thư viện (bạn cần xử lý chức năng này)
-    print("Chọn ảnh từ thư viện!");
   }
 }
 
@@ -118,8 +148,8 @@ class ChartHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
+    return const Padding(
+      padding: EdgeInsets.all(16.0),
       child: Text(
         'Biểu đồ tổng số tiền hàng tuần',
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -153,7 +183,7 @@ class TransactionBarChart extends StatelessWidget {
             );
           }).toList(),
           titlesData: FlTitlesData(
-            leftTitles: AxisTitles(
+            leftTitles: const AxisTitles(
               sideTitles: SideTitles(showTitles: true),
             ),
             bottomTitles: AxisTitles(
@@ -162,20 +192,20 @@ class TransactionBarChart extends StatelessWidget {
                 getTitlesWidget: (value, meta) {
                   return Text(
                     value.toInt() == 0 ? 'Tuần này' : 'Tuần trước',
-                    style: TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
                   );
                 },
               ),
             ),
           ),
           borderData: FlBorderData(show: false), // Ẩn đường biên
-          gridData: FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
+          gridData: const FlGridData(show: true, drawHorizontalLine: true, drawVerticalLine: false),
           barTouchData: BarTouchData(
             touchTooltipData: BarTouchTooltipData(
               getTooltipItem: (group, groupIndex, rod, rodIndex) {
                 return BarTooltipItem(
                   '${rod.toY}\n',
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
+                  const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14),
                 );
               },
             ),
@@ -205,7 +235,7 @@ class TransactionListView extends StatelessWidget {
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final transaction = snapshot.data![index];
@@ -230,7 +260,7 @@ class TransactionCard extends StatelessWidget {
       elevation: 4,
       child: ListTile(
         title: Text(transaction.title, style: const TextStyle(fontWeight: FontWeight.bold)),
-        subtitle: Text("Amount: ${transaction.amount.toString()}"),
+        subtitle: Text("Amount: ${transaction.amount.toString()} VNĐ"),
         trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
         onTap: () {
           // Navigate to transaction details or allow editing

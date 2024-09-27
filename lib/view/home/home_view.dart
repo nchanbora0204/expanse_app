@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/common_widget/custom_arc_painter.dart';
+import 'package:money_lover/common_widget/expense_view.dart';
+import 'package:money_lover/common_widget/income_view.dart';
 import 'package:money_lover/common_widget/segment_button.dart';
 import 'package:money_lover/common_widget/status_button.dart';
-import 'package:money_lover/common_widget/subcription_home_row.dart';
-import 'package:money_lover/common_widget/upcoming_view_row.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomeView extends StatefulWidget {
@@ -61,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                 itemBuilder: (context, index) {
                   var sub = subArr[index] as Map? ?? {};
 
-                  return SubScriptionHomeRow(
+                  return IncomeView(
                     sub: sub,
                     onPressed: () {},
                   );
@@ -79,7 +79,7 @@ class _HomeViewState extends State<HomeView> {
                 itemBuilder: (context, index) {
                   var bil = bilArr[index] as Map? ?? {};
 
-                  return UpcomingBillRow(
+                  return ExpenseView(
                     sub: bil,
                     onPressed: () {},
                   );

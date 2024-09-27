@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:money_lover/firebaseService/user_services.dart';
@@ -10,7 +12,10 @@ import 'package:money_lover/view/login_signup/sign_in.dart';
 import 'package:money_lover/view/login_signup/sign_up.dart';
 import 'package:money_lover/view/login_signup/signup_social.dart';
 import 'package:money_lover/view/login_signup/welcome_view.dart';
+import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/notification_list_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_analysis_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_list_screen.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
@@ -22,6 +27,7 @@ import 'common/color_extension.dart';
 void main() async {
   await Hive.initFlutter();
   await Hive.openBox('settingsBox');//Mở box để lưu trữ trạng thái.
+  Get.put(TransactionAnalysis());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: FirebaseOptions(
@@ -85,7 +91,7 @@ class MyApp extends StatelessWidget {
       themeMode: themeMode,
 
       home: AuthWrapper(),
-      initialRoute: 'sign_in',
+      initialRoute: 'main_tab',
 
       locale: languageProvider.locale, // Lấy locale từ LanguageProvider
       supportedLocales: L10n.all, // Xóa lặp lại supportedLocales
@@ -99,6 +105,7 @@ class MyApp extends StatelessWidget {
         'sign_in': (context) => SignIn(),
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
+        'detail_image_list': (context) => TransactionListPage(),
 
         'notifi_list_page': (context) => NotificationListPage(),
 

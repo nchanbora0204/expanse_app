@@ -7,17 +7,17 @@ import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/firebaseService/other_services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class AddTransactionForm extends StatefulWidget {
   @override
   _AddTransactionFormState createState() => _AddTransactionFormState();
-  final String amount; //
+  final String amount; // Trường để nhận số tiền
 
-  // Constructor để nhận amount từ trang notification List Page
+  // Constructor để nhận amount từ trang TransactionListPage
   AddTransactionForm({required this.amount});
 }
 
 class _AddTransactionFormState extends State<AddTransactionForm> {
-
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   double _amount = 0;
@@ -26,18 +26,15 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   String _description = '';
   String _categoryId = '';
   final TransactionService _transactionService = TransactionService();
-  DateTime _startDate = DateTime.now();
-  DateTime _endDate = DateTime.now();
-  final CategoryService  _categoryService = CategoryService();
+  final CategoryService _categoryService = CategoryService();
+
   @override
   void initState() {
     super.initState();
-    print("Received amount: ${widget.amount}");
+    // Chuyển đổi giá trị amount sang kiểu double và gán cho biến _amount
     String numericAmount = widget.amount.replaceAll(RegExp(r'[^0-9]'), '');
-    // Khi nhận giá trị amount, gán nó vào _amount để hiển thị trong form
     _amount = double.tryParse(numericAmount) ?? 0;
-    print('add: ${_amount}');
-
+    print('Received amount: $_amount');
   }
 
   @override
@@ -47,7 +44,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.addTransactionTitle),
+        title: Text(localizations!.addTransactionTitle),
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -58,14 +55,14 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildAmountField(theme, localizations!),
+              _buildAmountField(theme, localizations),
               _buildTitleField(theme, localizations),
-              _buildDesField(theme,localizations),
-              _buildCategoryDropdown(theme,localizations),
+              _buildDesField(theme, localizations),
+              _buildCategoryDropdown(theme, localizations),
               const SizedBox(height: 20),
-              _buildDateSelector(theme,localizations),
+              _buildDateSelector(theme, localizations),
               const SizedBox(height: 20),
-              _buildSaveButton(theme,localizations),
+              _buildSaveButton(theme, localizations),
             ],
           ),
         ),
@@ -76,12 +73,11 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   Widget _buildTitleField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.transactionTitle,
+        labelText: localizations.transactionTitle,
         labelStyle: TextStyle(
           color: theme.textTheme.bodyMedium?.color,
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Roboto', // Đảm bảo font chữ hỗ trợ tiếng Việt
         ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
@@ -92,16 +88,14 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return AppLocalizations.of(context)!.errorTitleRequired;
+          return localizations.errorTitleRequired;
         }
         return null;
       },
       onSaved: (value) {
         _title = value!;
       },
-
       style: const TextStyle(
-        fontFamily: 'Roboto', // Áp dụng font chữ cho TextFormField
         fontSize: 18,
       ),
     );
@@ -109,18 +103,15 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
 
   Widget _buildAmountField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
-      initialValue: _amount.toString(), // Đặt giá trị khởi tạo
+      initialValue: _amount.toString(),
+      // Đặt giá trị khởi tạo
       decoration: InputDecoration(
-
-
         labelStyle: TextStyle(
-            color: theme.textTheme.bodyMedium?.color,
-            fontSize: 18,
-            fontWeight: FontWeight.bold),
-
-        labelText: AppLocalizations.of(context)!.transactionAmount,
-
-
+          color: theme.textTheme.bodyMedium?.color,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+        labelText: localizations.transactionAmount,
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
         ),
@@ -131,10 +122,10 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       keyboardType: TextInputType.number,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return AppLocalizations.of(context)!.errorAmountRequired;
+          return localizations.errorAmountRequired;
         }
         if (double.tryParse(value) == null) {
-          return AppLocalizations.of(context)!.errorAmountInvalid;
+          return localizations.errorAmountInvalid;
         }
         return null;
       },
@@ -147,8 +138,12 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   Widget _buildDesField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: AppLocalizations.of(context)!.transactionDescription,
-        labelStyle: TextStyle(color: theme.textTheme.bodyMedium?.color, fontSize: 18, fontWeight: FontWeight.bold),
+        labelText: localizations.transactionDescription,
+        labelStyle: TextStyle(
+          color: theme.textTheme.bodyMedium?.color,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(color: theme.dividerColor),
         ),
@@ -156,23 +151,25 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
           borderSide: BorderSide(color: theme.colorScheme.primary),
         ),
       ),
-
       onSaved: (value) {
         _description = value!;
       },
     );
   }
 
-  Widget _buildCategoryDropdown(ThemeData theme, AppLocalizations localizations) {
+  Widget _buildCategoryDropdown(
+      ThemeData theme, AppLocalizations localizations) {
     return FutureBuilder<List<CategoryModel>>(
       future: _categoryService.getCategory(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return Text('Đang tải danh mục...', style: TextStyle(color: theme.textTheme.bodyMedium?.color));
+          return Text('Đang tải danh mục...',
+              style: TextStyle(color: theme.textTheme.bodyMedium?.color));
         }
 
         if (snapshot.hasError) {
-          return Text('Lỗi khi tải danh mục', style: TextStyle(color: theme.textTheme.bodyMedium?.color));
+          return Text('Lỗi khi tải danh mục',
+              style: TextStyle(color: theme.textTheme.bodyMedium?.color));
         }
 
         return DropdownButtonFormField<String>(
@@ -188,7 +185,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             });
           },
           decoration: InputDecoration(
-            labelText: AppLocalizations.of(context)!.transactionCategory,
+            labelText: localizations.transactionCategory,
             labelStyle: TextStyle(
               color: theme.textTheme.bodyMedium?.color,
               fontWeight: FontWeight.bold,
@@ -214,7 +211,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             Expanded(
               child: Text(
                 'Ngày giao dịch: ${_selectedDate.toLocal().toString().split(' ')[0]}',
-                style: TextStyle(fontSize: 16, color: theme.textTheme.bodyMedium?.color),
+                style: TextStyle(
+                    fontSize: 16, color: theme.textTheme.bodyMedium?.color),
               ),
             ),
             TextButton(
@@ -229,7 +227,6 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
       ],
     );
   }
-
 
   Widget _buildSaveButton(ThemeData theme, AppLocalizations localizations) {
     return Center(
@@ -246,8 +243,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               title: _title,
               amount: _amount,
               date: _selectedDate,
-
-              categoryId: _categoryId, // Chắc chắn rằng categoryId được truyền đúng
+              categoryId:
+                  _categoryId, // Chắc chắn rằng categoryId được truyền đúng
             );
 
             try {
@@ -259,7 +256,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
             }
           }
         },
-        child: Text(AppLocalizations.of(context)!.saveTransaction),
+        child: Text(localizations.saveTransaction),
         style: ElevatedButton.styleFrom(
           foregroundColor: theme.colorScheme.onPrimary,
           backgroundColor: theme.colorScheme.primary,
@@ -276,7 +273,8 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   String _generateRandomId() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();
-    return 'tr' + List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
+    return 'tr' +
+        List.generate(6, (index) => chars[random.nextInt(chars.length)]).join();
   }
 
   Future<void> _selectDate() async {

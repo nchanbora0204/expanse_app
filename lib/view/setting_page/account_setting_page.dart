@@ -28,6 +28,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
   void initState() {
     super.initState();
     _loadUserData();
+
   }
 
   Future<void> _loadUserData() async {
