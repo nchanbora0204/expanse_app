@@ -12,8 +12,8 @@ class TransactionHistoryPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Lịch sử giao dịch'),
       ),
-      body: StreamBuilder<List<TransactionModel>>(
-        stream: _transactionService.getTransactionStream(), // Lấy dữ liệu từ Firestore
+      body: FutureBuilder<List<TransactionModel>>(
+        future: _transactionService.getTransaction(), // Lấy dữ liệu từ Firestore
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -30,9 +30,14 @@ class TransactionHistoryPage extends StatelessWidget {
                   margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                   elevation: 4,
                   child: ListTile(
-                    title: Text(transaction.title, style: TextStyle(fontWeight: FontWeight.bold)),
+                    title: Text(
+                      transaction.title,
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     subtitle: Text("Số tiền: ${transaction.amount.toString()}"),
-                    trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+                    trailing: Text(
+                      DateFormat('dd/MM/yyyy').format(transaction.date),
+                    ),
                     onTap: () {
                       // Điều hướng đến chi tiết giao dịch nếu cần
                     },

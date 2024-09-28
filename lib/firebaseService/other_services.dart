@@ -51,6 +51,7 @@ class CategoryService {
           .doc(category.id)
           .set(category.toMap());
       print('Category Service Class: Thêm mới thành công');
+
     } catch (e) {
       print('Category Service Class: Lỗi khi thêm mới Category: $e');
     }

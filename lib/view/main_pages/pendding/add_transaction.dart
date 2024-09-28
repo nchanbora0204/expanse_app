@@ -45,6 +45,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations!.addTransactionTitle),
+        centerTitle: true,
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -244,7 +245,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
               amount: _amount,
               date: _selectedDate,
               categoryId:
-                  _categoryId, // Chắc chắn rằng categoryId được truyền đúng
+              _categoryId, // Chắc chắn rằng categoryId được truyền đúng
             );
 
             try {
