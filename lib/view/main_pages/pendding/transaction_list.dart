@@ -83,6 +83,7 @@
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
+              automaticallyImplyLeading: false,
               expandedHeight: 200.0,
               floating: false,
               pinned: true,

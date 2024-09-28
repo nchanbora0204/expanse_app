@@ -170,5 +170,6 @@
   "confirmDelete": "Xác nhận xóa",
   "confirmDeleteMessage": "Bạn có chắc muốn xóa giao dịch này không?",
   "cancel": "Không đồng ý",
-  "confirm": "Đồng ý"
+  "confirm": "Đồng ý",
+  "transactionDate": "Ngày giao dịch"
 }

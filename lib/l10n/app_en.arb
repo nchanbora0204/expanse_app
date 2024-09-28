@@ -167,7 +167,8 @@
   "confirmDelete": "Confirm Deletion",
   "confirmDeleteMessage": "Are you sure you want to delete this transaction?",
   "cancel": "Cancel",
-  "confirm": "Confirm"
+  "confirm": "Confirm",
+  "transactionDate": "Transaction Date"
 
 
 
