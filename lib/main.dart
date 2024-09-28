@@ -91,7 +91,7 @@ class MyApp extends StatelessWidget {
       themeMode: themeMode,
 
       home: AuthWrapper(),
-      initialRoute: 'main_tab',
+      initialRoute: 'welcome_screen',
 
       locale: languageProvider.locale, // Lấy locale từ LanguageProvider
       supportedLocales: L10n.all, // Xóa lặp lại supportedLocales

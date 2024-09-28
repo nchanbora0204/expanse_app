@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:ionicons/ionicons.dart';
 
 class SupportPage extends StatelessWidget {
   const SupportPage({Key? key}) : super(key: key);
@@ -7,108 +8,197 @@ class SupportPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.support),
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        title: Text(localizations.support),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: SingleChildScrollView( // Cho phép cuộn khi có nhiều nội dung
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.support,
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24, // Cỡ chữ tiêu đề lớn hơn
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                AppLocalizations.of(context)!.supportDescription, // Giới thiệu về hỗ trợ
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600], // Màu sắc nhạt hơn cho phần mô tả
-                ),
-              ),
-              const SizedBox(height: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _buildHeader(context),
+            _buildQuickActions(context),
+            _buildFAQSection(context),
+            _buildContactSupport(context),
+          ],
+        ),
+      ),
+    );
+  }
 
-              // Nút gửi email hỗ trợ
-              _buildSupportButton(
+  Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      color: theme.colorScheme.primaryContainer,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.howCanWeHelp,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.onPrimaryContainer,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            localizations.supportDescription,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActions(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.quickActions,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildActionButton(
                 context,
-                title: AppLocalizations.of(context)!.sendEmailSupport,
-                onPressed: () {
-                  // Thực hiện chức năng gửi email hỗ trợ
+                icon: Ionicons.book_outline,
+                label: localizations.userGuide,
+                onTap: () {
+                  // TODO: Implement user guide action
                 },
               ),
-
-              const SizedBox(height: 20),
-
-              // FAQs Section
-              Text(
-                AppLocalizations.of(context)!.faqs,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 10),
-              _buildFAQTile(context, 'Câu hỏi 1', 'Mô tả câu hỏi 1...'),
-              _buildFAQTile(context, 'Câu hỏi 2', 'Mô tả câu hỏi 2...'),
-
-              // Nút liên hệ hỗ trợ
-              const SizedBox(height: 20),
-              _buildSupportButton(
+              _buildActionButton(
                 context,
-                title: AppLocalizations.of(context)!.contactSupport,
-                onPressed: () {
-                  // Thực hiện chức năng liên hệ hỗ trợ
+                icon: Ionicons.videocam_outline,
+                label: localizations.videoTutorials,
+                onTap: () {
+                  // TODO: Implement video tutorials action
+                },
+              ),
+              _buildActionButton(
+                context,
+                icon: Ionicons.chatbubble_outline,
+                label: localizations.liveChatSupport,
+                onTap: () {
+                  // TODO: Implement live chat support action
                 },
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildSupportButton(BuildContext context, {required String title, required VoidCallback onPressed}) {
+  Widget _buildActionButton(BuildContext context, {
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.secondaryContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: Theme.of(context).colorScheme.secondary),
+          ),
+          const SizedBox(height: 8),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFAQSection(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            localizations.frequentlyAskedQuestions,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          const SizedBox(height: 16),
+          _buildFAQItem(context, localizations.faqQuestion1, localizations.faqAnswer1),
+          _buildFAQItem(context, localizations.faqQuestion2, localizations.faqAnswer2),
+          _buildFAQItem(context, localizations.faqQuestion3, localizations.faqAnswer3),
+          TextButton(
+            onPressed: () {
+              // TODO: Implement view all FAQs action
+            },
+            child: Text(localizations.viewAllFAQs),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFAQItem(BuildContext context, String question, String answer) {
+    return ExpansionTile(
+      title: Text(question, style: Theme.of(context).textTheme.titleMedium),
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Text(answer, style: Theme.of(context).textTheme.bodyMedium),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContactSupport(BuildContext context) {
     final theme = Theme.of(context);
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 15), // Tăng kích thước nút
-        backgroundColor: theme.primaryColor,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Bo góc nút
-        ),
-      ),
-      onPressed: onPressed,
-      child: Text(
-        title,
-        style: theme.textTheme.bodyMedium?.copyWith(
-          fontSize: 16, // Cỡ chữ lớn hơn
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+    final localizations = AppLocalizations.of(context)!;
 
-  Widget _buildFAQTile(BuildContext context, String question, String answer) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 10), // Khoảng cách giữa các câu hỏi
-      elevation: 2,
-      child: ListTile(
-        title: Text(
-          question,
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        subtitle: Text(answer),
-        trailing: Icon(Icons.arrow_forward_ios),
-        onTap: () {
-          // Chức năng mở rộng câu hỏi
-        },
+    return Container(
+      padding: const EdgeInsets.all(24),
+      color: theme.colorScheme.secondaryContainer,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            localizations.stillNeedHelp,
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onSecondaryContainer,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            icon: const Icon(Ionicons.mail_outline),
+            label: Text(localizations.contactSupport),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(16),
+              backgroundColor: theme.colorScheme.primary,
+              foregroundColor: theme.colorScheme.onPrimary,
+            ),
+            onPressed: () {
+              // TODO: Implement contact support action
+            },
+          ),
+        ],
       ),
     );
   }

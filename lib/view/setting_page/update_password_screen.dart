@@ -13,8 +13,10 @@ class UpdatePasswordScreen extends StatefulWidget {
 class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
   bool _isOldPasswordVisible = false;
   bool _isNewPasswordVisible = false;
+  bool _isConfirmPasswordVisible = false;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _updatePassword() async {
@@ -77,58 +79,96 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context);
+    final localizations = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(localizations!.changePassword),
+        title: Text(localizations.changePassword),
+        elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _oldPasswordController,
-              obscureText: !_isOldPasswordVisible,
-              decoration: InputDecoration(
-                labelText: localizations.oldPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isOldPasswordVisible ? Ionicons.eye : Ionicons.eye_off,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Icon(
+                Icons.lock_outline,
+                size: 80,
+                color: Colors.blue,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                localizations.changePassword,
+                style: theme.textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              _buildPasswordField(
+                controller: _oldPasswordController,
+                label: localizations.oldPassword,
+                isVisible: _isOldPasswordVisible,
+                onVisibilityChanged: () {
+                  setState(() => _isOldPasswordVisible = !_isOldPasswordVisible);
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildPasswordField(
+                controller: _newPasswordController,
+                label: localizations.newPassword,
+                isVisible: _isNewPasswordVisible,
+                onVisibilityChanged: () {
+                  setState(() => _isNewPasswordVisible = !_isNewPasswordVisible);
+                },
+              ),
+              const SizedBox(height: 16),
+              _buildPasswordField(
+                controller: _confirmPasswordController,
+                label: localizations.comfirmPassword,
+                isVisible: _isConfirmPasswordVisible,
+                onVisibilityChanged: () {
+                  setState(() => _isConfirmPasswordVisible = !_isConfirmPasswordVisible);
+                },
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton(
+                onPressed: _updatePassword,
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  onPressed: () {
-                    setState(() {
-                      _isOldPasswordVisible = !_isOldPasswordVisible;
-                    });
-                  },
+                ),
+                child: Text(
+                  localizations.changePassword.toUpperCase(),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            TextField(
-              controller: _newPasswordController,
-              obscureText: !_isNewPasswordVisible,
-              decoration: InputDecoration(
-                labelText: localizations.newPassword,
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isNewPasswordVisible ? Ionicons.eye : Ionicons.eye_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isNewPasswordVisible = !_isNewPasswordVisible;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _updatePassword,
-              child: Text(localizations.changePassword),
-            ),
-          ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPasswordField({
+    required TextEditingController controller,
+    required String label,
+    required bool isVisible,
+    required VoidCallback onVisibilityChanged,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: !isVisible,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        suffixIcon: IconButton(
+          icon: Icon(
+            isVisible ? Ionicons.eye_outline : Ionicons.eye_off_outline,
+          ),
+          onPressed: onVisibilityChanged,
         ),
       ),
     );
@@ -138,6 +178,7 @@ class _UpdatePasswordScreenState extends State<UpdatePasswordScreen> {
   void dispose() {
     _oldPasswordController.dispose();
     _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
     super.dispose();
   }
 }

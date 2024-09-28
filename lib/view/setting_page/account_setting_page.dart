@@ -5,17 +5,14 @@ import 'package:money_lover/firebaseService/user_services.dart';
 import 'package:money_lover/language/language_provider.dart';
 import 'package:money_lover/models/user_model.dart';
 import 'package:money_lover/view/setting_page/edit_screen.dart';
-import 'package:money_lover/view/setting_page/forward_button.dart';
 import 'package:money_lover/view/setting_page/noitification_page.dart';
-import 'package:money_lover/view/setting_page/setting_item.dart';
-import 'package:money_lover/view/setting_page/setting_switch.dart';
 import 'package:money_lover/view/setting_page/support_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class AccountSettingPage extends StatefulWidget {
-  const AccountSettingPage({super.key});
+  const AccountSettingPage({Key? key}) : super(key: key);
 
   @override
   State<AccountSettingPage> createState() => _AccountSettingPageState();
@@ -41,7 +38,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
       UserModel? userModel = await userService.getUserDetails(user.uid);
 
       if (userModel == null) {
-        // Nếu không tìm thấy dữ liệu người dùng, tạo một UserModel mới từ thông tin hiện có
         userModel = UserModel(
           uid: user.uid,
           name: user.displayName ?? '',
@@ -50,21 +46,215 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
           gender: '',
           profileImageUrl: user.photoURL ?? '',
         );
-        // Lưu thông tin người dùng mới vào Firestore
         await userService.saveUserDetails(userModel);
       }
 
       setState(() {
         _user = userModel;
         _loading = false;
-        print(_user);
       });
     }
   }
 
+  @override
+  Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final languageProvider = Provider.of<LanguageProvider>(context);
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      backgroundColor: theme.scaffoldBackgroundColor,
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.samesetting),
+        backgroundColor: theme.appBarTheme.backgroundColor,
+      ),
+      body: _loading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                AppLocalizations.of(context)!.setting,
+                style: theme.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 24),
+              _buildUserInfoCard(),
+              SizedBox(height: 24),
+              _buildSettingsSection(themeProvider, languageProvider, theme),
+              SizedBox(height: 24),
+              _buildLogoutButton(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoCard() {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundImage: _user?.profileImageUrl != null && _user!.profileImageUrl.isNotEmpty
+                  ? NetworkImage(_user!.profileImageUrl)
+                  : AssetImage("assets/img/u1.png") as ImageProvider,
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _user?.name ?? "User Name",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    _user?.email ?? "Email",
+                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const EditScreen()),
+                );
+                if (result == true) {
+                  await _loadUserData();
+                }
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSettingsSection(ThemeProvider themeProvider, LanguageProvider languageProvider, ThemeData theme) {
+    return Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          _buildSettingItem(
+            icon: Icons.language,
+            title: AppLocalizations.of(context)!.language,
+            trailing: Text(languageProvider.locale.languageCode == 'vi' ? "Tiếng Việt" : "English"),
+            onTap: () => _showLanguagePicker(context),
+          ),
+          Divider(height: 1),
+          _buildSettingItem(
+            icon: Icons.brightness_6,
+            title: AppLocalizations.of(context)!.dark_mode,
+            trailing: Switch(
+              value: themeProvider.curThemeMode == ThemeMode.dark,
+              onChanged: (value) {
+                themeProvider.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+              },
+            ),
+          ),
+          Divider(height: 1),
+          _buildSettingItem(
+            icon: Icons.help_outline,
+            title: AppLocalizations.of(context)!.support,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SupportPage()),
+              );
+            },
+          ),
+          Divider(height: 1),
+          _buildSettingItem(
+            icon: Icons.notifications_none,
+            title: AppLocalizations.of(context)!.notifications,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationSettingsPage()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettingItem({
+    required IconData icon,
+    required String title,
+    Widget? trailing,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: Theme.of(context).primaryColor),
+      title: Text(title),
+      trailing: trailing ?? Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildLogoutButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.red,
+          padding: EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        onPressed: () async {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: Row(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    SizedBox(width: 20),
+                    Text(AppLocalizations.of(context)!.loggingOut)
+                  ],
+                ),
+              );
+            },
+          );
+          try {
+            await FirebaseAuth.instance.signOut();
+            await Future.delayed(Duration(seconds: 3));
+            Navigator.of(context).pop();
+            Navigator.pushReplacementNamed(context, 'welcome_screen');
+          } catch (e) {
+            Navigator.of(context).pop();
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(AppLocalizations.of(context)!.logoutFailed)),
+            );
+          }
+        },
+        child: Text(
+          AppLocalizations.of(context)!.logout,
+          style: TextStyle(fontSize: 16, color: Colors.white),
+        ),
+      ),
+    );
+  }
+
   Future<void> _showLanguagePicker(BuildContext context) async {
-    final languageProvider =
-        Provider.of<LanguageProvider>(context, listen: false);
+    final languageProvider = Provider.of<LanguageProvider>(context, listen: false);
     final curLocale = languageProvider.locale.languageCode;
 
     showModalBottomSheet(
@@ -77,246 +267,29 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ListTile(
-                title: const Text('VietNam'),
+                title: Text('Tiếng Việt'),
                 onTap: () {
-                  languageProvider.setLocale(const Locale('vi'));
+                  languageProvider.setLocale(Locale('vi'));
                   Navigator.pop(context);
                 },
                 trailing: curLocale == 'vi'
-                    ? const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
+                    ? Icon(Icons.check, color: Colors.green)
                     : null,
               ),
               ListTile(
-                title: const Text('English'),
+                title: Text('English'),
                 onTap: () {
-                  languageProvider.setLocale(const Locale('en'));
+                  languageProvider.setLocale(Locale('en'));
                   Navigator.pop(context);
                 },
                 trailing: curLocale == 'en'
-                    ? const Icon(
-                        Icons.check,
-                        color: Colors.green,
-                      )
+                    ? Icon(Icons.check, color: Colors.green)
                     : null,
               )
             ],
           ),
         );
       },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context);
-    final currentMode = themeProvider.curThemeMode;
-    final languageProvider = Provider.of<LanguageProvider>(context);
-    final theme = Theme.of(context);
-
-    return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.samesetting),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                AppLocalizations.of(context)!.setting,
-                style: theme.textTheme.headlineLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 40),
-              Text(
-                AppLocalizations.of(context)!.account,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 30),
-              _loading
-                  ? const Center(child: CircularProgressIndicator())
-                  : SizedBox(
-                      width: double.infinity,
-                      child: Row(
-                        children: [
-                          _user?.profileImageUrl != null &&
-                                  _user!.profileImageUrl.isNotEmpty
-                              ? ClipOval(
-                                  child: Image.network(
-                                    _user!.profileImageUrl,
-                                    width: 70,
-                                    height: 70,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.asset(
-                                        "assets/img/u1.png",
-                                        width: 70,
-                                        height: 70,
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  ),
-                                )
-                              : ClipOval(
-                                  child: Image.asset(
-                                    "assets/img/u1.png",
-                                    width: 70,
-                                    height: 70,
-                                  ),
-                                ),
-                          const SizedBox(width: 10),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                _user?.name ?? "User Name",
-                                style: theme.textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              const SizedBox(height: 15),
-                              Text(
-                                _user?.email ?? "Email",
-                                style: theme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w300,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          ForwardButton(
-                            onTap: () async {
-                              final result = await Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const EditScreen(),
-                                ),
-                              );
-                              if (result == true) {
-                                await _loadUserData();
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-              const SizedBox(height: 60),
-              Text(
-                AppLocalizations.of(context)!.samesetting,
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 40),
-              SettingItem(
-                title: AppLocalizations.of(context)!.language,
-                icon: Ionicons.earth,
-                bgColor: Colors.orange.shade100,
-                iconColor: Colors.orange,
-                value: languageProvider.locale.languageCode == 'vi'
-                    ? "VietNam"
-                    : "English",
-                onTap: () {
-                  _showLanguagePicker(context);
-                },
-                showDropdown: true,
-              ),
-              const SizedBox(height: 50),
-              SettingSwitch(
-                title: AppLocalizations.of(context)!.dark_mode,
-                icon: Ionicons.moon,
-                bgColor: Colors.purple.shade100,
-                iconColor: Colors.purple,
-                currentMode: currentMode,
-                onModeChange: (mode) {
-                  themeProvider.setThemeMode(mode);
-                },
-                onSystemModeTap: () {
-                  themeProvider.setThemeMode(ThemeMode.system);
-                },
-              ),
-              const SizedBox(height: 50),
-              SettingItem(
-                title: AppLocalizations.of(context)!.support,
-                icon: Ionicons.help_circle,
-                bgColor: Colors.pink.shade100,
-                iconColor: Colors.pink,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SupportPage()),
-                  );
-                },
-                showDropdown: false,
-              ),
-              const SizedBox(height: 50),
-              SettingItem(
-                title: AppLocalizations.of(context)!.notifications,
-                icon: Ionicons.notifications_circle,
-                bgColor: Colors.blue.shade100,
-                iconColor: Colors.blue,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => NotificationSettingsPage(),
-                    ),
-                  );
-                },
-                showDropdown: false,
-              ),
-              const SizedBox(
-                height: 50,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Row(
-                          children: <Widget>[
-                            const CircularProgressIndicator(),
-                            const SizedBox(
-                              width: 20,
-                            ),
-                            Text(AppLocalizations.of(context)!.loggingOut)
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                  try {
-                    await FirebaseAuth.instance.signOut();
-                    await Future.delayed(const Duration(seconds: 3));
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacementNamed(context, 'welcome_screen');
-                  } catch (e) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                          content:
-                              Text(AppLocalizations.of(context)!.logoutFailed)),
-                    );
-                  }
-                },
-                child: Text(AppLocalizations.of(context)!.logout),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }

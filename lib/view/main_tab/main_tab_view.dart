@@ -6,6 +6,7 @@ import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
 import '../home/home_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MainTabView extends StatefulWidget {
   const MainTabView({super.key});
@@ -37,27 +38,27 @@ class _MainTabViewState extends State<MainTabView> {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: pages[_currentPage],
       bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 15),
-          child: Stack(
-            alignment: Alignment.center,
+        child: Container(
+          height: 80, // Đặt chiều cao cố định cho thanh điều hướng
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            color: theme.brightness == Brightness.light ? Colors.white : theme.scaffoldBackgroundColor,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, -5),
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Image.asset(
-                "assets/img/bottom_bar_bg.png",
-                color: theme.brightness == Brightness.light
-                    ? Colors.white
-                    : theme.scaffoldBackgroundColor,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // Sử dụng spaceBetween
-                children: [
-                  _buildIconButton(0, "assets/img/home.png", "Trang Chủ"),
-                  _buildIconButton(1, "assets/img/creditcards.png", "Sổ Giao Dịch"),
-                  _addSpendingButton(), // Nút trung tâm
-                  _buildIconButton(2, "assets/img/budgets.png", "Ngân Sách"),
-                  _buildIconButton(3, "assets/img/settings.png", "Cài Đặt Chung"),
-                ],
-              ),
+              _buildIconButton(0, "assets/img/home.png", AppLocalizations.of(context)!.home),
+              _buildIconButton(1, "assets/img/creditcards.png", AppLocalizations.of(context)!.transactionList),
+              _addSpendingButton(),
+              _buildIconButton(2, "assets/img/budgets.png", AppLocalizations.of(context)!.budgets),
+              _buildIconButton(3, "assets/img/settings.png", AppLocalizations.of(context)!.setting),
             ],
           ),
         ),
@@ -67,39 +68,45 @@ class _MainTabViewState extends State<MainTabView> {
 
   Widget _buildIconButton(int index, String iconPath, String label) {
     final theme = Theme.of(context);
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          onPressed: () {
-            setState(() {
-              _currentPage = index;
-            });
-          },
-          icon: Image.asset(
-            iconPath,
-            width: 25,
-            height: 25,
-            color: _currentPage == index
-                ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
-                : theme.disabledColor,
-          ),
+    final isSelected = _currentPage == index;
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _currentPage = index;
+          });
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              iconPath,
+              width: 24,
+              height: 24,
+              color: isSelected
+                  ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
+                  : theme.disabledColor,
+            ),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected
+                    ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
+                    : theme.disabledColor,
+                fontSize: 12,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-        Text(
-          label,
-          style: TextStyle(
-            color: _currentPage == index
-                ? (theme.brightness == Brightness.light ? Colors.black : Colors.white)
-                : theme.disabledColor,
-            fontSize: 12,
-          ),
-        ),
-      ],
+      ),
     );
   }
 
   Widget _addSpendingButton() {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Navigator.push(
           context,
@@ -107,7 +114,8 @@ class _MainTabViewState extends State<MainTabView> {
         );
       },
       child: Container(
-        margin: const EdgeInsets.all(15),
+        width: 60,
+        height: 60,
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
@@ -116,7 +124,7 @@ class _MainTabViewState extends State<MainTabView> {
               offset: const Offset(0, 4),
             ),
           ],
-          borderRadius: BorderRadius.circular(50),
+          shape: BoxShape.circle,
         ),
         child: Image.asset(
           "assets/img/center_btn.png",

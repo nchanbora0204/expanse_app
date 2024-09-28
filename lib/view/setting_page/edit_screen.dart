@@ -6,15 +6,11 @@ import 'package:image_picker/image_picker.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:money_lover/firebaseService/user_services.dart';
 import 'package:money_lover/models/user_model.dart';
-
-
-import 'package:money_lover/view/setting_page/edit_item.dart';
-
+import 'package:money_lover/view/setting_page/update_password_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'update_password_screen.dart';
 
 class EditScreen extends StatefulWidget {
-  const EditScreen({super.key});
+  const EditScreen({Key? key}) : super(key: key);
 
   @override
   State<EditScreen> createState() => _EditScreenState();
@@ -22,7 +18,6 @@ class EditScreen extends StatefulWidget {
 
 class _EditScreenState extends State<EditScreen> {
   String gender = "man";
-  UserModel? userDetails;
   File? _imageFile;
   String? _currentImageUrl;
   final UserService _userService = UserService();
@@ -34,21 +29,7 @@ class _EditScreenState extends State<EditScreen> {
   void initState() {
     super.initState();
     _initializeUserData();
-    // _initializePermissions();
   }
-
-  // Future<void> _initializePermissions() async {
-  //   if (Platform.isAndroid) {
-  //     if (await Permission.storage.status.isDenied) {
-  //       await Permission.storage.request();
-  //     }
-  //     if (await Permission.photos.status.isDenied) {
-  //       await Permission.photos.request();
-  //     }
-  //   } else {
-  //     await Permission.photos.request();
-  //   }
-  // }
 
   Future<void> _initializeUserData() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -97,7 +78,7 @@ class _EditScreenState extends State<EditScreen> {
       String? profileImageUrl;
       if (_imageFile != null) {
         profileImageUrl =
-            await _userService.uploadProfilePicture(_imageFile!, user.uid);
+        await _userService.uploadProfilePicture(_imageFile!, user.uid);
         setState(() {
           _currentImageUrl = profileImageUrl;
           _imageFile = null;
@@ -131,50 +112,7 @@ class _EditScreenState extends State<EditScreen> {
     }
   }
 
-  // Future<void> _pickImage() async {
-  //   debugPrint('Pick image Called');
-  //
-  //   PermissionStatus status;
-  //   if (Platform.isAndroid) {
-  //     if (await Permission.storage.status.isDenied) {
-  //       status = await Permission.storage.request();
-  //     } else if (await Permission.photos.status.isDenied) {
-  //       status = await Permission.photos.request();
-  //     } else {
-  //       status = PermissionStatus.granted;
-  //     }
-  //   } else {
-  //     status = await Permission.photos.request();
-  //   }
-  //
-  //   debugPrint('Permission status: $status');
-  //
-  //   if (status.isGranted) {
-  //     final picker = ImagePicker();
-  //     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-  //
-  //     if (pickedFile != null) {
-  //       setState(() {
-  //         _imageFile = File(pickedFile.path);
-  //       });
-  //     }
-  //   } else if (status.isPermanentlyDenied) {
-  //     _showPermissonDeniedDialog(context);
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBar(
-  //         content: Text(AppLocalizations.of(context)!.permissionDenied),
-  //         action: SnackBarAction(
-  //           label: 'Thử lại',
-  //           onPressed: () => _pickImage(),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
   Future<void> _pickImage() async {
-    debugPrint('Pick image Called');
-
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
@@ -184,197 +122,130 @@ class _EditScreenState extends State<EditScreen> {
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Không có ảnh nào được chọn."),
-        ),
+        const SnackBar(content: Text("Không có ảnh nào được chọn.")),
       );
     }
   }
-
-  // void _showPermissonDeniedDialog(BuildContext context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return AlertDialog(
-  //           title: Text("Quyền truy cập bị từ chối"),
-  //           content: Text(
-  //               "Ứng dụng cần quyền truy cập thư viện ảnh để thay đổi ảnh đại diện. "
-  //               "Vui lòng vào Cài đặt và cấp quyền truy cập."),
-  //           actions: [
-  //             TextButton(
-  //               child: Text("Hủy"),
-  //               onPressed: () {
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //             TextButton(
-  //               child: Text("Mở cài đặt"),
-  //               onPressed: () {
-  //                 openAppSettings();
-  //                 Navigator.of(context).pop();
-  //               },
-  //             ),
-  //           ],
-  //         );
-  //       });
-  // }
 
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final textTheme = theme.textTheme;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.editProfile),
+        title: Text(localizations.editProfile),
         backgroundColor: theme.appBarTheme.backgroundColor,
         leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
           onPressed: () => Navigator.pop(context),
-          icon: Icon(Ionicons.chevron_back_outline,
-              color: theme.appBarTheme.foregroundColor),
         ),
-        leadingWidth: 80,
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10),
-            child: TextButton(
-              onPressed: _updateProfile,
-              child: Text(
-                "Lưu",
-                style: TextStyle(
-                  color: theme.appBarTheme.foregroundColor,
-                  fontSize: 16,
-                ),
-              ),
+          TextButton(
+            onPressed: _updateProfile,
+            child: Text(
+              localizations.save,
+              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold),
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(30),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(localizations.account,
-                  style: textTheme.headlineLarge
-                      ?.copyWith(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 40),
-              EditItem(
-                title: localizations.photo,
-                widget: Column(
+              Center(
+                child: Stack(
                   children: [
-                    ClipOval(
-                      child: SizedBox(
-                        height: 100,
-                        width: 100,
-                        child: _imageFile != null
-                            ? Image.file(
-                                _imageFile!,
-                                fit: BoxFit.cover,
-                              )
-                            : (_currentImageUrl != null &&
-                                    _currentImageUrl!.isNotEmpty
-                                ? Image.network(
-                                    _currentImageUrl!,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stckTrace) {
-                                      return Image.asset(
-                                        "assets/img/u1.png",
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  )
-                                : Image.asset(
-                                    "assets/img/u1.png",
-                                    fit: BoxFit.cover,
-                                  )),
-                      ),
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: _imageFile != null
+                          ? FileImage(_imageFile!) as ImageProvider
+                          : (_currentImageUrl != null && _currentImageUrl!.isNotEmpty
+                          ? NetworkImage(_currentImageUrl!)
+                          : AssetImage("assets/img/u1.png")) as ImageProvider,
                     ),
-                    ElevatedButton(
-                      onPressed: _pickImage,
-                      style: TextButton.styleFrom(
-                          foregroundColor: Colors.lightBlueAccent),
-                      child: Text(localizations.changePhoto),
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: theme.primaryColor,
+                        radius: 20,
+                        child: IconButton(
+                          icon: Icon(Icons.camera_alt, color: Colors.white),
+                          onPressed: _pickImage,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-              EditItem(
-                title: localizations.name,
-                widget: TextField(
-                    controller: _nameController,
-                    decoration: InputDecoration(hintText: localizations.name)),
+              SizedBox(height: 24),
+              _buildTextField(localizations.name, _nameController, Icons.person),
+              SizedBox(height: 16),
+              _buildTextField(localizations.email, _emailController, Icons.email),
+              SizedBox(height: 16),
+              _buildTextField(localizations.age, _ageController, Icons.cake, isNumber: true),
+              SizedBox(height: 24),
+              Text(localizations.gender, style: theme.textTheme.titleMedium),
+              SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildGenderButton("man", Icons.male, localizations.male),
+                  SizedBox(width: 16),
+                  _buildGenderButton("woman", Icons.female, localizations.female),
+                ],
               ),
-              const SizedBox(height: 40),
-              EditItem(
-                title: localizations.gender,
-                widget: Row(
-                  children: [
-                    IconButton(
-                      onPressed: () => setState(() => gender = "man"),
-                      style: IconButton.styleFrom(
-                        backgroundColor: gender == "man"
-                            ? Colors.deepPurple
-                            : Colors.grey.shade200,
-                        fixedSize: const Size(50, 50),
-                      ),
-                      icon: Icon(Ionicons.male,
-                          color: gender == "man" ? Colors.green : Colors.grey,
-                          size: 18),
-                    ),
-                    const SizedBox(width: 20),
-                    IconButton(
-                      onPressed: () => setState(() => gender = "woman"),
-                      style: IconButton.styleFrom(
-                        backgroundColor: gender == "woman"
-                            ? Colors.purpleAccent
-                            : Colors.grey.shade200,
-                        fixedSize: const Size(50, 50),
-                      ),
-                      icon: Icon(Ionicons.female,
-                          color: gender == "woman" ? Colors.green : Colors.grey,
-                          size: 18),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 40),
-              EditItem(
-                title: localizations.age,
-                widget: TextField(
-                    controller: _ageController,
-                    decoration: InputDecoration(hintText: localizations.age)),
-              ),
-              const SizedBox(height: 40),
-              EditItem(
-                title: localizations.email,
-                widget: TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(hintText: localizations.email)),
-              ),
-              const SizedBox(height: 40),
-              EditItem(
-                title: localizations.password,
-                widget: GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => UpdatePasswordScreen()));
+              SizedBox(height: 24),
+              Center(
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.lock),
+                  label: Text(localizations.changePassword),
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePasswordScreen()));
                   },
-                  child: Text(
-                    localizations.changePassword,
-                    style:
-                    const TextStyle(color: Colors.lightBlueAccent, fontSize: 16),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: theme.primaryColor,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   ),
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, TextEditingController controller, IconData icon, {bool isNumber = false}) {
+    return TextField(
+      controller: controller,
+      keyboardType: isNumber ? TextInputType.number : TextInputType.text,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGenderButton(String value, IconData icon, String label) {
+    final isSelected = gender == value;
+    final theme = Theme.of(context);
+    return ElevatedButton.icon(
+      icon: Icon(icon, color: isSelected ? Colors.white : theme.iconTheme.color),
+      label: Text(label),
+      onPressed: () => setState(() => gender = value),
+      style: ElevatedButton.styleFrom(
+        foregroundColor: isSelected ? Colors.white : theme.textTheme.bodyMedium?.color, backgroundColor: isSelected ? theme.primaryColor : theme.cardColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),
     );
   }
