@@ -21,7 +21,9 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   double _amount = 0;
-
+  late TextEditingController _amountController;
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
   DateTime _selectedDate = DateTime.now();
   String _description = '';
   String _categoryId = '';
@@ -45,6 +47,7 @@ class _AddTransactionFormState extends State<AddTransactionForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(localizations!.addTransactionTitle),
+        centerTitle: true,
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),

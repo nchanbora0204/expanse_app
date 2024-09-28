@@ -18,6 +18,7 @@ import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transa
 import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_list_screen.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
 import 'package:money_lover/view/setting_page/account_setting_page.dart';
+import 'package:money_lover/view/setting_page/support_page.dart';
 import 'package:money_lover/view/theme_provider/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -106,6 +107,7 @@ class MyApp extends StatelessWidget {
         'home': (context) => HomeView(),
         'main_tab': (context) => MainTabView(),
         'detail_image_list': (context) => TransactionListPage(),
+        'support_page': (context) => SupportPage(),
 
         'notifi_list_page': (context) => NotificationListPage(),
 

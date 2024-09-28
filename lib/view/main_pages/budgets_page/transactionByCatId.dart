@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:money_lover/models/transaction_model.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TransactionsPage extends StatelessWidget {
   final List<TransactionModel> transactions;
@@ -8,9 +9,10 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localizations  = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Danh sách giao dịch'),
+        title: Text(AppLocalizations.of(context)!.transactionList),
       ),
       body: ListView.builder(
         itemCount: transactions.length,

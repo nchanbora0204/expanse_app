@@ -1,12 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import để hỗ trợ đa ngôn ngữ
 import 'package:money_lover/common/color_extension.dart';
-import 'package:money_lover/firebaseService/other_services.dart'; // Đảm bảo đường dẫn đúng
-import 'package:money_lover/models/category_model.dart'; // Đảm bảo đường dẫn đúng
+import 'package:money_lover/firebaseService/other_services.dart';
+import 'package:money_lover/models/category_model.dart';
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ExpenseCatList extends StatefulWidget {
   @override
@@ -25,6 +27,9 @@ class _CategoryScreenState extends State<ExpenseCatList> {
     _devHeight = MediaQuery.of(context).size.height;
     _devWidth = MediaQuery.of(context).size.width;
 
+    // Khởi tạo localizations
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: Center(
@@ -34,8 +39,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
           mainAxisSize: MainAxisSize.max,
           children: [
             _categoryList(),
-            _addNewCategoryButton(),
-            _calendarView(),
+            _addNewCategoryButton(localizations), // Truyền localizations vào
           ],
         ),
       ),
@@ -44,20 +48,19 @@ class _CategoryScreenState extends State<ExpenseCatList> {
 
   Widget _categoryList() {
     return StreamBuilder<List<CategoryModel>>(
-      stream: _categoryService.getCategoryStream(), // Sử dụng stream để lấy danh sách category
+      stream: _categoryService.getCategoryStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return const Text('Lỗi khi tải dữ liệu');
+          return Text(AppLocalizations.of(context)!.errorLoadingData); // Sử dụng chuỗi từ localizations
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('Chưa có dữ liệu danh mục');
+          return Text(AppLocalizations.of(context)!.noCategoryData); // Sử dụng chuỗi từ localizations
         } else {
-          // Lọc các danh mục chỉ có type là 0 (khoản chi)
           final categories = snapshot.data!.where((category) => category.type == 0).toList();
 
           if (categories.isEmpty) {
-            return const Text('Chưa có khoản chi nào.');
+            return Text(AppLocalizations.of(context)!.noExpense); // Sử dụng chuỗi từ localizations
           }
 
           return AnimatedContainer(
@@ -72,7 +75,6 @@ class _CategoryScreenState extends State<ExpenseCatList> {
                 Expanded(
                   child: _categoryCard(categories),
                 ),
-             
               ],
             ),
           );
@@ -119,9 +121,8 @@ class _CategoryScreenState extends State<ExpenseCatList> {
                     ),
                   ),
                   const SizedBox(height: 5),
-                  // Hiển thị số tiền cho mỗi khoản chi
                   Text(
-                    '${categories[index].amount} VNĐ', // Giả sử 'amount' là field trong CategoryModel
+                    '${categories[index].amount} VNĐ',
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
@@ -133,7 +134,7 @@ class _CategoryScreenState extends State<ExpenseCatList> {
     );
   }
 
-  Widget _addNewCategoryButton() {
+  Widget _addNewCategoryButton(AppLocalizations localizations) { // Nhận localizations
     return Container(
       height: 50,
       width: _devWidth! * 0.4,
@@ -159,14 +160,5 @@ class _CategoryScreenState extends State<ExpenseCatList> {
     return colors[random.nextInt(colors.length)];
   }
 
-  Widget _calendarView() {
-    return Container(
-      height: _devHeight! * 0.05,
-      child: Text(
-        "Tháng 9",
-        style: TextStyle(
-            fontWeight: FontWeight.w900, fontSize: 30, color: TColor.gray20),
-      ),
-    );
-  }
+
 }

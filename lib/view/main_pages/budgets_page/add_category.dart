@@ -1,6 +1,6 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Import AppLocalizations
 import 'package:money_lover/firebaseService/other_services.dart';
 import 'package:money_lover/models/category_model.dart';
 
@@ -21,10 +21,11 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!; // Lấy localizations
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thêm Danh Mục Mới'),
+        title: Text(localizations.addCategoryFormTitle), // Sử dụng chuỗi từ AppLocalizations
         backgroundColor: theme.appBarTheme.backgroundColor,
         iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
       ),
@@ -36,13 +37,13 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildNameField(theme),
+                _buildNameField(theme, localizations),
                 const SizedBox(height: 20),
-                _buildAmountField(theme),
+                _buildAmountField(theme, localizations),
                 const SizedBox(height: 20),
-                _buildTypeSelector(theme), // Thêm lựa chọn cho khoản chi hay thu
+                _buildTypeSelector(theme, localizations),
                 const SizedBox(height: 20),
-                _buildSaveButton(theme),
+                _buildSaveButton(theme, localizations),
               ],
             ),
           ),
@@ -51,10 +52,10 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildNameField(ThemeData theme) {
+  Widget _buildNameField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Tên Danh Mục',
+        labelText: localizations.addCategoryFormCategoryName, // Sử dụng chuỗi từ AppLocalizations
         labelStyle: TextStyle(
           color: theme.textTheme.bodyMedium?.color,
           fontSize: 18,
@@ -69,7 +70,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập tên danh mục';
+          return localizations.addCategoryFormErrorEmptyName; // Sử dụng chuỗi từ AppLocalizations
         }
         return null;
       },
@@ -82,10 +83,10 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildAmountField(ThemeData theme) {
+  Widget _buildAmountField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Số Tiền',
+        labelText: localizations.addCategoryFormAmount, // Sử dụng chuỗi từ AppLocalizations
         labelStyle: TextStyle(
           color: theme.textTheme.bodyMedium?.color,
           fontSize: 18,
@@ -100,9 +101,9 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập số tiền';
+          return localizations.addCategoryFormErrorEmptyAmount; // Sử dụng chuỗi từ AppLocalizations
         } else if (double.tryParse(value) == null) {
-          return 'Vui lòng nhập một số hợp lệ';
+          return localizations.addCategoryFormErrorInvalidAmount; // Sử dụng chuỗi từ AppLocalizations
         }
         return null;
       },
@@ -116,13 +117,13 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildTypeSelector(ThemeData theme) {
+  Widget _buildTypeSelector(ThemeData theme, AppLocalizations localizations) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        const Text(
-          'Loại Danh Mục:',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          localizations.addCategoryFormCategoryType, // Sử dụng chuỗi từ AppLocalizations
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ),
         Row(
           children: [
@@ -143,7 +144,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
                       });
                     },
                   ),
-                  const Text('Khoản Chi'),
+                  Text(localizations.addCategoryFormExpense), // Sử dụng chuỗi từ AppLocalizations
                 ],
               ),
             ),
@@ -158,13 +159,13 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
                   Radio<int>(
                     value: 1,
                     groupValue: _type,
-                    onChanged: (value) {  
+                    onChanged: (value) {
                       setState(() {
                         _type = value!;
                       });
                     },
                   ),
-                  const Text('Khoản Thu'),
+                  Text(localizations.addCategoryFormIncome), // Sử dụng chuỗi từ AppLocalizations
                 ],
               ),
             ),
@@ -174,7 +175,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildSaveButton(ThemeData theme) {
+  Widget _buildSaveButton(ThemeData theme, AppLocalizations localizations) {
     return Center(
       child: ElevatedButton(
         onPressed: () async {
@@ -207,7 +208,7 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        child: const Text('Lưu Danh Mục'),
+        child: Text(localizations.addCategoryFormSaveButton), // Sử dụng chuỗi từ AppLocalizations
       ),
     );
   }

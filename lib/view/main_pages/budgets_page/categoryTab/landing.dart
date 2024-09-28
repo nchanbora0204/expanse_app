@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:money_lover/common/color_extension.dart';
 import 'package:money_lover/view/main_pages/budgets_page/categoryTab/expense_cat_list.dart';
 import 'package:money_lover/view/main_pages/budgets_page/categoryTab/income_cat_list.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class CatTabView extends StatefulWidget {
   const CatTabView({super.key});
@@ -15,10 +15,11 @@ class CatTabView extends StatefulWidget {
 class _CatTabView extends State<CatTabView> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   double? _devHeight, _devWidth;
+
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 2, vsync: this); // Thay đổi length thành 2
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.leanBack);
   }
 
@@ -32,6 +33,9 @@ class _CatTabView extends State<CatTabView> with SingleTickerProviderStateMixin 
   Widget build(BuildContext context) {
     _devHeight = MediaQuery.of(context).size.height;
     _devWidth = MediaQuery.of(context).size.width;
+
+    final localizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: TColor.gray,
       appBar: AppBar(
@@ -44,10 +48,9 @@ class _CatTabView extends State<CatTabView> with SingleTickerProviderStateMixin 
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.white,
-          tabs: const [
-            Tab(text: 'Khoản Chi',),
-            Tab(text: 'Khoản Thu',),
-
+          tabs: [
+            Tab(text: localizations.addCategoryFormExpense), // Sử dụng chuỗi dịch
+            Tab(text: localizations.addCategoryFormIncome),    // Sử dụng chuỗi dịch
           ],
         ),
       ),
@@ -56,10 +59,8 @@ class _CatTabView extends State<CatTabView> with SingleTickerProviderStateMixin 
         children: [
           ExpenseCatList(),
           IncomeCatList(),
-
         ],
       ),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

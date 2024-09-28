@@ -2,29 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:ionicons/ionicons.dart';
 
-class SupportPage extends StatelessWidget {
+class SupportPage extends StatefulWidget {
   const SupportPage({Key? key}) : super(key: key);
+
+  @override
+  _SupportPageState createState() => _SupportPageState();
+}
+
+class _SupportPageState extends State<SupportPage> {
+  bool _showQuickActions = true; // Trạng thái hiển thị của _buildQuickActions
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final localizations = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(localizations.support),
-        backgroundColor: theme.colorScheme.primary,
-        foregroundColor: theme.colorScheme.onPrimary,
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            _buildHeader(context),
-            _buildQuickActions(context),
-            _buildFAQSection(context),
-            _buildContactSupport(context),
-          ],
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _showQuickActions = false; // Ẩn _buildQuickActions khi bấm ra ngoài
+        });
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(localizations.support),
+          backgroundColor: theme.colorScheme.primary,
+          foregroundColor: theme.colorScheme.onPrimary,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _buildHeader(context),
+              if (_showQuickActions) _buildQuickActions(context), // Hiển thị QuickActions dựa trên trạng thái
+              _buildFAQSection(context),
+              _buildContactSupport(context),
+            ],
+          ),
         ),
       ),
     );

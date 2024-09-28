@@ -61,11 +61,14 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final languageProvider = Provider.of<LanguageProvider>(context);
     final theme = Theme.of(context);
+    bool isDarkMode = themeProvider.curThemeMode == ThemeMode.dark;
 
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text(AppLocalizations.of(context)!.samesetting),
+        centerTitle: true,
         backgroundColor: theme.appBarTheme.backgroundColor,
       ),
       body: _loading
@@ -85,7 +88,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               SizedBox(height: 24),
               _buildUserInfoCard(),
               SizedBox(height: 24),
-              _buildSettingsSection(themeProvider, languageProvider, theme),
+              _buildSettingsSection(themeProvider, languageProvider, theme, isDarkMode),
               SizedBox(height: 24),
               _buildLogoutButton(),
             ],
@@ -127,7 +130,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.edit),
+              icon: Icon(Icons.edit, color: _getIconColor()),
               onPressed: () async {
                 final result = await Navigator.push(
                   context,
@@ -144,7 +147,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
     );
   }
 
-  Widget _buildSettingsSection(ThemeProvider themeProvider, LanguageProvider languageProvider, ThemeData theme) {
+  Widget _buildSettingsSection(ThemeProvider themeProvider, LanguageProvider languageProvider, ThemeData theme, bool isDarkMode) {
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -201,9 +204,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
     VoidCallback? onTap,
   }) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).primaryColor),
+      leading: Icon(icon, color: _getIconColor()),
       title: Text(title),
-      trailing: trailing ?? Icon(Icons.chevron_right),
+      trailing: trailing ?? Icon(Icons.chevron_right, color: _getIconColor()),
       onTap: onTap,
     );
   }
@@ -285,11 +288,17 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 trailing: curLocale == 'en'
                     ? Icon(Icons.check, color: Colors.green)
                     : null,
-              )
+              ),
             ],
           ),
         );
       },
     );
+  }
+
+  Color _getIconColor() {
+    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
+    bool isDarkMode = themeProvider.curThemeMode == ThemeMode.dark;
+    return isDarkMode ? Colors.white : Colors.blue;
   }
 }

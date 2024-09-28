@@ -4,7 +4,9 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_analysis/transaction_analysis_page.dart';
+import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 import 'package:money_lover/view/main_tab/main_tab_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart'; // Thêm dòng này
 
 class TransactionListPage extends StatelessWidget {
   final RxList<Map<String, dynamic>> transactions = <Map<String, dynamic>>[].obs;
@@ -23,7 +25,7 @@ class TransactionListPage extends StatelessWidget {
       }
     } catch (e) {
       print('Error loading transactions: $e');
-      Get.snackbar('Error', 'Failed to load transactions',
+      Get.snackbar(AppLocalizations.of(Get.context!)!.confirmDelete, AppLocalizations.of(Get.context!)!.confirmDeleteMessage,
           snackPosition: SnackPosition.BOTTOM);
     }
   }
@@ -49,16 +51,16 @@ class TransactionListPage extends StatelessWidget {
       context: Get.context!,
       builder: (context) {
         return AlertDialog(
-          title: Text('Xác Nhận'),
-          content: Text('Bạn có chắc chắn muốn xóa giao dịch này không?'),
+          title: Text(AppLocalizations.of(context)!.confirmDelete),
+          content: Text(AppLocalizations.of(context)!.confirmDeleteMessage),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Đồng Ý'),
+              child: Text(AppLocalizations.of(context)!.confirm),
             ),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Không Đồng Ý'),
+              child: Text(AppLocalizations.of(context)!.cancel),
             ),
           ],
         );
@@ -66,54 +68,25 @@ class TransactionListPage extends StatelessWidget {
     );
 
     if (shouldDelete == true) {
-      // Hiển thị loading trước khi xóa
       Get.dialog(
         Center(child: CircularProgressIndicator()),
         barrierDismissible: false,
       );
 
-      // Thực hiện việc xóa giao dịch
-      await Future.delayed(Duration(milliseconds: 500)); // Thêm một độ trễ giả lập để thấy hiệu ứng loading
+      await Future.delayed(Duration(milliseconds: 500));
 
-      transactions.removeAt(index); // Xóa giao dịch khỏi danh sách
-      await saveTransactions(); // Lưu lại trạng thái hiện tại
-      Get.back(); // Đóng hộp thoại loading
+      transactions.removeAt(index);
+      await saveTransactions();
+      Get.back();
     }
-  }
-
-  void _showDeleteConfirmationDialog(BuildContext context, int index) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Xác nhận xóa'),
-          content: Text('Bạn có chắc muốn xóa giao dịch này không?'),
-          actions: [
-            TextButton(
-              child: Text('Không đồng ý'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Đồng ý'),
-              onPressed: () {
-                // Gọi hàm xóa giao dịch trực tiếp
-                deleteTransaction(index);
-                Navigator.of(context).pop(); // Đóng hộp thoại
-              },
-            ),
-          ],
-        );
-      },
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Danh Sách Giao Dịch'),
+        title: Text(AppLocalizations.of(context)!.transactionList),
+        centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () => Navigator.push(
@@ -130,7 +103,7 @@ class TransactionListPage extends StatelessWidget {
         final uniqueTransactions = allTransactions.toSet().toList();
 
         return uniqueTransactions.isEmpty
-            ? Center(child: Text('Chưa có giao dịch nào.'))
+            ? Center(child: Text(AppLocalizations.of(context)!.noTransactions))
             : ListView.builder(
           itemCount: uniqueTransactions.length,
           itemBuilder: (context, index) {
@@ -139,7 +112,7 @@ class TransactionListPage extends StatelessWidget {
               margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
               child: GestureDetector(
                 onLongPress: () {
-                  _showDeleteConfirmationDialog(context, index);
+                  deleteTransaction(index);
                 },
                 child: InkWell(
                   onTap: () {
@@ -163,7 +136,7 @@ class TransactionListPage extends StatelessWidget {
                         ),
                       ),
                       subtitle: Text(
-                        'Số tiền: ${NumberFormat('#,###').format(transaction['amount'])} VND',
+                        '${AppLocalizations.of(context)!.amount}: ${NumberFormat('#,###').format(transaction['amount'])} VND',
                       ),
                       trailing: Text(DateFormat('dd/MM/yyyy').format(DateTime.now())),
                     ),
