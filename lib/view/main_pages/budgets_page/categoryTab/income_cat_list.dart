@@ -7,6 +7,7 @@ import 'package:money_lover/models/category_model.dart'; // Sửa đường dẫ
 import 'package:money_lover/models/transaction_model.dart';
 import 'package:money_lover/view/main_pages/budgets_page/add_category.dart';
 import 'package:money_lover/view/main_pages/budgets_page/transactionByCatId.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class IncomeCatList extends StatefulWidget {
   const IncomeCatList({super.key});
@@ -36,6 +37,8 @@ class _CategoryScreenState extends State<IncomeCatList> {
     _devHeight = MediaQuery.of(context).size.height;
     _devWidth = MediaQuery.of(context).size.width;
 
+    final localizations = AppLocalizations.of(context)!; // Lấy ngôn ngữ hiện tại
+
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
 
@@ -46,31 +49,30 @@ class _CategoryScreenState extends State<IncomeCatList> {
           mainAxisSize: MainAxisSize.max,
           children: [
             _categoryList(),
-            _addNewCategory(),
-            calendarView(),
+            _addNewCategory(localizations), // Truyền localizations
           ],
         ),
       ),
     );
   }
 
- 
   Widget _categoryList() {
     return StreamBuilder<List<CategoryModel>>(
       stream: _categoryService.getCategoryStream(), // Lấy danh sách category
       builder: (context, snapshot) {
+
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
         } else if (snapshot.hasError) {
-          return const Text('Lỗi khi tải dữ liệu');
+          return Text(AppLocalizations.of(context)!.errorLoadingData); // Đã thay đổi chuỗi
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Text('Chưa có dữ liệu danh mục');
+          return Text(AppLocalizations.of(context)!.noCategoryData); // Đã thay đổi chuỗi
         } else {
-          // Lọc danh mục chỉ có type là 0 (khoản chi)
+          // Lọc danh mục chỉ có type là 1 (khoản thu)
           final categories = snapshot.data!.where((category) => category.type == 1).toList();
 
           if (categories.isEmpty) {
-            return const Text('Chưa có khoản chi nào.');
+            return Text(AppLocalizations.of(context)!.noIncome); // Đã thay đổi chuỗi
           }
 
           return AnimatedContainer(
@@ -93,9 +95,6 @@ class _CategoryScreenState extends State<IncomeCatList> {
     );
   }
 
-
-
-
   Widget _categoryCard(List<CategoryModel> categories) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -107,7 +106,6 @@ class _CategoryScreenState extends State<IncomeCatList> {
       itemBuilder: (context, index) {
         return GestureDetector(
           onTap: () async {
-            
             String categoryId = categories[index].id;
             List<TransactionModel> transactions = await _categoryService.getTransactionsByCategory(categoryId);
             Navigator.push(
@@ -149,7 +147,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
     );
   }
 
-  Widget _addNewCategory() {
+  Widget _addNewCategory(AppLocalizations localizations) { // Nhận localizations
     return Container(
       height: 50,
       width: _devWidth! * 0.4,
@@ -160,7 +158,7 @@ class _CategoryScreenState extends State<IncomeCatList> {
       child: IconButton(
         icon: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder:(context)=>AddCategoryForm() )); // Chức năng để thêm danh mục mới
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddCategoryForm())); // Chức năng để thêm danh mục mới
         },
       ),
     );
@@ -173,16 +171,5 @@ class _CategoryScreenState extends State<IncomeCatList> {
       TColor.gray50,
     ];
     return colors[random.nextInt(colors.length)];
-  }
-
-  Widget calendarView() {
-    return SizedBox(
-      height: _devHeight! * 0.05,
-      child: Text(
-        "Tháng 9 ",
-        style: TextStyle(
-            fontWeight: FontWeight.w900, fontSize: 30, color: TColor.gray20),
-      ),
-    );
   }
 }

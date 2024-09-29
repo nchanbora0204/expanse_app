@@ -136,9 +136,10 @@ class _EditScreenState extends State<EditScreen> {
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         title: Text(localizations.editProfile),
+        centerTitle: true,
         backgroundColor: theme.appBarTheme.backgroundColor,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: theme.appBarTheme.foregroundColor),
+          icon: Icon(Icons.arrow_back, color: theme.iconTheme.color),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
@@ -146,7 +147,7 @@ class _EditScreenState extends State<EditScreen> {
             onPressed: _updateProfile,
             child: Text(
               localizations.save,
-              style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold),
+              style: TextStyle(color: theme.brightness == Brightness.dark ? Colors.white : Colors.blue, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -203,8 +204,8 @@ class _EditScreenState extends State<EditScreen> {
               SizedBox(height: 24),
               Center(
                 child: ElevatedButton.icon(
-                  icon: Icon(Icons.lock),
-                  label: Text(localizations.changePassword),
+                  icon: Icon(Icons.lock, color: Colors.white), // Đảm bảo màu sắc cho biểu tượng
+                  label: Text(localizations.changePassword, style: TextStyle(color: Colors.white)), // Đảm bảo màu sắc cho nhãn
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (context) => UpdatePasswordScreen()));
                   },
@@ -227,7 +228,7 @@ class _EditScreenState extends State<EditScreen> {
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon),
+        prefixIcon: Icon(icon, color: Theme.of(context).iconTheme.color), // Thay đổi màu sắc biểu tượng theo chủ đề
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -240,10 +241,11 @@ class _EditScreenState extends State<EditScreen> {
     final theme = Theme.of(context);
     return ElevatedButton.icon(
       icon: Icon(icon, color: isSelected ? Colors.white : theme.iconTheme.color),
-      label: Text(label),
+      label: Text(label, style: TextStyle(color: isSelected ? Colors.white : theme.textTheme.bodyMedium?.color)),
       onPressed: () => setState(() => gender = value),
       style: ElevatedButton.styleFrom(
-        foregroundColor: isSelected ? Colors.white : theme.textTheme.bodyMedium?.color, backgroundColor: isSelected ? theme.primaryColor : theme.cardColor,
+        foregroundColor: isSelected ? Colors.white : theme.textTheme.bodyMedium?.color,
+        backgroundColor: isSelected ? theme.primaryColor : theme.cardColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       ),

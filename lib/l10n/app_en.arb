@@ -149,7 +149,35 @@
   "faqQuestion3": "How can I contact customer support?",
   "faqAnswer3": "You can contact customer support by clicking on the 'Contact Support' button.",
   "viewAllFAQs": "View All FAQs",
-  "stillNeedHelp": "Still need help?"
+  "stillNeedHelp": "Still need help?",
+  "addCategoryFormTitle": "Add Category",
+  "addCategoryFormCategoryName": "Category Name",
+  "addCategoryFormErrorEmptyName": "Please enter a category name.",
+  "addCategoryFormAmount": "Amount",
+  "addCategoryFormErrorEmptyAmount": "Please enter an amount.",
+  "addCategoryFormErrorInvalidAmount": "Please enter a valid amount.",
+  "addCategoryFormCategoryType": "Category Type",
+  "addCategoryFormExpense": "Expense",
+  "addCategoryFormIncome": "Income",
+  "addCategoryFormSaveButton": "Save",
+  "errorLoadingData": "Error Loading Data",
+  "noCategoryData": "No Category Data",
+  "noExpense": "No Expense.",
+  "noIncome": "No Income",
+  "confirmDelete": "Confirm Deletion",
+  "confirmDeleteMessage": "Are you sure you want to delete this transaction?",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "transactionDate": "Transaction Date",
+  "expenseLabel": "Expense",
+  "totalExpenseOverview": "Total Expense Overview",
+  "toltalIncome": "Toltal Incom",
+  "toltalExpense": "Toltal Expense",
+  "expenseCenterText": "Expense Center Text",
+  "recentTransactions" : "Recent Transactions",
+  "transaction": "transaction"
+
+
 
 
 }

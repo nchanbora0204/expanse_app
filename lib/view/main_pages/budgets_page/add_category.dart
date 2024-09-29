@@ -1,11 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:money_lover/firebaseService/other_services.dart';
 import 'package:money_lover/models/category_model.dart';
 
 class AddCategoryForm extends StatefulWidget {
-  const AddCategoryForm({super.key});
+  const AddCategoryForm({Key? key}) : super(key: key);
 
   @override
   _AddCategoryFormState createState() => _AddCategoryFormState();
@@ -14,36 +14,61 @@ class AddCategoryForm extends StatefulWidget {
 class _AddCategoryFormState extends State<AddCategoryForm> {
   final _formKey = GlobalKey<FormState>();
   String _name = '';
-  int _type = 0; // 0: khoản chi, 1: khoản thu
-  double _amount = 0.0; // Số tiền có thể chi
+  int _type = 0;
+  double _amount = 0.0;
   final CategoryService _categoryService = CategoryService();
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final localizations = AppLocalizations.of(context)!;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Thêm Danh Mục Mới'),
-        backgroundColor: theme.appBarTheme.backgroundColor,
-        iconTheme: IconThemeData(color: theme.appBarTheme.foregroundColor),
+        title: Text(localizations.addCategoryFormTitle,
+        style: TextStyle(
+          color: theme.brightness == Brightness.light
+              ? Colors.black
+              : Colors.white
+        ),),
+        backgroundColor: theme.colorScheme.surface,
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: theme.brightness == Brightness.light
+              ? Colors.black
+              : Colors.white, // Màu nút "Back" thay đổi theo chế độ sáng/tối
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildNameField(theme),
-                const SizedBox(height: 20),
-                _buildAmountField(theme),
-                const SizedBox(height: 20),
-                _buildTypeSelector(theme), // Thêm lựa chọn cho khoản chi hay thu
-                const SizedBox(height: 20),
-                _buildSaveButton(theme),
-              ],
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              theme.colorScheme.surface,
+              theme.colorScheme.background,
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _buildNameField(theme, localizations),
+                    const SizedBox(height: 24),
+                    _buildAmountField(theme, localizations),
+                    const SizedBox(height: 24),
+                    _buildTypeSelector(theme, localizations),
+                    const SizedBox(height: 32),
+                    _buildSaveButton(theme, localizations),
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -51,121 +76,105 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildNameField(ThemeData theme) {
+  Widget _buildNameField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Tên Danh Mục',
-        labelStyle: TextStyle(
-          color: theme.textTheme.bodyMedium?.color,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+        labelText: localizations.addCategoryFormCategoryName,
+        prefixIcon: Icon(Icons.category, color: theme.colorScheme.primary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.outline),
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.dividerColor),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.outline),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.primary),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
+        filled: true,
+        fillColor: theme.colorScheme.surface,
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập tên danh mục';
+          return localizations.addCategoryFormErrorEmptyName;
         }
         return null;
       },
       onSaved: (value) {
         _name = value!;
       },
-      style: const TextStyle(
-        fontSize: 18,
-      ),
+      style: TextStyle(fontSize: 16),
     );
   }
 
-  Widget _buildAmountField(ThemeData theme) {
+  Widget _buildAmountField(ThemeData theme, AppLocalizations localizations) {
     return TextFormField(
       decoration: InputDecoration(
-        labelText: 'Số Tiền',
-        labelStyle: TextStyle(
-          color: theme.textTheme.bodyMedium?.color,
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
+        labelText: localizations.addCategoryFormAmount,
+        prefixIcon: Icon(Icons.attach_money, color: theme.colorScheme.primary),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.outline),
         ),
-        enabledBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.dividerColor),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.outline),
         ),
-        focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: theme.colorScheme.primary),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
         ),
+        filled: true,
+        fillColor: theme.colorScheme.surface,
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Vui lòng nhập số tiền';
+          return localizations.addCategoryFormErrorEmptyAmount;
         } else if (double.tryParse(value) == null) {
-          return 'Vui lòng nhập một số hợp lệ';
+          return localizations.addCategoryFormErrorInvalidAmount;
         }
         return null;
       },
       onSaved: (value) {
-        _amount = double.tryParse(value!) ?? 0.0; // Chuyển đổi giá trị sang double
+        _amount = double.tryParse(value!) ?? 0.0;
       },
       keyboardType: TextInputType.number,
-      style: const TextStyle(
-        fontSize: 18,
-      ),
+      style: TextStyle(fontSize: 16),
     );
   }
 
-  Widget _buildTypeSelector(ThemeData theme) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  Widget _buildTypeSelector(ThemeData theme, AppLocalizations localizations) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Loại Danh Mục:',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        Text(
+          localizations.addCategoryFormCategoryType,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: theme.colorScheme.onSurface,
+          ),
         ),
+        const SizedBox(height: 12),
         Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _type = 0; // Khoản chi
-                });
-              },
-              child: Row(
-                children: [
-                  Radio<int>(
-                    value: 0,
-                    groupValue: _type,
-                    onChanged: (value) {
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  const Text('Khoản Chi'),
-                ],
+            Expanded(
+              child: _buildTypeOption(
+                theme,
+                localizations.addCategoryFormExpense,
+                Icons.remove_circle_outline,
+                0,
               ),
             ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _type = 1; // Khoản thu
-                });
-              },
-              child: Row(
-                children: [
-                  Radio<int>(
-                    value: 1,
-                    groupValue: _type,
-                    onChanged: (value) {  
-                      setState(() {
-                        _type = value!;
-                      });
-                    },
-                  ),
-                  const Text('Khoản Thu'),
-                ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildTypeOption(
+                theme,
+                localizations.addCategoryFormIncome,
+                Icons.add_circle_outline,
+                1,
               ),
             ),
           ],
@@ -174,45 +183,90 @@ class _AddCategoryFormState extends State<AddCategoryForm> {
     );
   }
 
-  Widget _buildSaveButton(ThemeData theme) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () async {
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-
-            // Sinh id ngẫu nhiên cho danh mục
-            final id = _generateRandomId();
-            final category = CategoryModel(
-              id: id,
-              name: _name,
-              type: _type,
-              amount: _amount, // Số tiền có thể chi
-            );
-
-            try {
-              await _categoryService.addCategory(category);
-              print('Danh mục đã được lưu');
-              Navigator.pop(context, true);
-            } catch (e) {
-              print('Lỗi khi lưu danh mục: $e');
-            }
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          foregroundColor: theme.colorScheme.onPrimary,
-          backgroundColor: theme.colorScheme.primary,
-          padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+  Widget _buildTypeOption(ThemeData theme, String label, IconData icon, int value) {
+    final isSelected = _type == value;
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _type = value;
+        });
+      },
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? theme.colorScheme.primaryContainer : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected ? theme.colorScheme.primary : theme.colorScheme.outline,
+            width: isSelected ? 2 : 1,
           ),
         ),
-        child: const Text('Lưu Danh Mục'),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.onSurface,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Phương thức để sinh id ngẫu nhiên với định dạng 'catXXXXXX'
+  Widget _buildSaveButton(ThemeData theme, AppLocalizations localizations) {
+    return ElevatedButton(
+      onPressed: _saveCategory,
+      style: ElevatedButton.styleFrom(
+        foregroundColor: theme.colorScheme.onPrimary,
+        backgroundColor: theme.colorScheme.primary,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        elevation: 2,
+      ),
+      child: Text(
+        localizations.addCategoryFormSaveButton,
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  void _saveCategory() async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      final id = _generateRandomId();
+      final category = CategoryModel(
+        id: id,
+        name: _name,
+        type: _type,
+        amount: _amount,
+      );
+
+      try {
+        await _categoryService.addCategory(category);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Category saved successfully')),
+        );
+        Navigator.pop(context, true);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error saving category: $e')),
+        );
+      }
+    }
+  }
+
   String _generateRandomId() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = Random();

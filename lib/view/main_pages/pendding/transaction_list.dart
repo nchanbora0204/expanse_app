@@ -40,7 +40,10 @@ class _TransactionListState extends State<TransactionList> {
 
   Future<void> _fetchTotalAmount() async {
     DateTime now = DateTime.now();
-    _totalAmount = await _statisticService.getTotalAmountByDate(now);
+    double? total = await _statisticService.getTotalAmountByDate(now);
+    if (total != null) {
+      _totalAmount = total;
+    }
     setState(() {});
   }
 
@@ -48,8 +51,10 @@ class _TransactionListState extends State<TransactionList> {
     for (int i = 0; i < 2; i++) {
       // Lấy tổng cho 2 tuần
       DateTime startOfWeek = DateTime.now().subtract(Duration(days: i * 7));
-      _weeklyTotals[i] =
-          await _statisticService.getTotalAmountByDate(startOfWeek);
+      double? total = await _statisticService.getTotalAmountByDate(startOfWeek);
+      if (total != null) {
+        _weeklyTotals[i] = total;
+      }
     }
     setState(() {});
   }
@@ -80,84 +85,105 @@ class _TransactionListState extends State<TransactionList> {
     print("Saved Income: $_income, Expense: $_expense, Date: $_date");
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.transactionBook),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50.0),
-          child: Container(
-            alignment: Alignment.center,
-            child: Text(
-              '${AppLocalizations.of(context)!.totalThisWeek}: ${_totalAmount.toStringAsFixed(2)} VNĐ',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Builder(
+                builder: (BuildContext context) {
+                  final localization = AppLocalizations.of(context);
+                  // if (localization == null) {
+                  //   return Text('Transaction Book'); // Giá trị mặc định
+                  // }
+                  final brightness = Theme.of(context).brightness;
+
+                  final isDarkMode = brightness == Brightness.dark;
+                  return Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: isDarkMode
+                            ? [Colors.grey[600]!, Colors.grey[900]!]
+                            : [Colors.blue[300]!, Colors.blue[700]!],
+                      ),
+                    ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            AppLocalizations.of(context)!.totalThisWeek,
+                            style: TextStyle(color: Colors.white, fontSize: 16),
+                          ),
+                          Text(
+                            '${(_totalAmount ?? 0).toStringAsFixed(2)} VNĐ',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            AppLocalizations.of(context)!.transactionBook,
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const ChartHeader(),
-            TransactionBarChart(weeklyTotals: _weeklyTotals),
-            TransactionListView(transactionService: _transactionService),
-          ],
-        ),
-      ),
-      floatingActionButton: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => NotificationListPage()),
-              );
-            },
-            backgroundColor: Colors.blue,
-            tooltip: AppLocalizations.of(context)!.notifications,
-            child: const Icon(Icons.notifications),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Card(
+                elevation: 4,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.chartHeader,
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(height: 16),
+                      AspectRatio(
+                        aspectRatio: 1.7,
+                        child: TransactionBarChart(weeklyTotals: _weeklyTotals),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () async {
-              await _transactionAnalysis.pickImage();
-              _loadSavedData();
-            },
-            child: const Icon(Icons.photo_library),
-            backgroundColor: Colors.green,
-            tooltip: AppLocalizations.of(context)!.pickImage,
-          ),
-          const SizedBox(height: 16),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => TransactionListPage()),
-              );
-            },
-            child: const Icon(Icons.add),
-            backgroundColor: Colors.purple,
-            tooltip: AppLocalizations.of(context)!.goToNewPage,
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return TransactionListView(
+                    transactionService: _transactionService);
+              },
+              childCount: 1,
+            ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class ChartHeader extends StatelessWidget {
-  const ChartHeader({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Text(
-        AppLocalizations.of(context)!.chartHeader, // Thay đổi ở đây
-        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
+      floatingActionButton: AnimatedFloatingActionButton(),
     );
   }
 }
@@ -170,59 +196,56 @@ class TransactionBarChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 1.5,
-      child: BarChart(
-        BarChartData(
-          barGroups: weeklyTotals.asMap().entries.map((entry) {
-            return BarChartGroupData(
-              x: entry.key,
-              barRods: [
-                BarChartRodData(
-                  toY: entry.value,
-                  color: entry.key == 0 ? Colors.blue : Colors.orange,
-                  width: 40,
-                  borderRadius: BorderRadius.circular(5),
+    return BarChart(
+      BarChartData(
+        barGroups: weeklyTotals.asMap().entries.map((entry) {
+          return BarChartGroupData(
+            x: entry.key,
+            barRods: [
+              BarChartRodData(
+                toY: entry.value,
+                gradient: LinearGradient(
+                  colors: [Colors.blue.shade300, Colors.blue.shade700],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
                 ),
-              ],
-            );
-          }).toList(),
-          titlesData: FlTitlesData(
-            leftTitles: const AxisTitles(
-              sideTitles: SideTitles(showTitles: true),
-            ),
-            bottomTitles: AxisTitles(
-              sideTitles: SideTitles(
-                showTitles: true,
-                getTitlesWidget: (value, meta) {
-                  return Text(
+                width: 20,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ],
+          );
+        }).toList(),
+        titlesData: FlTitlesData(
+          leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) {
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
                     value.toInt() == 0
                         ? AppLocalizations.of(context)!.thisWeek
                         : AppLocalizations.of(context)!.lastWeek,
-                    style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold),
-                  );
-                },
-              ),
-            ),
-          ),
-          borderData: FlBorderData(show: false),
-          gridData: const FlGridData(
-              show: true, drawHorizontalLine: true, drawVerticalLine: false),
-          barTouchData: BarTouchData(
-            touchTooltipData: BarTouchTooltipData(
-              getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                return BarTooltipItem(
-                  '${rod.toY}\n',
-                  const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14),
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  ),
                 );
               },
             ),
+          ),
+        ),
+        borderData: FlBorderData(show: false),
+        gridData: FlGridData(show: false),
+        barTouchData: BarTouchData(
+          touchTooltipData: BarTouchTooltipData(
+            getTooltipItem: (group, groupIndex, rod, rodIndex) {
+              return BarTooltipItem(
+                '${rod.toY.toStringAsFixed(2)} VNĐ',
+                TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              );
+            },
           ),
         ),
       ),
@@ -242,15 +265,15 @@ class TransactionListView extends StatelessWidget {
       stream: transactionService.getTransactionStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No transactions available.'));
+          return Center(child: Text('No transactions available.'));
         } else {
           return ListView.builder(
             shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
+            physics: NeverScrollableScrollPhysics(),
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
               final transaction = snapshot.data![index];
@@ -272,15 +295,157 @@ class TransactionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: ListTile(
-        title: Text(transaction.title,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: CircleAvatar(
+          backgroundColor: transaction.amount >= 0 ? Colors.green : Colors.red,
+          child: Icon(
+            transaction.amount >= 0 ? Icons.arrow_upward : Icons.arrow_downward,
+            color: Colors.white,
+          ),
+        ),
+        title: Text(
+          transaction.title,
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
         subtitle: Text(
-            "${AppLocalizations.of(context)!.amount}: ${transaction.amount.toString()} VNĐ"),
-        trailing: Text(DateFormat('dd/MM/yyyy').format(transaction.date)),
+          DateFormat('dd/MM/yyyy').format(transaction.date),
+          style: TextStyle(color: Colors.grey[600]),
+        ),
+        trailing: Text(
+          '${transaction.amount.toStringAsFixed(2)} VNĐ',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: transaction.amount >= 0 ? Colors.green : Colors.red,
+          ),
+        ),
       ),
+    );
+  }
+}
+
+class AnimatedFloatingActionButton extends StatefulWidget {
+  @override
+  _AnimatedFloatingActionButtonState createState() =>
+      _AnimatedFloatingActionButtonState();
+}
+
+class _AnimatedFloatingActionButtonState
+    extends State<AnimatedFloatingActionButton>
+    with SingleTickerProviderStateMixin {
+  bool isExpanded = false;
+  late AnimationController _animationController;
+  late Animation<double> _animateIcon;
+  late Animation<double> _translateButton;
+  Curve _curve = Curves.easeOut;
+  double _fabHeight = 56.0;
+
+  @override
+  initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _translateButton = Tween<double>(
+      begin: _fabHeight,
+      end: -14.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.0,
+        0.75,
+        curve: _curve,
+      ),
+    ));
+    super.initState();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isExpanded) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isExpanded = !isExpanded;
+  }
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: <Widget>[
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 3.0,
+            0.0,
+          ),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => NotificationListPage()),
+              );
+            },
+            tooltip: 'Notifications',
+            child: Icon(Icons.notifications),
+            heroTag: 'btn1',
+          ),
+        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value * 2.0,
+            0.0,
+          ),
+          child: FloatingActionButton(
+            onPressed: () async {
+              await Get.find<TransactionAnalysis>().pickImage();
+            },
+            tooltip: 'Pick Image',
+            child: Icon(Icons.photo_library),
+            heroTag: 'btn2',
+          ),
+        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _translateButton.value,
+            0.0,
+          ),
+          child: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TransactionListPage()),
+              );
+            },
+            tooltip: 'Add Transaction',
+            child: Icon(Icons.add),
+            heroTag: 'btn3',
+          ),
+        ),
+        FloatingActionButton(
+          onPressed: animate,
+          tooltip: 'Toggle',
+          child: AnimatedIcon(
+            icon: AnimatedIcons.menu_close,
+            progress: _animateIcon,
+          ),
+          heroTag: 'btn4',
+        ),
+      ],
     );
   }
 }

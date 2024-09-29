@@ -10,9 +10,7 @@ class HomeView extends StatefulWidget {
   const HomeView({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _HomeViewState();
-  }
+  State<StatefulWidget> createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
@@ -27,10 +25,9 @@ class _HomeViewState extends State<HomeView> {
     _fetchTotal();
   }
 
-  // Phương thức để lấy tổng số tiền chi tiêu và cập nhật UI
   void _fetchTotal() async {
     double amountExpense = await _transactionService.getTotalExpense();
-    double amountIncome = await _transactionService.getTotalIncome(); // Thay thế bằng ID người dùng thực tế
+    double amountIncome = await _transactionService.getTotalIncome();
     double total = await _transactionService.totalTrans();
     setState(() {
       _totalExpense = total;
@@ -49,13 +46,8 @@ class _HomeViewState extends State<HomeView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             _homeHeader(),
-
-            // Pie Chart được thêm ở đây dưới header
             _buildPieChart(),
-
-            const SizedBox(
-              height: 150,
-            ),
+            // _buildTransactionList(),
           ],
         ),
       ),
@@ -65,43 +57,28 @@ class _HomeViewState extends State<HomeView> {
   Widget _homeHeader() {
     final theme = Theme.of(context);
     return Container(
-      height: MediaQuery.of(context).size.width * 1.1,
+      height: MediaQuery.of(context).size.height * 0.4,
       decoration: BoxDecoration(
-        color: theme.colorScheme.secondary.withOpacity(0.5),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [theme.colorScheme.primary, theme.colorScheme.secondary],
+        ),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(25),
-          bottomRight: Radius.circular(25),
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
         ),
       ),
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          Image.asset("assets/img/home_bg.png"),
-          Container(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.width * 0.05),
-            width: MediaQuery.of(context).size.width * 0.7,
-            height: MediaQuery.of(context).size.width * 0.7,
-            child: CustomPaint(
-              painter: CustomArcPanter(),
-            ),
-          ),
-          _spendingView(),
-          _activeSub(),
-        ],
+      child: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            _spendingView(),
+            _activeSub(),
+          ],
+        ),
       ),
     );
-  }
-
-  String formatCurrency(double amount) {
-    if (amount >= 1000000000) {
-      return '${(amount / 1000000000).toStringAsFixed(1)}B'; // 1 tỷ => "1.0B"
-    } else if (amount >= 1000000) {
-      return '${(amount / 1000000).toStringAsFixed(1)}M'; // 1 triệu => "1.0M"
-    } else if (amount >= 1000) {
-      return '${(amount / 1000).toStringAsFixed(1)}k'; // 1 ngàn => "1.0k"
-    } else {
-      return amount.toStringAsFixed(0); // Hiển thị số tiền nhỏ bình thường
-    }
   }
 
   Widget _spendingView() {
@@ -109,173 +86,218 @@ class _HomeViewState extends State<HomeView> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const SizedBox(
-          height: 8,
-        ),
         Text(
-          formatCurrency(_totalExpense).toString(), // Hiển thị tổng số tiền chi tiêu
+          formatCurrency(_totalExpense),
           style: TextStyle(
-            color: theme.textTheme.headlineLarge?.color,
-            fontSize: 40,
-            fontWeight: FontWeight.w700,
+            color: theme.colorScheme.onPrimary,
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
           ),
         ),
         Text(
-          AppLocalizations.of(context)!.monthlySpending,
+          AppLocalizations.of(context)!.monthlySpending, // Sử dụng AppLocalizations
           style: TextStyle(
-            color: theme.textTheme.bodyMedium?.color,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+            fontSize: 16,
           ),
         ),
-        const SizedBox(
-          height: 25,
-        ),
-        InkWell(
-          onTap: () {},
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: theme.colorScheme.onSecondary.withOpacity(0.15),
-              ),
-              color: theme.colorScheme.secondary.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Text(
-              AppLocalizations.of(context)!.spendingView,
-              style: TextStyle(
-                color: theme.textTheme.bodyLarge?.color,
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            backgroundColor: theme.colorScheme.onPrimary,
+            foregroundColor: theme.colorScheme.primary,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           ),
-        )
+          child: Text(AppLocalizations.of(context)!.spendingView), // Sử dụng AppLocalizations
+        ),
       ],
     );
   }
 
   Widget _activeSub() {
-    final theme = Theme.of(context);
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        _buildStatusButton(
+          title: AppLocalizations.of(context)!.lowestSubs,  // Sử dụng AppLocalizations
+          future: _transactionService.countTotalIncomeTransactions(),
+          color: Colors.green,
+        ),
+        _buildStatusButton(
+          title: AppLocalizations.of(context)!.highestSubs,  // Sử dụng AppLocalizations
+          future: _transactionService.countTotalExpenseTransactions(),
+          color: Colors.red,
+        ),
+      ],
+    );
+  }
 
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          const Spacer(),
-          Row(
+  Widget _buildStatusButton({
+    required String title,
+    required Future<int> future,
+    required Color color,
+  }) {
+    return FutureBuilder<int>(
+      future: future,
+      builder: (context, snapshot) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
+          ),
+          child: Column(
             children: [
-              // Sử dụng FutureBuilder để lấy số lượng khoản thu nhập
-              Expanded(
-                child: FutureBuilder<int>(
-                  future: TransactionService().countTotalIncomeTransactions(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return StatusButton(
-                        title: 'Khoản thu',
-                        value: '...',
-                        statusColor: theme.colorScheme.secondary,
-                        onPressed: () {},
-                      );
-                    } else if (snapshot.hasError) {
-                      return StatusButton(
-                        title: 'Khoản thu',
-                        value: 'Lỗi',
-                        statusColor: theme.colorScheme.secondary,
-                        onPressed: () {},
-                      );
-                    } else {
-                      return StatusButton(
-                        title: AppLocalizations.of(context)!.lowestSubs,
-                        value: '${snapshot.data} khoản', // Hiển thị số lượng thu nhập
-                        statusColor: theme.colorScheme.secondary,
-                        onPressed: () {},
-                      );
-                    }
-                  },
+              Text(
+                title,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(
-                width: 8,
-              ),
-              // Sử dụng FutureBuilder để lấy số lượng khoản chi tiêu
-              Expanded(
-                child: FutureBuilder<int>(
-                  future: TransactionService().countTotalExpenseTransactions(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return StatusButton(
-                        title: AppLocalizations.of(context)!.highestSubs,
-                        value: '...',
-                        statusColor: theme.colorScheme.tertiary,
-                        onPressed: () {},
-                      );
-                    } else if (snapshot.hasError) {
-                      return StatusButton(
-                        title: AppLocalizations.of(context)!.highestSubs,
-                        value: 'Lỗi',
-                        statusColor: theme.colorScheme.tertiary,
-                        onPressed: () {},
-                      );
-                    } else {
-                      return StatusButton(
-                        title: 'Khoản chi ',
-                        value: '${snapshot.data} khoản', // Hiển thị số lượng chi tiêu
-                        statusColor: theme.colorScheme.tertiary,
-                        onPressed: () {},
-                      );
-                    }
-                  },
+              const SizedBox(height: 5),
+              Text(
+                snapshot.connectionState == ConnectionState.waiting
+                    ? '...'
+                    : snapshot.hasError
+                    ? AppLocalizations.of(context)!.errorLoadingData  // Sử dụng AppLocalizations
+                    : '${snapshot.data} ${AppLocalizations.of(context)!.transactionBook}',  // Sử dụng AppLocalizations
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildPieChart() {
+    final theme = Theme.of(context);
+    Map<String, double> dataMap = {
+      AppLocalizations.of(context)!.toltalIncome: _amountIncome,  // Sử dụng AppLocalizations
+      AppLocalizations.of(context)!.toltalExpense: _amountExpense,  // Sử dụng AppLocalizations
+    };
+
+    return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 5,
+            blurRadius: 7,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Text(
+            AppLocalizations.of(context)!.totalExpenseOverview,  // Sử dụng AppLocalizations
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: theme.colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 20),
+          PieChart(
+            dataMap: dataMap,
+            animationDuration: const Duration(milliseconds: 800),
+            chartLegendSpacing: 32,
+            chartRadius: MediaQuery.of(context).size.width / 2.7,
+            colorList: [
+              theme.colorScheme.secondary,
+              theme.colorScheme.error,
+            ],
+            initialAngleInDegree: 0,
+            chartType: ChartType.ring,
+            ringStrokeWidth: 32,
+            centerText: AppLocalizations.of(context)!.expenseCenterText,  // Sử dụng AppLocalizations
+            legendOptions: const LegendOptions(
+              showLegendsInRow: false,
+              legendPosition: LegendPosition.right,
+              showLegends: true,
+              legendShape: BoxShape.circle,
+              legendTextStyle: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            chartValuesOptions: const ChartValuesOptions(
+              showChartValueBackground: true,
+              showChartValues: true,
+              showChartValuesInPercentage: true,
+              showChartValuesOutside: false,
+              decimalPlaces: 1,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPieChart() {
-    final theme = Theme.of(context);
+  // Widget _buildTransactionList() {
+  //   return Container(
+  //     margin: const EdgeInsets.all(20),
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Text(
+  //           AppLocalizations.of(context)!.recentTransactions,  // Sử dụng AppLocalizations
+  //           style: TextStyle(
+  //             fontSize: 20,
+  //             fontWeight: FontWeight.bold,
+  //             color: Theme.of(context).colorScheme.primary,
+  //           ),
+  //         ),
+  //         const SizedBox(height: 10),
+  //         ListView.builder(
+  //           shrinkWrap: true,
+  //           physics: const NeverScrollableScrollPhysics(),
+  //           itemCount: 5, // Show last 5 transactions
+  //           itemBuilder: (context, index) {
+  //             return ListTile(
+  //               leading: CircleAvatar(
+  //                 backgroundColor: index % 2 == 0 ? Colors.green : Colors.red,
+  //                 child: Icon(
+  //                   index % 2 == 0 ? Icons.arrow_upward : Icons.arrow_downward,
+  //                   color: Colors.white,
+  //                 ),
+  //               ),
+  //               title: Text('${AppLocalizations.of(context)!.transaction} ${index + 1}'),
+  //               subtitle: Text('${DateTime.now().subtract(Duration(days: index)).day}/${DateTime.now().month}/${DateTime.now().year}'),
+  //               trailing: Text(
+  //                 '${index % 2 == 0 ? '+' : '-'}\$${(index + 1) * 100}',
+  //                 style: TextStyle(
+  //                   color: index % 2 == 0 ? Colors.green : Colors.red,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //             );
+  //           },
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-    Map<String, double> dataMap = {
-      "Tổng thu": _amountIncome,
-      "Tổng chi": _amountExpense,
-    };
-
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: PieChart(
-        dataMap: dataMap,
-        animationDuration: const Duration(milliseconds: 800),
-        chartLegendSpacing: 32,
-        chartRadius: MediaQuery.of(context).size.width / 2.7,
-        colorList: [
-          theme.colorScheme.secondary,
-          theme.colorScheme.tertiary,
-        ],
-        initialAngleInDegree: 0,
-        chartType: ChartType.ring,
-        ringStrokeWidth: 32,
-        centerText: "Chi tiêu",
-        legendOptions: const LegendOptions(
-          showLegendsInRow: false,
-          legendPosition: LegendPosition.right,
-          showLegends: true,
-          legendShape: BoxShape.circle,
-          legendTextStyle: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        chartValuesOptions: const ChartValuesOptions(
-          showChartValueBackground: true,
-          showChartValues: true,
-          showChartValuesInPercentage: true,
-          showChartValuesOutside: false,
-          decimalPlaces: 1,
-        ),
-      ),
-    );
+  String formatCurrency(double value) {
+    return '\$${value.toStringAsFixed(2)}';
   }
 }
