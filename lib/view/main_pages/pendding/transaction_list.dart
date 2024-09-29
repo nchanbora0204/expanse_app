@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:money_lover/background_services/transaction_hunter.dart';
+import 'package:money_lover/firebaseService/transaction_hunter.dart';
 import 'package:money_lover/firebaseService/statistic_service.dart';
 import 'package:money_lover/firebaseService/transactionServices.dart';
 import 'package:money_lover/models/transaction_model.dart';

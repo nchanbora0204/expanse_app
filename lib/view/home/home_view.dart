@@ -75,6 +75,7 @@ class _HomeViewState extends State<HomeView> {
           children: [
             _spendingView(),
             _activeSub(),
+
           ],
         ),
       ),
@@ -252,50 +253,50 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  // Widget _buildTransactionList() {
-  //   return Container(
-  //     margin: const EdgeInsets.all(20),
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Text(
-  //           AppLocalizations.of(context)!.recentTransactions,  // Sử dụng AppLocalizations
-  //           style: TextStyle(
-  //             fontSize: 20,
-  //             fontWeight: FontWeight.bold,
-  //             color: Theme.of(context).colorScheme.primary,
-  //           ),
-  //         ),
-  //         const SizedBox(height: 10),
-  //         ListView.builder(
-  //           shrinkWrap: true,
-  //           physics: const NeverScrollableScrollPhysics(),
-  //           itemCount: 5, // Show last 5 transactions
-  //           itemBuilder: (context, index) {
-  //             return ListTile(
-  //               leading: CircleAvatar(
-  //                 backgroundColor: index % 2 == 0 ? Colors.green : Colors.red,
-  //                 child: Icon(
-  //                   index % 2 == 0 ? Icons.arrow_upward : Icons.arrow_downward,
-  //                   color: Colors.white,
-  //                 ),
-  //               ),
-  //               title: Text('${AppLocalizations.of(context)!.transaction} ${index + 1}'),
-  //               subtitle: Text('${DateTime.now().subtract(Duration(days: index)).day}/${DateTime.now().month}/${DateTime.now().year}'),
-  //               trailing: Text(
-  //                 '${index % 2 == 0 ? '+' : '-'}\$${(index + 1) * 100}',
-  //                 style: TextStyle(
-  //                   color: index % 2 == 0 ? Colors.green : Colors.red,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //             );
-  //           },
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+  Widget _buildTransactionList() {
+    return Container(
+      margin: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            AppLocalizations.of(context)!.recentTransactions,  // Sử dụng AppLocalizations
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          const SizedBox(height: 10),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: 5, // Show last 5 transactions
+            itemBuilder: (context, index) {
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundColor: index % 2 == 0 ? Colors.green : Colors.red,
+                  child: Icon(
+                    index % 2 == 0 ? Icons.arrow_upward : Icons.arrow_downward,
+                    color: Colors.white,
+                  ),
+                ),
+                title: Text('${AppLocalizations.of(context)!.transaction} ${index + 1}'),
+                subtitle: Text('${DateTime.now().subtract(Duration(days: index)).day}/${DateTime.now().month}/${DateTime.now().year}'),
+                trailing: Text(
+                  '${index % 2 == 0 ? '+' : '-'}\$${(index + 1) * 100}',
+                  style: TextStyle(
+                    color: index % 2 == 0 ? Colors.green : Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   String formatCurrency(double value) {
     return '\$${value.toStringAsFixed(2)}';

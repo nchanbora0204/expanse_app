@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:money_lover/background_services/transaction_hunter.dart';
+import 'package:money_lover/firebaseService/transaction_hunter.dart';
 import 'package:money_lover/view/main_pages/pendding/add_transaction.dart';
 import 'package:money_lover/view/main_pages/pendding/transaction_list.dart';
 
